@@ -53,7 +53,7 @@ class SubCategory extends Model
 
     public function getCreatedByAttribute($value)
     {
-        return User::find($value)->name;
+        return User::find($value)->name ?? 'N/A';
     }
 }
 

@@ -34,8 +34,11 @@
                             <div class="col-md-1 p-0 mt-1 text-end pe-2">
                                 <button class="btn create-btn align-items-center" type="submit" >
                                     Count
-                                    <img src="{{ asset('back/assets/dasheets/img/oui_token-token-count.svg') }}"
-                                        alt="" id="c-img"/>
+                                    {{-- <img src="{{ asset('back/assets/dasheets/img/oui_token-token-count.svg') }}"
+                                        alt="" id="c-img"/> --}}
+                                        {{-- icons like image  --}}
+                                        <i class="bi bi-ui-checks-grid ms-1"></i>
+
                                         <div class="spinner-border spinner-border-sm ms-1" role="status" id="loader" style="display: none">
                                             <span class="visually-hidden">Loading...</span>
                                         </div>

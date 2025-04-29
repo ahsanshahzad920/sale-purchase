@@ -142,7 +142,7 @@
                 {{-- <div class="row">
 
                 </div> --}}
-                <div class=" float-start">
+                <div class="">
                     <button type="submit" class="btn save-btn text-white mt-3">Submit</button>
                     {{-- <a href="{{ route('sales-payments.index') }}" class="btn cancel-btn">Back</a> --}}
                 </div>

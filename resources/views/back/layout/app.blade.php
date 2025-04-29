@@ -21,24 +21,28 @@
 
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
 
-     <!-- Dynamically set favicon using the site logo -->
-     <link rel="icon" type="image/png" href="{{Storage::url(getLogo())}}" />
+    <!-- Dynamically set favicon using the site logo -->
+    <link rel="icon" type="image/png" href="{{ Storage::url(getLogo()) }}" />
 
     <!-- Customized Bootstrap Stylesheet -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css"  /> --}}
 
     <!-- Template Stylesheet -->
-    <link href="{{ asset('back/assets/dasheets/css/style.css') }}" rel="stylesheet" />
+    {{-- <link href="{{ asset('back/assets/dasheets/css/style.css') }}" rel="stylesheet" /> --}}
+    <link href="{{ asset('back/assets/dasheets/css/crm.css') }}" rel="stylesheet" />
 
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     {{-- <link href="{{ asset('back/assets/css/styles.css') }}" rel="stylesheet" /> --}}
     {{-- <link href="{{ asset('back/assets/js/simplebar/css/simplebar.css') }}" rel="stylesheet" /> --}}
 
+
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js" crossorigin="anonymous">
     </script>
+
+    {{-- <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> --}}
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -50,6 +54,7 @@
         .page-link {
             color: black;
         }
+
         .dt-buttons {
             display: none;
         }
@@ -62,12 +67,52 @@
             display: none;
         }
     </style>
+    <style>
+        .orange-bg {
+            background: #FE9F44;
+        }
+
+        .orange-bg-light {
+            background: #FFC6A4;
+        }
+
+        .btn-orange-bg {
+            background: #FE9F44;
+            color: white;
+        }
+
+        .btn-orange-bg-light {
+            background: #FFC6A4;
+
+        }
+
+        .btn-orange-bg:hover {
+            background: #FFC6A4;
+            color: white;
+        }
+
+        .btn-orange-bg-light:hover {
+            background: #FE9F44;
+        }
+
+        .darkblue-bg {
+            background: #092C4C;
+        }
+
+        .darkgreen-bg {
+            background: #0E9384;
+        }
+
+        .normalblue-bg {
+            background: #155EEF;
+        }
+    </style>
 </head>
 
 <body>
-    @include('back.layout.navbar')
+    {{-- @include('back.layout.navbar')
 
-    @include('back.layout.sidebar')
+    @include('back.layout.sidebar-2')
     <!-- Content Start -->
     <div class="content">
       <!-- Navbar Start -->
@@ -96,7 +141,7 @@
                     @csrf
                     <select class="form-select form-control rounded-5" name="warehouse_id" id="selected_warehouse_id" onchange="this.form.submit()">
                         <option value="">Select warehouse</option>
-                        @foreach($warehouses as $warehouse)
+                        @foreach ($warehouses as $warehouse)
                             <option value="{{ $warehouse->id }}" {{ $warehouse->id == session('selected_warehouse_id') ? 'selected' : '' }}>{{ $warehouse->users->name ?? '' }}</option>
                         @endforeach
                     </select>
@@ -156,12 +201,114 @@
               </div>
           </div>
       </nav>
-  </div>
-</div>
+    </div> --}}
 
-        @yield('content')
+    {{-- <div class="container-fluid position-relative bg-white d-flex p-0">
 
-        @include('back.layout.footer')
+        <!-- Sidebar Start -->
+        @include('back.layout.sidebar-2')
+
+        <!-- Sidebar End -->
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            @include('back.layout.navbar-2')
+            <!-- Navbar End -->
+
+            @yield('content')
+        </div>
+        <!-- Recent Sales End -->
+
+    </div> --}}
+    <!-- Content End -->
+
+    <div class="container-fluid position-relative bg-white d-flex p-0">
+        <!-- Spinner Start -->
+
+        <!-- Spinner End -->
+
+        <!-- Sidebar Start -->
+        @include('back.layout.sidebar-2')
+
+        <!-- Sidebar End -->
+
+        <!-- Content Start -->
+        <div class="contents">
+            <!-- Navbar Start -->
+            @include('back.layout.navbar-2')
+            <!-- Navbar End -->
+
+            @yield('content')
+
+            @php
+                $links = \App\Models\Setting::first() ?? [];
+            @endphp
+
+            <div class="container-fluid px-4 mb-5 main-footer">
+                <div class="bg-footer p-3 bg-white">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 align-items-center align-middle">
+                            <p class="fw-bold m-0">
+                                {{$links->footer ?? 'ITSOL - Inventory and Stock Management'}}
+                            </p>
+                        </div>
+                        <div class="col-md-6 text-end d-flex gap-3 align-items-center justify-content-end">
+                            <a href="{{ $links->linkedin ?? '' }}" target="_blank" class="text-decoration-none">
+                                <!-- <img
+                                    src="dasheets/img/footer-linkedin.svg"
+                                    class="img-fluid me-2"
+                                    alt="linkedin"
+                                /> -->
+                                <i class="fa-brands fa-linkedin-in darkorange-txt fs-3"></i>
+                            </a>
+                            <a href="{{ $links->fb ?? '' }}" target="_blank" class="text-decoration-none">
+                                <i class="fa-brands fa-facebook-f fs-4 darkorange-txt"></i>
+                            </a>
+                            <a href="{{ $links->twitch ?? '' }}" target="_blank" class="text-decoration-none">
+                                <!-- <img
+                          src="dasheets/img/footer-twitch.svg"
+                          class="img-fluid me-2"
+                          alt="Twitch"
+                      /> -->
+                                <i class="fa-brands fa-twitch fs-4 darkorange-txt"></i>
+                            </a>
+                            <a href="{{ $links->twitter ?? '' }}" target="_blank" class="text-decoration-none">
+                                <!-- <img
+                          src="dasheets/img/footer-twitter.svg"
+                          class="img-fluid me-2"
+                          alt="Twitter"
+                      /> -->
+                                <i class="fa-brands fa-twitter fs-4 darkorange-txt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            {{-- @include('back.layout.footer') --}}
+
+        </div>
+        <!-- Recent Sales End -->
+
+        <!-- Calendar Modal -->
+        <div class="modal fade" id="myModal" aria-labelledby="exampleModalToggleLabel" tabindex="-1"
+            style="display: none" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content calendar-modal">
+                    <div class="modal-header border-0 text-white">
+                        <button type="button" class="btn-close text-white calendar-close-btn" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="datepicker"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     @yield('modal')
 
@@ -177,19 +324,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 
-     <!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" ></script>
-     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-     <script src="https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
-     <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.1.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
     <!-- Template Javascript -->
     <script src="{{ asset('back/assets/dasheets/js/main.js') }}"></script>
+    <script src="{{ asset('back/assets/dasheets/js/chart.js') }}"></script>
 
-     {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script> --}}
-     @yield('scripts')
+    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script> --}}
+    @yield('scripts')
+
+
+
 
 </body>
 

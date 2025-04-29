@@ -33,7 +33,7 @@
                                 <div class="form-group">
                                     <label for="exampleFormControlSelect1" class="mb-1 fw-bold">Date <span
                                             class="text-danger">*</span></label>
-                                    <input class="form-control subheading" type="date" value="<?php echo date('Y-m-d'); ?>" />
+                                    <input class="form-control" type="date" value="<?php echo date('Y-m-d'); ?>" />
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -112,9 +112,9 @@
                     <div class="row mt-2 px-3">
                         <div class="col-md-8"></div>
                         <div class="col-md-4 border rounded-2">
-                            <div class="row border-bottom subheading">
+                            <div class="row border-bottom">
                                 <div class="col-md-6 col-6">Order Tax</div>
-                                <div class="col-md-6 col-6" id="order_tax_display">$0.00</div><span> (0.00%)</span>
+                                <div class="col-md-6 col-6" id="order_tax_display">$0.00</div><span></span>
                             </div>
 
                             <div class="row border-bottom">
@@ -496,19 +496,21 @@
             });
 
             // Assume `orderTax` is a percentage value from an input field
-
             const orderTax = parseFloat($('#order_tax').val() == '' ? 0 : $('#order_tax').val()) / 100;
             const taxAmount = subtotal * orderTax;
 
-            const discountValue = parseFloat($('#discount').val() == '' ? 0 : $('#discount').val());
+            // Discount is now a percentage
+            const discountPercentage = parseFloat($('#discount').val() == '' ? 0 : $('#discount').val()) / 100;
+            const discountAmount = subtotal * discountPercentage;
 
             const shipping = parseFloat($('#shipping').val() == '' ? 0 : $('#shipping').val());
 
-            const grandTotal = subtotal + taxAmount - discountValue + shipping;
+            const grandTotal = subtotal + taxAmount - discountAmount + shipping;
 
             // Update the UI
-            $('#order_tax_display').text(`$${taxAmount.toFixed(2)} (${orderTax * 100}%)`);
-            $('#discount_display').text(`$${discountValue.toFixed(2)}`);
+            let orderTaxInPercentage = orderTax * 100;
+            $('#order_tax_display').text(`$${taxAmount.toFixed(2)} (${orderTaxInPercentage.toFixed()}%)`);
+            $('#discount_display').text(`$${discountAmount.toFixed(2)} (${(discountPercentage * 100).toFixed(2)}%)`);
             $('#shipping_display').text(`$${shipping.toFixed(2)}`);
             $('#grand_total').text(`$${grandTotal.toFixed(2)}`);
             if ($('#payment_status').val() == 'paid') {
@@ -517,6 +519,34 @@
             }
 
         }
+        // function calculateTotal() {
+        //     let subtotal = 0;
+        //     $('.table tbody tr').each(function() {
+        //         subtotal += parseFloat($(this).find('td:nth-child(9)').text() || 0);
+        //     });
+
+        //     // Assume `orderTax` is a percentage value from an input field
+
+        //     const orderTax = parseFloat($('#order_tax').val() == '' ? 0 : $('#order_tax').val()) / 100;
+        //     const taxAmount = subtotal * orderTax;
+
+        //     const discountValue = parseFloat($('#discount').val() == '' ? 0 : $('#discount').val());
+
+        //     const shipping = parseFloat($('#shipping').val() == '' ? 0 : $('#shipping').val());
+
+        //     const grandTotal = subtotal + taxAmount - discountValue + shipping;
+
+        //     // Update the UI
+        //     $('#order_tax_display').text(`$${taxAmount.toFixed(2)} (${orderTax * 100}%)`);
+        //     $('#discount_display').text(`$${discountValue.toFixed(2)}`);
+        //     $('#shipping_display').text(`$${shipping.toFixed(2)}`);
+        //     $('#grand_total').text(`$${grandTotal.toFixed(2)}`);
+        //     if ($('#payment_status').val() == 'paid') {
+        //         $('#amount_pay').val(grandTotal);
+        //         $('#amount_recieved').val(grandTotal);
+        //     }
+
+        // }
 
         // When an item-edit button is clicked
         $(document).on('click', '.item-edit', function() {

@@ -137,4 +137,27 @@ function sendInvoiceToCustomerViaEmailAndSms($email,$id){
         Log::error('Error sending email: ' . $e->getMessage());
         return false;
     }
+
+
+}
+
+if (!function_exists('adminSidebarRoutes')) {
+    function adminSidebarRoutes()
+    {
+        return $modules = [
+            'product_management' => [
+                'roles' => ['Admin', 'Manager'],
+                'pages' => [
+                    ['route' => 'products.index', 'label' => 'All Products'],
+                    ['route' => 'products.create', 'label' => 'Create Product'],
+                    ['route' => 'categories.index', 'label' => 'Category'],
+                    ['route' => 'sub-categories.index', 'label' => 'Sub Category'],
+                    ['route' => 'brands.index', 'label' => 'Brand'],
+                    ['route' => 'units.index', 'label' => 'Unit'],
+                ],
+            ],
+
+        ];
+
+    }
 }

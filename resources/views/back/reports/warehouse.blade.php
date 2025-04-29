@@ -39,7 +39,7 @@
                                 id="warehouses">
                                 <option value="" selected>Select Warehouse</option>
                                 @foreach ($all_warehouses as $warehouse)
-                                    <option value="{{ $warehouse->id }}">{{ $warehouse->users->name }}</option>
+                                    <option value="{{ $warehouse->id }}">{{ $warehouse?->users?->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -808,7 +808,7 @@
                     labels: labels,
                     datasets: [{
                         label: 'Total Quantity',
-                        backgroundColor: 'rgba(98, 95, 237, 1)',
+                        backgroundColor: '#FE9F43',
                         data: totalQuantities
                     }, ]
                 },
@@ -835,7 +835,7 @@
                 data: {
                     labels: warehouseData.map(data => data.label),
                     datasets: [{
-                        backgroundColor: 'rgba(98, 95, 237, 1)',
+                        backgroundColor: '#FE9F43',
                         data: warehouseData.map(data => data.data[2].toFixed(1)) // Total quantity data
                     }]
                 },

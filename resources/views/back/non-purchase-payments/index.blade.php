@@ -134,7 +134,7 @@
                                     </td>
 
                                     <td class="align-middle">
-                                        {{ $purchaseInvoice->vendor->user->name }}
+                                        {{ $purchaseInvoice?->vendor?->user?->name }}
                                     </td>
                                     {{-- <td class="align-middle">{{ $purchaseInvoice->invoice->vendor->users->name ?? '' }}</td> --}}
                                     <td class="align-middle">{{ $purchaseInvoice->payment_type ?? '' }}</td>

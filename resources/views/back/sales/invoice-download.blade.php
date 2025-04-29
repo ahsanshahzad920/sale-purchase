@@ -175,7 +175,7 @@
         body {
           font-family: "Nunito", sans-serif;
         }
-  
+
         .card {
           background-color: #fff;
           border-radius: 10px;
@@ -185,7 +185,7 @@
         .card-shadow {
           box-shadow: 0px 1px 12px 0px rgba(0, 0, 0, 0.15);
         }
-  
+
         .all-adjustment {
           border-bottom: 3px solid rgba(76, 73, 227, 1);
           width: 20%;
@@ -194,26 +194,26 @@
           font-weight: 500;
           text-align: center;
         }
-  
+
         .heading {
           font-family: "Nunito", sans-serif;
           font-size: 17.6px;
           font-weight: 400;
         }
-  
+
         .subheading {
           font-family: "Nunito", sans-serif;
           font-size: 0.873rem !important;
           font-weight: 400 !important;
           /* font-size: 1.1rem; */
         }
-  
+
         p {
           font-family: "Nunito", sans-serif;
           font-size: 14px;
           font-weight: 400;
         }
-  
+
         .badges {
           display: inline-block;
           border-radius: 5px;
@@ -221,17 +221,17 @@
           min-width: 66px;
           text-align: center;
         }
-  
+
         .badges.blue-border {
           border: 1px solid rgba(76, 73, 227, 1);
           color: rgba(76, 73, 227, 1);
         }
-  
+
         .badges.green-border {
           border: 1px solid rgba(114, 220, 105, 1);
           color: rgba(114, 220, 105, 1);
         }
-  
+
         .mb-4,
         .mt-4,
         .mt-2,
@@ -240,29 +240,29 @@
           /* margin-top: 16px; */
           padding-bottom: 4px;
         }
-  
+
         .row {
           display: flex;
           flex-wrap: wrap;
         }
-  
+
         .tax-detail {
           display: flex;
           justify-content: space-between;
           width: 100%;
         }
-  
+
         .col-md-4,
         .col-6 {
           flex: 0 0 auto;
           width: 33.333333%;
           /* width: 1fr; */
         }
-  
+
         .table-responsive {
           overflow-x: auto;
         }
-  
+
         .table {
           width: 100%;
           margin-bottom: 1rem;
@@ -270,81 +270,81 @@
           font-family: "Nunito", sans-serif;
           font-size: 13px !important;
         }
-  
+
         .table th,
         .table td {
           padding: 8px;
           text-align: left;
         }
-  
+
         .table thead th {
           vertical-align: bottom;
         }
-  
+
         .table tbody + tbody {
           border-top: 2px solid #dee2e6;
         }
-  
+
         .align-middle {
           vertical-align: middle;
         }
-  
+
         .border-bottom {
           border-bottom: 1px solid #dee2e6;
         }
-  
+
         .border {
           border: 1px solid #dee2e6;
           padding: 10px;
         }
-  
+
         .rounded-2 {
           border-radius: 0.25rem;
         }
-  
+
         .rounded-3 {
           border-radius: 0.3rem;
         }
-  
+
         .p-3 {
           padding: 16px;
         }
-  
+
         .px-3 {
           padding-left: 16px;
           padding-right: 16px;
         }
-  
+
         .mt-2 {
           margin-top: 16px;
         }
-  
+
         .order-detail {
           display: flex;
           justify-content: space-between;
         }
-  
+
         .order-1 {
           order: 1;
         }
 
-  
+
         @media (max-width: 768px) {
           .all-adjustment {
             border-bottom: 3px solid rgb(0, 0, 0);
             width: 100% !important;
           }
-  
+
           .col-6 {
             width: 50%;
           }
         }
-  
+
         @media (max-width: 576px) {
           .order-detail {
             flex-wrap: wrap;
           }
-  
+
           .main-order {
             width: 100%;
           }
@@ -586,7 +586,7 @@
                                             <td class="align-middle">${{ $sale->shipping ?? '0.00' }}</td>
                                             <td class="align-middle">${{ $sale->grand_total ?? '0.00' }}</td>
                                             <td class="align-middle">${{ $sale->amount_recieved ?? '0.00' }}</td>
-                                            <td class="align-middle">${{ $sale->amount_due ?? '0.00' }}</td>                                        
+                                            <td class="align-middle">${{ $sale->amount_due ?? '0.00' }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -620,6 +620,9 @@
                                 <div class="col-md-6 col-6">Due</div>
                                 <div class="col-md-6 col-6">$ {{ $sale->amount_due ?? '0.00' }}</div>
                             </div>
+                        </div> --}}
+                        {{-- <div class="footer">
+                            {!! DNS1D::getBarcodeHTML($sale->invoice->invoice_id, 'C128A') !!}
                         </div> --}}
                     </div>
                 </div>

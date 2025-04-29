@@ -115,7 +115,7 @@
                     <div class="row mt-2 px-3">
                         <div class="col-md-8"></div>
                         <div class="col-md-4 border rounded-2">
-                            <div class="row border-bottom subheading">
+                            <div class="row border-bottom">
                                 <div class="col-md-6 col-6">Order Tax</div>
                                 <div class="col-md-6 col-6" id="order_tax_display">$0.00</div><span> (0.00%)</span>
                             </div>

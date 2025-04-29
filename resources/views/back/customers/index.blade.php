@@ -175,6 +175,15 @@
                                                     for="flexSwitchCheck{{ $user->id }}"></label>
                                             </div>
                                         </div>
+                                        {{-- <div class="d-flex align-items-center form-switch">
+                                            <label class="switch mt-2" for="flexSwitchCheck{{ $user->id }}">
+                                                <input type="checkbox" data-user-id="{{ $user->id }}"
+                                                    class=" form-check-input toggle-class-status"
+                                                    {{ $user->customer ? ($user->customer->status ? 'checked' : '') : '' }}
+                                                    style="cursor:pointer;"/>
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div> --}}
                                     </td>
                                     <td class="align-middle">
                                         <div class="table_switch">
@@ -188,7 +197,7 @@
                                         </div>
                                     </td>
                                     <td class="align-middle">
-                                        <a class=" btn btn-sm btn-primary" data-bs-toggle="modal"
+                                        <a class=" btn btn-sm save-btn" data-bs-toggle="modal"
                                             data-bs-target="#addCustomerCard{{ $user->customer->id }}"
                                             style="cursor: pointer">
                                             Add Card

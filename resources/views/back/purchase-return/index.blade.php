@@ -73,7 +73,7 @@
                                     </label>
                                 </th>
                                 <th class="text-secondary">Date</th>
-                                <th class="text-secondary">Refference</th>
+                                <th class="text-secondary">Reference</th>
                                 <th class="text-secondary">Vendor</th>
                                 <th class="text-secondary">Warehouse</th>
                                 <th class="text-secondary">Status</th>
@@ -217,7 +217,7 @@
                                 name="vendor_id" id="vendor_id">
                                 <option value="0">Select Supplier</option>
                                 @foreach ($suppliers as $supplier)
-                                    <option value="{{ $supplier->id }}">{{ $supplier->user->name }}</option>
+                                    <option value="{{ $supplier->id }}">{{ $supplier->user->name ?? '' }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -227,7 +227,7 @@
                                 name="warehouse_id" id="warehouse_id">
                                 <option value="0">Select Warehouse</option>
                                 @foreach ($warehouses as $warehouse)
-                                    <option value="{{ $warehouse->id }}">{{ $warehouse->users->name }}</option>
+                                    <option value="{{ $warehouse->id }}">{{ $warehouse->users->name ?? '' }}</option>
                                 @endforeach
                             </select>
                         </div>

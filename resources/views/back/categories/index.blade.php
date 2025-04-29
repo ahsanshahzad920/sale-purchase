@@ -109,7 +109,7 @@
 
                                     <td class="align-middle">{{ $category->created_by }}</td>
                                     <td class="align-middle">
-                                        <div class="table_switch">
+                                        {{-- <div class="table_switch">
                                             <div class="form-check form-switch" >
                                                 <input class="form-check-input status" data-id="{{ $category->id }}"
                                                     type="checkbox" id="flexSwitchCheck{{ $category->id }}"
@@ -117,6 +117,12 @@
                                                 <label class="form-check-label"
                                                     for="flexSwitchCheck{{ $category->id }}"></label>
                                             </div>
+                                        </div> --}}
+                                        <div class="d-flex align-items-center">
+                                            <label class="switch mt-2" for="flexSwitchCheck{{ $category->id }}">
+                                                <input type="checkbox" data-id="{{ $category->id }}" class="status" name="show_email"  id="flexSwitchCheck{{ $category->id }}" {{ $category->status == 1 ? 'checked' : '' }}  style="cursor:pointer;"/>
+                                                <span class="slider"></span>
+                                            </label>
                                         </div>
                                     </td>
                                     <td class="align-middle">

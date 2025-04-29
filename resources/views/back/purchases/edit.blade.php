@@ -172,7 +172,7 @@
                     <div class="row mt-2 px-3">
                         <div class="col-md-8"></div>
                         <div class="col-md-4 border rounded-2">
-                            <div class="row border-bottom subheading">
+                            <div class="row border-bottom">
                                 <div class="col-md-6 col-6">Order Tax</div>
                                 <div class="col-md-6 col-6" id="order_tax_display">${{$purchase->order_tax ?? ''}}</div>
                                 {{-- <span> (0.00%)</span> --}}
@@ -380,7 +380,7 @@
                                                 </button> --}}
                                             </div>
 
-                                            <button class="btn newpurchase-btn text-white mt-3 px-3">
+                                            <button class="btn newpurchase-btn newsale-btn text-white mt-3 px-3">
                                                 <div class="spinner-border text-light spinner-border-sm ms-2 me-2" role="status"
                                                     id="btn-spinner" style="display: none">
                                                 </div>
@@ -1017,11 +1017,14 @@
             const shipping = parseFloat($('#shipping').val() == '' ? 0 : $('#shipping').val());
 
             const grandTotal = subtotal + taxAmount - discountValue + shipping;
+            const discountPercentage = (discountValue / subtotal) * 100;
 
             // Update the UI
             let orderTextPercentage = orderTax * 100;
             $('#order_tax_display').text(`$${taxAmount.toFixed(2)} (${orderTextPercentage.toFixed()}%)`);
-            $('#discount_display').text(`$${discountValue.toFixed(2)}`);
+            // $('#discount_display').text(`$${discountValue.toFixed(2)}`);
+            $('#discount_display').text(`$${discountValue.toFixed(2)} (${discountPercentage.toFixed(2)}%)`);
+
             $('#shipping_display').text(`$${shipping.toFixed(2)}`);
             $('#grand_total').text(`$${grandTotal.toFixed(2)}`);
             if ($('#payment_status').val() == 'paid') {
@@ -1158,6 +1161,7 @@
         });
 
         $(document).ready(function() {
+            calculateTotal();
             $('#createPurchaseForm').on('submit', function(e) {
                 e.preventDefault();
                 let amountReceived = 0;
@@ -1316,7 +1320,7 @@
                 var payment_status = document.getElementById('payment_status').value;
                 if (payment_status == 'partial' || payment_status == 'pending') {
                     // document.getElementById('pending_amount_modal').innerHTML = total;
-                    document.getElementById('pending_amount_modal').innerHTML = `$${$('#grand_total').text().replace('$', '') - $('#amount_received').val()}`;
+                    document.getElementById('pending_amount_modal').innerHTML = `$${($('#grand_total').text().replace('$', '') - $('#amount_received').val()).toFixed(2)}`;
                 }
                 else
                 {

@@ -132,9 +132,9 @@
                     <div class="row mt-2 px-3">
                         <div class="col-md-8"></div>
                         <div class="col-md-4 border rounded-2">
-                            <div class="row border-bottom subheading">
+                            <div class="row border-bottom">
                                 <div class="col-md-6 col-6">Order Tax</div>
-                                <div class="col-md-6 col-6" id="order_tax_display">$0.00</div><span> (0.00%)</span>
+                                <div class="col-md-6 col-6" id="order_tax_display">$0.00</div><span></span>
                                 {{-- <div class="col-md-6 col-6" id="order_tax_display"></div><span> (0.00%)</span> --}}
                             </div>
 
@@ -164,14 +164,14 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="order_tax" class="mb-1 fw-bold">Order Tax</label>
-                                    <input type="number" placeholder="0%" class="form-control subheading"value="0"
+                                    <input type="number" placeholder="0%" class="form-control subheading" value="{{ $sale_return->order_tax ?? '' }}"
                                         id="order_tax" />
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="discount" class="mb-1 fw-bold">Discount</label>
-                                    <input type="number" placeholder="$0.00" class="form-control subheading"value="0"
+                                    <input type="number" placeholder="$0.00" class="form-control subheading"value="{{ $sale_return->discount ?? '' }}"
                                         id="discount" />
 
                                 </div>
@@ -255,24 +255,55 @@
                 $(this).find('td:nth-child(8)').text(itemSubtotal.toFixed(2)); // Update subtotal for each row
             });
 
-            // Calculate total tax, discount, shipping, and grand total
-            const orderTax = parseFloat($('#order_tax').val()) || 0;
-            const discountValue = parseFloat($('#discount').val()) || 0;
-            const shipping = parseFloat($('#shipping').val()) || 0;
+            // Assume `orderTax` is a percentage value from an input field
+            const orderTax = parseFloat($('#order_tax').val() == '' ? 0 : $('#order_tax').val()) / 100;
+            const taxAmount = subtotal * orderTax;
 
-            const taxAmount = subtotal * (orderTax / 100);
-            const grandTotal = subtotal + taxAmount - discountValue + shipping;
+            // Discount is now a percentage
+            const discountPercentage = parseFloat($('#discount').val() == '' ? 0 : $('#discount').val()) / 100;
+            const discountAmount = subtotal * discountPercentage;
 
+            const shipping = parseFloat($('#shipping').val() == '' ? 0 : $('#shipping').val());
+
+            const grandTotal = subtotal + taxAmount - discountAmount + shipping;
             // Update UI with calculated values
-            $('#order_tax_display').text(`$${taxAmount.toFixed(2)} (${orderTax}%)`);
-            $('#discount_display').text(`$${discountValue.toFixed(2)}`);
+            // Update the UI
+            let orderTaxInPercentage = orderTax * 100;
+            $('#order_tax_display').text(`$${taxAmount.toFixed(2)} (${orderTaxInPercentage.toFixed()}%)`);
+            $('#discount_display').text(`$${discountAmount.toFixed(2)} (${(discountPercentage * 100).toFixed(2)}%)`);
             $('#shipping_display').text(`$${shipping.toFixed(2)}`);
             $('#grand_total').text(`$${grandTotal.toFixed(2)}`);
         }
+        // function calculateTotal() {
+        //     let subtotal = 0;
+        //     $('.table tbody tr').each(function() {
+        //         const quantity = parseInt($(this).find('td:nth-child(5) input').val()) ||
+        //         0; // Parse quantity as integer
+        //         const price = parseFloat($(this).find('td:nth-child(3)').text()) || 0; // Parse price as float
+        //         const itemSubtotal = quantity * price;
+        //         subtotal += itemSubtotal;
+        //         $(this).find('td:nth-child(8)').text(itemSubtotal.toFixed(2)); // Update subtotal for each row
+        //     });
+
+        //     // Calculate total tax, discount, shipping, and grand total
+        //     const orderTax = parseFloat($('#order_tax').val()) || 0;
+        //     const discountValue = parseFloat($('#discount').val()) || 0;
+        //     const shipping = parseFloat($('#shipping').val()) || 0;
+
+        //     const taxAmount = subtotal * (orderTax / 100);
+        //     const grandTotal = subtotal + taxAmount - discountValue + shipping;
+
+        //     // Update UI with calculated values
+        //     $('#order_tax_display').text(`$${taxAmount.toFixed(2)} (${orderTax}%)`);
+        //     $('#discount_display').text(`$${discountValue.toFixed(2)}`);
+        //     $('#shipping_display').text(`$${shipping.toFixed(2)}`);
+        //     $('#grand_total').text(`$${grandTotal.toFixed(2)}`);
+        // }
 
 
 
         $(document).ready(function() {
+            calculateTotal();
             $('#createSaleForm').on('submit', function(e) {
                 e.preventDefault();
 

@@ -103,11 +103,11 @@ class HomeController extends Controller
     //     return view('user.shop',compact('products','categories','brands'));
     // }
 
-    
+
     public function shopPage(Request $request)
     {
 
-        $query = Product::with('images')->where('status','1');
+        $query = Product::with('images','category')->where('status','1');
 
         if ($request->has('categories')) {
 
@@ -143,7 +143,12 @@ class HomeController extends Controller
         }
 
 
-        $products = $query->get();
+        $products = $query->paginate(12);
+
+        if ($request->ajax()) {
+            return response()->json($products);
+        }
+
         $categories = Category::where('status', 1)->get();
         $min_price = Product::where('sell_price', '>', 0)->min('sell_price');
         $max_price = Product::where('sell_price', '>', 0)->max('sell_price');

@@ -34,7 +34,7 @@
                         <div class="col-md-4 col-12">
                             <div class="input-search position-relative">
                                 <input type="text" placeholder="Search Warehouse"
-                                    class="form-control rounded-3 subheading" id="custom-filter"/>
+                                    class="form-control rounded-3 subheading" id="custom-filter" />
                                 <span class="fa fa-search search-icon text-secondary"></span>
                             </div>
                         </div>
@@ -43,9 +43,10 @@
                             {{-- <a href="#" class="btn create-btn rounded-3 mt-2" type="button"
                             data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop"
                             aria-controls="staticBackdrop">Filter <i class="bi bi-funnel"></i></a> --}}
-                            <a href="#" class="btn border-danger text-danger rounded-3 mt-2 excel-btn" id="download-excel">Excel <i
-                                    class="bi bi-file-earmark-text"></i></a>
-                            <a href="#" class="btn pdf rounded-3 mt-2" id="download-pdf">Pdf <i class="bi bi-file-earmark"></i></a>
+                            <a href="#" class="btn border-danger text-danger rounded-3 mt-2 excel-btn"
+                                id="download-excel">Excel <i class="bi bi-file-earmark-text"></i></a>
+                            <a href="#" class="btn pdf rounded-3 mt-2" id="download-pdf">Pdf <i
+                                    class="bi bi-file-earmark"></i></a>
                             @can('warehouse-create')
                                 <button class="btn create-btn rounded-3 mt-2" data-bs-target="#exampleModalToggle"
                                     data-bs-toggle="modal">
@@ -84,7 +85,7 @@
                                 <th class="sorting">City</th>
                                 <th class="sorting">Email</th>
                                 <th class="sorting">Zip Code</th>
-                                @canany(['warehouse-edit','warehouse-delete'])
+                                @canany(['warehouse-edit', 'warehouse-delete'])
                                     <th class="sorting">Action</th>
                                 @endcanany
                             </tr>
@@ -96,7 +97,7 @@
                                     <td class="align-middle">
                                         <label for="select-checkbox" class="checkbox">
                                             <input class="checkbox__input select-checkbox deleteRow" type="checkbox"
-                                                id="select-checkbox" data-id="{{$warehouse->id}}"/>
+                                                id="select-checkbox" data-id="{{ $warehouse->id }}" />
                                             <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 22 22">
                                                 <rect width="21" height="21" x=".5" y=".5" fill="#FFF"
@@ -107,7 +108,7 @@
                                         </label>
                                     </td>
                                     <td class="align-middle">
-                                        {{$warehouse->id ?? ''}}
+                                        {{ $warehouse->id ?? '' }}
                                     </td>
                                     <td class="align-middle">
                                         {{ $warehouse->users->name ?? '' }}
@@ -124,7 +125,7 @@
 
                                             @can('warehouse-edit')
                                                 <a class=" text-decoration-none btn edit-category-btn" data-bs-toggle="modal"
-                                                    data-bs-target="#editCategoryModel{{ $warehouse->id ?? ''}}">
+                                                    data-bs-target="#editCategoryModel{{ $warehouse->id ?? '' }}">
                                                     <img src="{{ asset('back/assets/dasheets/img/edit-2.svg') }}"
                                                         class="p-0 me-2 ms-0" alt="" />
                                                 </a>
@@ -146,7 +147,6 @@
                                         </div>
                                     </td>
                                 </tr>
-
                             @endforeach
                         </tbody>
                     </table>
@@ -234,8 +234,8 @@
                             </div>
                             <div class="form-group">
                                 <label for="country_code">Country Code</label>
-                                <input type="text" class="form-control subheading" name="country_code" id="country_code"
-                                    placeholder="Country Code (e.g US)" required>
+                                <input type="text" class="form-control subheading" name="country_code"
+                                    id="country_code" placeholder="Country Code (e.g US)" required>
                             </div>
                             <div class="form-group">
                                 <label for="state_code">State Or Provice Code</label>
@@ -277,7 +277,8 @@
                                 <div class="form-group">
                                     <label for="name"> Name</label>
                                     <input type="text" class="form-control subheading" name="name" id="name"
-                                        placeholder="Warehouse Name" required value="{{ $warehouse->users->name ?? '' }}">
+                                        placeholder="Warehouse Name" required
+                                        value="{{ $warehouse->users->name ?? '' }}">
                                 </div>
 
                                 <div class="form-group mt-2">
@@ -289,7 +290,8 @@
                                 <div class="form-group">
                                     <label for="address">Address</label>
                                     <input type="text" class="form-control subheading" name="address" id="address"
-                                        placeholder="Warehouse Address" required value="{{ $warehouse->users->address ?? '' }}">
+                                        placeholder="Warehouse Address" required
+                                        value="{{ $warehouse->users->address ?? '' }}">
                                 </div>
 
                                 <div class="form-group">
@@ -300,12 +302,13 @@
                                 <div class="form-group">
                                     <label for="city">City</label>
                                     <input type="text" class="form-control subheading" name="city" id="city"
-                                        placeholder="Warehouse City" required value="{{ $warehouse->city ?? ''}}">
+                                        placeholder="Warehouse City" required value="{{ $warehouse->city ?? '' }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email</label>
                                     <input type="text" class="form-control subheading" name="email" id="email"
-                                        placeholder="Warehouse Email" required value="{{ $warehouse->users->email  ?? ''}}">
+                                        placeholder="Warehouse Email" required
+                                        value="{{ $warehouse->users->email ?? '' }}">
                                 </div>
                                 <div class="">
                                     <div class="form-group">
@@ -320,7 +323,7 @@
                                         <label for="state_code" class="mb-1">State Or Province Code</label>
                                         <input type="text" class="form-control subheading" id="state_code"
                                             placeholder="State Code (e.g Az)" required name="state_code"
-                                            value="{{ $warehouse->users->state_code ?? ''}}" />
+                                            value="{{ $warehouse->users->state_code ?? '' }}" />
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -328,7 +331,7 @@
                                     <input type="text" class="form-control subheading" name="zip_code" id="zip_code"
                                         placeholder="Warehouse Zip Code" required value="{{ $warehouse->zip_code }}">
                                 </div>
-                                <input type="hidden" name="user_id" value="{{$warehouse->user_id ?? ''}}">
+                                <input type="hidden" name="user_id" value="{{ $warehouse->user_id ?? '' }}">
 
                                 <button class="btn save-btn text-white mt-4">Done</button>
                             </form>
@@ -360,14 +363,14 @@
                         extend: 'pdf',
                         footer: true,
                         exportOptions: {
-                            columns: [0, 1, 2, 3,4,5,6,]
+                            columns: [0, 1, 2, 3, 4, 5, 6, ]
                         }
                     },
                     {
                         extend: 'csv',
                         footer: false,
                         exportOptions: {
-                            columns: [0, 1, 2, 3,4,5,6,]
+                            columns: [0, 1, 2, 3, 4, 5, 6, ]
                         }
 
                     },
@@ -375,7 +378,7 @@
                         extend: 'excel',
                         footer: false,
                         exportOptions: {
-                            columns: [0, 1, 2, 3,4,5,6,]
+                            columns: [0, 1, 2, 3, 4, 5, 6, ]
                         }
                     }
                 ]
@@ -393,8 +396,8 @@
             });
 
 
-           // Select all checkbox click handler
-           $('#myCheckbox09').on('click', function() {
+            // Select all checkbox click handler
+            $('#myCheckbox09').on('click', function() {
                 var isSelected = $(this).is(':checked'); // Check if checkbox is checked
 
                 // Select/deselect all checkboxes with class 'select-checkbox'
@@ -533,15 +536,42 @@
                 $(this).find('.delete-category-form').submit();
             });
 
-            $(".delete-category-form").submit(function() {
-                var decision = confirm("Are you sure, You want to Delete this warehourse?");
-                if (decision) {
-                    return true;
-                }
-                return false;
-            });
+            // $(".delete-category-form").submit(function() {
+            //     var decision = confirm("Are you sure, You want to Delete this warehourse?");
+            //     if (decision) {
+            //         return true;
+            //     }
+            //     return false;
+            // });
+
 
 
         });
     </script>
+
+    <!-- Include SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(".delete-category-form").submit(function(e) {
+            e.preventDefault(); // Prevent the form from submitting immediately
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "If you delete this warehouse, all data related to this warehouse will be removed!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#d33",
+                cancelButtonColor: "#3085d6",
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "Cancel",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // If confirmed, submit the form
+                    this.submit();
+                }
+            });
+        });
+    </script>
+
 @endsection

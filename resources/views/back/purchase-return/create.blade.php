@@ -308,7 +308,7 @@
 
         });
 
-       
+
         function calculateTotal() {
             let subtotal = 0;
             $('.table tbody tr').each(function() {
@@ -369,7 +369,13 @@
                     if (item.quantityReturn != 0) {
                         formData.return_items.push(item);
                     }
+
                 });
+
+                if (formData.return_items.length === 0) {
+                    toastr.error('Please add at least one item to the return list');
+                    return;
+                }
 
                 // AJAX request to server
                 $.ajax({

@@ -57,7 +57,7 @@
 
     // Sidebar Toggler
     $('.sidebar-toggler').click(function () {
-        $('.sidebar, .content').toggleClass("open");
+        $('.sidebar, .contents').toggleClass("open");
         return false;
     });
     // document.addEventListener("DOMContentLoaded", function () {
@@ -448,6 +448,7 @@
         var div = document.createElement('div');
         var button = document.createElement('button');
         button.classList.add('btn', 'text-danger', 'border-danger', 'w-100', 'subheading', 'mt-4', 'delete-barcode');
+        button.setAttribute('type', 'button');
         var icon = document.createElement('i');
         icon.classList.add('bi', 'bi-trash3');
 

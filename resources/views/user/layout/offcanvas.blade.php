@@ -66,11 +66,15 @@
                     @endphp
                     <ul class="list-unstyled mt-2">
                         @foreach ($categories as $category )
-                        <li class="mt-2 border-bottom p-2 mt-2">
-                            <a href="{{ route('category.products', ['code' => $category->code]) }}" class="text-decoration-none text-dark">
-                                {{ $category->name ?? 'N/A' }}
-                            </a>
-                        </li>
+
+                            @foreach ($category->subcategories as $subcategory )
+                                <li class="mt-2 border-bottom p-2 mt-2">
+                                    <a href="{{ route('category.products', ['code' => $subcategory->code]) }}" class="text-decoration-none text-dark">
+                                        {{ $subcategory->name ?? 'N/A' }}
+                                    </a>
+                                </li>
+                            @endforeach
+
                         @endforeach
                     </ul>
                 </div>

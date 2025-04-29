@@ -40,6 +40,10 @@
 
     </style>
     <style>
+        :root {
+            --dt-row-selected: 255, 255, 255;
+            --dt-row-selected-text: 0, 0, 0;
+        }
         .dataTables_paginate {
             display: none;
         }

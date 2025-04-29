@@ -61,67 +61,225 @@ class ProductController extends BaseController
 
 
 
+    // public function index(Request $req)
+    // {
+
+    //     return $this->handleException(function () use ($req) {
+
+    //         if ($req->filled('search')) {
+
+    //             $searchTerm = $req->search;
+    //             // Search products by name
+    //             $productsByName = Product::search($searchTerm)->get();
+    //             // Search products by category name
+    //             $category = Category::search($searchTerm)->first();
+    //             $productsByCategory = $category ? $category->products : collect();
+    //             // Search products by brand name
+    //             $brand = Brand::search($searchTerm)->first();
+    //             $productsByBrand = $brand ? $brand->product : collect();
+
+    //             $barcode = Barcode::search($searchTerm)->get();
+    //             $barcode->load('product');
+    //             $barcode = $barcode ? $barcode : collect();
+    //             $barcodeProduct = [];
+    //             foreach ($barcode as $productsByBarcodes) {
+    //                 $barcodeProduct[] = $productsByBarcodes->product;
+    //             }
+    //             // Merge and remove deduplicate products from all searches
+    //             $mergedProducts = $productsByName->merge($productsByCategory)->merge($productsByBrand)->merge($barcodeProduct)->unique('id');
+
+    //             // Load relationships
+    //             $mergedProducts->load('category', 'brand', 'unit', 'images', 'product_warehouses', 'barcodes');
+
+    //             $products = $mergedProducts;
+    //             $categories = Category::all();
+    //             $brands = Brand::all();
+    //             return view('back.products.index', compact('products', 'categories', 'brands'));
+    //         }
+    //         else if (auth()->user()->hasRole(['Cashier', 'Manager'])) {
+    //             $products = Product::with('category', 'unit', 'images', 'product_warehouses')
+    //                 ->whereHas('product_warehouses', function ($q) {
+    //                     $q->where('warehouse_id', auth()->user()->warehouse_id);
+    //                 })->get();
+    //             $categories = Category::all();
+    //             $brands = Brand::all();
+    //             return view('back.products.index', compact('products', 'categories', 'brands'));
+    //         }
+    //         else {
+    //             $selected_warehouse_id = session('selected_warehouse_id');
+    //             if ($selected_warehouse_id) {
+    //                 $products = Product::with('category', 'unit', 'images', 'product_warehouses')->whereHas('product_warehouses', function ($query) use ($selected_warehouse_id) {
+    //                     $query->where('warehouse_id', $selected_warehouse_id);
+    //                 })->get();
+    //             } else {
+    //                 $products = Product::with('category', 'unit', 'images', 'product_warehouses')->get();
+    //                 // dd($products);
+    //             }
+    //             $categories = Category::all();
+    //             $brands = Brand::all();
+
+    //             return view('back.products.index', compact('products', 'categories', 'brands'));
+    //         }
+    //     });
+    // }
+
+
+    // public function index(Request $req)
+    // {
+    //     return $this->handleException(function () use ($req) {
+    //         if ($req->ajax()) {
+    //             $query = Product::with(['category', 'brand', 'unit', 'images', 'product_warehouses']);
+
+    //             // Handle search
+    //             if ($req->filled('search')) {
+    //                 $searchTerm = $req->search;
+    //                 $query->where('name', 'like', "%{$searchTerm}%")
+    //                     ->orWhere('sku', 'like', "%{$searchTerm}%");
+    //                 // Add other search conditions as needed
+    //             }
+
+    //             // Get paginated results
+    //             $products = $query->paginate($req->length);
+
+    //             // Format the products for DataTables
+    //             $data = $products->map(function($product) {
+    //                 return [
+    //                     'id' => $product->id, // Include the ID if needed
+    //                     'checkbox' => '<input class="checkbox__input select-checkbox deleteRow" type="checkbox" data-id="' . $product->id . '" />',
+    //                     'image' => $product->images->isNotEmpty() ? '<img src="' . asset('/storage' . $product->images[0]['img_path']) . '" style="width: 70px">' : '<img src="' . asset('back/assets/image/no-image.png') . '" style="width: 70px" />',
+    //                     'name' => $product->name,
+    //                     'sku' => $product->sku ?? '',
+    //                     'product_type' => $product->product_type ?? '....',
+    //                     'category' => $product->category->name,
+    //                     'brand' => $product->brand->name ?? '',
+    //                     'purchase_price' => '$' . ($product->purchase_price ?? '....'),
+    //                     'sell_price' => '$' . $product->sell_price,
+    //                     'unit' => $product->unit->short_name ?? '....',
+    //                     'quantity' => $this->getProductQuantity($product),
+    //                     'actions' => $this->getActionButtons($product),
+    //                 ];
+    //             });
+
+    //             return response()->json([
+    //                 'data' => $data,
+    //                 'recordsTotal' => $products->total(),
+    //                 'recordsFiltered' => $products->total(),
+    //             ]);
+    //         }
+
+    //         // Handle non-AJAX requests
+    //         $categories = Category::all();
+    //         $brands = Brand::all();
+    //         return view('back.products.index', compact('categories', 'brands'));
+    //     });
+    // }
+
+
     public function index(Request $req)
     {
-
         return $this->handleException(function () use ($req) {
+            if ($req->ajax()) {
+                $query = Product::with(['category', 'brand', 'unit', 'images', 'product_warehouses']);
 
-            if ($req->filled('search')) {
-
-                $searchTerm = $req->search;
-                // Search products by name
-                $productsByName = Product::search($searchTerm)->get();
-                // Search products by category name
-                $category = Category::search($searchTerm)->first();
-                $productsByCategory = $category ? $category->products : collect();
-                // Search products by brand name
-                $brand = Brand::search($searchTerm)->first();
-                $productsByBrand = $brand ? $brand->product : collect();
-
-                $barcode = Barcode::search($searchTerm)->get();
-                $barcode->load('product');
-                $barcode = $barcode ? $barcode : collect();
-                $barcodeProduct = [];
-                foreach ($barcode as $productsByBarcodes) {
-                    $barcodeProduct[] = $productsByBarcodes->product;
+                // Handle search
+                if ($req->filled('search')) {
+                    $searchTerm = $req->search;
+                    $query->where(function($q) use ($searchTerm) {
+                        $q->where('name', 'like', "%{$searchTerm}%")
+                          ->orWhere('sku', 'like', "%{$searchTerm}%")
+                          ->orWhere('product_type', 'like', "%{$searchTerm}%")
+                          ->orWhereHas('category', function($query) use ($searchTerm) {
+                              $query->where('name', 'like', "%{$searchTerm}%");
+                          })
+                          ->orWhereHas('brand', function($query) use ($searchTerm) {
+                              $query->where('name', 'like', "%{$searchTerm}%");
+                          });
+                    });
                 }
-                // Merge and remove deduplicate products from all searches
-                $mergedProducts = $productsByName->merge($productsByCategory)->merge($productsByBrand)->merge($barcodeProduct)->unique('id');
 
-                // Load relationships
-                $mergedProducts->load('category', 'brand', 'unit', 'images', 'product_warehouses', 'barcodes');
+                // Get paginated results
+                $totalRecords = $query->count();
+                $products = $query->skip($req->start)
+                    ->take($req->length)
+                    ->get();
 
-                $products = $mergedProducts;
-                $categories = Category::all();
-                $brands = Brand::all();
-                return view('back.products.index', compact('products', 'categories', 'brands'));
-            }
-            else if (auth()->user()->hasRole(['Cashier', 'Manager'])) {
-                $products = Product::with('category', 'unit', 'images', 'product_warehouses')
-                    ->whereHas('product_warehouses', function ($q) {
-                        $q->where('warehouse_id', auth()->user()->warehouse_id);
-                    })->get();
-                $categories = Category::all();
-                $brands = Brand::all();
-                return view('back.products.index', compact('products', 'categories', 'brands'));
-            }
-            else {
-                $selected_warehouse_id = session('selected_warehouse_id');
-                if ($selected_warehouse_id) {
-                    $products = Product::with('category', 'unit', 'images', 'product_warehouses')->whereHas('product_warehouses', function ($query) use ($selected_warehouse_id) {
-                        $query->where('warehouse_id', $selected_warehouse_id);
-                    })->get();
-                } else {
-                    $products = Product::with('category', 'unit', 'images', 'product_warehouses')->get();
-                    // dd($products);
-                }
-                $categories = Category::all();
-                $brands = Brand::all();
+                // Format the products for DataTables
+                $data = $products->map(function ($product) {
+                    return [
+                        'id' => $product->id,
+                        'checkbox' => '<input class="checkbox__input select-checkbox deleteRow" type="checkbox" data-id="' . $product->id . '" />',
+                        'image' => $product->images->isNotEmpty() ? '<img src="' . asset('/storage' . $product->images[0]['img_path']) . '" style="width: 70px">' : '<img src="' . asset('back/assets/image/no-image.png') . '" style="width: 70px" />',
+                        'name' => $product->name,
+                        'sku' => $product->sku ?? '',
+                        'product_type' => $product->product_type ?? '....',
+                        'category' => $product->category->name,
+                        'brand' => $product->brand->name ?? '',
+                        'purchase_price' => '$' . ($product->purchase_price ?? '....'),
+                        'sell_price' => '$' . $product->sell_price,
+                        'unit' => $product->unit->short_name ?? '....',
+                        'quantity' => $this->getProductQuantity($product),
+                        'actions' => $this->getActionButtons($product),
+                    ];
+                });
 
-                return view('back.products.index', compact('products', 'categories', 'brands'));
+                return response()->json([
+                    'data' => $data,
+                    'recordsTotal' => $totalRecords,
+                    'recordsFiltered' => $totalRecords,
+                ]);
             }
+
+            // Handle non-AJAX requests
+            $categories = Category::all();
+            $brands = Brand::all();
+            return view('back.products.index', compact('categories', 'brands'));
         });
     }
+
+
+
+    // Helper function to get product quantity based on user role
+    private function getProductQuantity($product)
+    {
+        if (auth()->user()->hasRole(['Cashier', 'Manager'])) {
+            return $product->product_warehouses->where('warehouse_id', auth()->user()->warehouse_id)->first()->quantity ?? '0';
+        } elseif (session('selected_warehouse_id')) {
+            return $product->product_warehouses->where('warehouse_id', session('selected_warehouse_id'))->first()->quantity ?? '0';
+        } else {
+            return $product->product_warehouses->sum('quantity') ?? '0';
+        }
+    }
+
+    // Helper function to generate action buttons
+    private function getActionButtons($product)
+    {
+        $buttons = '<div class="">
+                    <a class="btn btn-secondary bg-transparent border-0 text-dark" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-solid fa-ellipsis-v"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">';
+
+        if (auth()->user()->can('products-show')) {
+            $buttons .= '<a class="dropdown-item" href="' . route('get-one-product-details', $product->id) . '">Product Detail</a>';
+        }
+        if (auth()->user()->can('products-edit')) {
+            $buttons .= '<a class="dropdown-item" href="' . route('products.edit', $product->id) . '">Edit Product</a>';
+        }
+        if (auth()->user()->can('products-delete')) {
+            $buttons .= '<form action="' . route('products.destroy', $product->id) . '" method="POST" style="display:inline;">
+                        ' . csrf_field() . method_field('DELETE') . '
+                        <button type="submit" class="dropdown-item confirm-text">Delete Product</button>
+                     </form>';
+        }
+        $buttons .= '<a class="dropdown-item" href="' . route('products.duplicate', $product->id) . '">Duplicate Product</a>';
+        $buttons .= '</div></div>';
+
+        return $buttons;
+    }
+
+
+
+
 
 
     public function productSearch(Request $req, $cate_id = null)
@@ -248,10 +406,10 @@ class ProductController extends BaseController
         $data = $request->validated();
         $warehouse = Warehouse::find($data['warehouse_id']);
 
-
         if (!$warehouse) {
             return response()->json(['error' => 'Warehouse not found.'], 404);
         }
+
         $productData = [
             "title" => $data['name'],
             "body_html" => $data['description'],
@@ -434,12 +592,11 @@ class ProductController extends BaseController
                 }
             }
 
-            return response()->json(['message'=> 'Product created successfully!'],200);
+            return response()->json(['message' => 'Product created successfully!'], 200);
         }
         // return redirect()->route('products.index')
         //     ->with('error', 'Product creation failed.');
-        return response()->json(['message'=> 'Product creation failed!'],200);
-
+        return response()->json(['message' => 'Product creation failed!'], 200);
     }
 
 
@@ -551,14 +708,14 @@ class ProductController extends BaseController
         // dd($data);
         $product = Product::findOrFail($id);
         $requestData = $request->all();
-       $requestData['status'] = $request->status ? 1 : 0;
-       $requestData['imei_no'] = $request->imei_no ? 1 : 0;
+        $requestData['status'] = $request->status ? 1 : 0;
+        $requestData['imei_no'] = $request->imei_no ? 1 : 0;
 
 
         $shopify_enable = Setting::first();
 
         $existing_images = $request->input('existing_images', []);
-        if($product->shopify_id){
+        if ($product->shopify_id) {
             if ($shopify_enable->shopify_enable == 1) {
                 $shopifyProductId = (string) $product->shopify_id;
                 $warehouse = Warehouse::find($data['warehouse_id']);

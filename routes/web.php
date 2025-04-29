@@ -117,6 +117,7 @@ use App\Http\Controllers\Admin\ManualShippingController;
 use App\Http\Controllers\Admin\NonSalesInvoicePaymentController;
 use App\Http\Controllers\Admin\NonPurchaseInvoicePaymentController;
 use App\Http\Controllers\FedExController;
+use App\Http\Controllers\ScraperController;
 use App\Http\Controllers\User\ProductController as UserProductController;
 use App\Http\Controllers\User\DashboardController as UserDashboardController;
 
@@ -726,3 +727,18 @@ Route::get('search-products/{cate_id?}', [ProductController::class, 'productSear
 Route::get('/404', function () {
     abort(404);
 })->name('errors.404');
+
+
+Route::get('start-scraping', [ScraperController::class, 'startScraping'])->name('start-scraping');
+
+
+Route::get('/sales-data', [DashboardController::class, 'getSalesData2Chart']);
+Route::get('/weekly-sales', [DashboardController::class, 'getWeeklySalesData']);
+Route::get('/weekly-sales-heatmap', [DashboardController::class, 'getWeeklySalesHeatmapData']);
+
+Route::get('/top-categories', [DashboardController::class, 'getTopCategories']);
+Route::get('/customer-sales-returns', [DashboardController::class, 'getCustomerSalesVsReturns']);
+
+Route::get('/top-selling-products/filter', [DashboardController::class, 'filterTopSellingProducts'])->name('topSellingProducts.filter');
+Route::get('/recent-sales/filter', [DashboardController::class, 'filterRecentSales'])->name('recentSales.filter');
+Route::get('/recent-transactions/filter', [DashboardController::class, 'filterRecentTransactions'])->name('recentTransactions.filter');

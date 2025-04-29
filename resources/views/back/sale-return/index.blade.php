@@ -259,7 +259,7 @@
                                 name="customer_id" id="customer_id">
                                 <option value="0">Select Customer</option>
                                 @foreach ($customers as $customer)
-                                    <option value="{{ $customer->id }}">{{ $customer->user->name }}</option>
+                                    <option value="{{ $customer->id }}">{{ $customer->user->name ?? ''}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -269,7 +269,7 @@
                                 name="warehouse_id" id="warehouse_id">
                                 <option value="0">Select Warehouse</option>
                                 @foreach ($warehouses as $warehouse)
-                                    <option value="{{ $warehouse->id }}">{{ $warehouse->users->name }}</option>
+                                    <option value="{{ $warehouse->id }}">{{ $warehouse->users->name ?? '' }}</option>
                                 @endforeach
                             </select>
                         </div>

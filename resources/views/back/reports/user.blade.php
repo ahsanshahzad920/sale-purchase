@@ -91,7 +91,7 @@
                                     <td class="align-middle">{{ $user['total_inventory'] }}</td>
                                     <td class="align-middle">
                                         <a href="{{ route('user.show', $user['id']) }}"
-                                            class="btn btn-sm rounded-3 save-btn btn-primary">Report</a>
+                                            class="btn btn-sm rounded-3 save-btn">Report</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -238,7 +238,7 @@
                         name: 'Action',
                         render: function(data, type, row) {
                             console.log('data', data);
-                            return `<a href="/user/show/${row.id}" class="btn btn-sm rounded-3 save-btn btn-primary">Report</a>`;
+                            return `<a href="/user/show/${row.id}" class="btn btn-sm rounded-3 save-btn">Report</a>`;
                         }
                     }
                 ]

@@ -26,12 +26,12 @@ class Brand extends Model
 
     public function getCreatedByAttribute($value)
     {
-        return User::find($value)->name;
+        return User::find($value)->name ?? '';
     }
 
     public function getUpdatedByAttribute($value)
     {
-        return User::find($value)->name;
+        return User::find($value)->name ?? '';
     }
 
     public function toSearchableArray()

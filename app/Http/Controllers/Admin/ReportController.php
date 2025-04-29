@@ -1005,8 +1005,8 @@ class ReportController extends BaseController
                         'id' => $sale->sale_return->id,
                         'date' => $sale->sale_return->date,
                         'reference' => $sale->sale_return->reference,
-                        'customer' => optional($sale->sale_return->sales->customer)->user->name ?? '',
-                        'warehouse' => optional($sale->sale_return->sales->warehouse)->users->name ?? '',
+                        'customer' => optional($sale?->sale_return?->sales?->customer)?->user?->name ?? '',
+                        'warehouse' => optional($sale?->sale_return?->sales?->warehouse)?->users?->name ?? '',
                         'quantity' => $sale->return_quantity,
                         'unit' => $sale->sale_units->short_name ?? '',
                         'price' => $sale->price,
@@ -1137,8 +1137,8 @@ class ReportController extends BaseController
                             'id' => $sale->sale_return->id,
                             'date' => $sale->sale_return->date,
                             'reference' => $sale->sale_return->reference,
-                            'customer' => optional($sale->sale_return->sales->customer)->user->name ?? '',
-                            'warehouse' => optional($sale->sale_return->sales->warehouse)->users->name ?? '',
+                            'customer' => optional($sale?->sale_return?->sales?->customer)?->user?->name ?? '',
+                            'warehouse' => optional($sale?->sale_return?->sales?->warehouse)?->users?->name ?? '',
                             'quantity' => $sale->return_quantity,
                             'unit' => $sale->sale_units->short_name ?? '',
                             'price' => $sale->price,
@@ -1249,8 +1249,8 @@ class ReportController extends BaseController
                         'id' => $sale->sale_return->id,
                         'date' => $sale->sale_return->date,
                         'reference' => $sale->sale_return->reference,
-                        'customer' => optional($sale->sale_return->sales->customer)->user->name ?? '',
-                        'warehouse' => optional($sale->sale_return->sales->warehouse)->users->name ?? '',
+                        'customer' => optional($sale?->sale_return?->sales?->customer)?->user?->name ?? '',
+                        'warehouse' => optional($sale?->sale_return?->sales?->warehouse)?->users?->name ?? '',
                         'quantity' => $sale->return_quantity,
                         'unit' => $sale->sale_units->short_name ?? '',
                         'price' => $sale->price,
@@ -1714,8 +1714,8 @@ class ReportController extends BaseController
                         'vendor' => optional($group->first()->vendor)->user->name ?? '',
                         'total_sales' => $group->count(),
                         'total_amount' => $group->sum('grand_total'),
-                        'total_paid' => number_format($group->sum('amount_recieved')  + $group->first()->vendor->totalNonInvoicePaymentsPay->sum('amount_pay')),
-                        'total_due' =>  number_format($group->sum('amount_due')  + $group->first()->vendor->totalNonInvoicePaymentsDue->sum('amount_pay')),
+                        'total_paid' => number_format($group->sum('amount_recieved')  + $group->first()?->vendor?->totalNonInvoicePaymentsPay?->sum('amount_pay')),
+                        'total_due' =>  number_format($group->sum('amount_due')  + $group->first()?->vendor?->totalNonInvoicePaymentsDue?->sum('amount_pay')),
                     ];
                 })
                 ->values(); // Reset the keys
@@ -1732,8 +1732,8 @@ class ReportController extends BaseController
                             'vendor' => optional($group->first()->vendor)->user->name ?? '',
                             'total_sales' => $group->count(),
                             'total_amount' => $group->sum('grand_total'),
-                            'total_paid' => number_format($group->sum('amount_recieved')  + $group->first()->vendor->totalNonInvoicePaymentsPay->sum('amount_pay')),
-                            'total_due' =>  number_format($group->sum('amount_due')  + $group->first()->vendor->totalNonInvoicePaymentsDue->sum('amount_pay')),
+                            'total_paid' => number_format($group->sum('amount_recieved')  + $group->first()?->vendor?->totalNonInvoicePaymentsPay?->sum('amount_pay')),
+                            'total_due' =>  number_format($group->sum('amount_due')  + $group->first()?->vendor?->totalNonInvoicePaymentsDue?->sum('amount_pay')),
                         ];
                     })
                     ->values(); // Reset the keys
@@ -1749,8 +1749,8 @@ class ReportController extends BaseController
                             'vendor' => optional($group->first()->vendor)->user->name ?? '',
                             'total_sales' => $group->count(),
                             'total_amount' => $group->sum('grand_total'),
-                            'total_paid' => number_format($group->sum('amount_recieved')  + $group->first()->vendor->totalNonInvoicePaymentsPay->sum('amount_pay')),
-                            'total_due' =>  number_format($group->sum('amount_due')  + $group->first()->vendor->totalNonInvoicePaymentsDue->sum('amount_pay')),
+                            'total_paid' => number_format($group->sum('amount_recieved')  + $group->first()?->vendor?->totalNonInvoicePaymentsPay?->sum('amount_pay')),
+                            'total_due' =>  number_format($group->sum('amount_due')  + $group->first()?->vendor?->totalNonInvoicePaymentsDue?->sum('amount_pay')),
                         ];
                     })
                     ->values(); // Reset the keys
@@ -1973,7 +1973,7 @@ class ReportController extends BaseController
                 $sales_grand_total = $warehouse->sales->sum('grand_total');
                 $sales_paid = $warehouse->sales->sum('amount_recieved');
                 return [
-                    'label' => $warehouse->users->name,
+                    'label' => $warehouse?->users?->name,
                     'data' => [$totalQuantity, $totalItems,  $sales_grand_total, $sales_paid],
                 ];
             });
@@ -2126,7 +2126,7 @@ class ReportController extends BaseController
                     $sales_grand_total = $warehouse->sales->sum('grand_total');
                     $sales_paid = $warehouse->sales->sum('amount_recieved');
                     return [
-                        'label' => $warehouse->users->name,
+                        'label' => $warehouse?->users?->name,
                         'data' => [$totalQuantity, $totalItems,  $sales_grand_total, $sales_paid],
                     ];
                 });
@@ -2281,7 +2281,7 @@ class ReportController extends BaseController
                 $sales_paid = $warehouse->sales->sum('amount_recieved');
                 // $sales_grand_total = "Grand Total ". $sales_grand_total;
                 return [
-                    'label' => $warehouse->users->name,
+                    'label' => $warehouse?->users?->name,
                     // 'data' => [$totalQuantity." Quantity", $totalItems. "Items"],
                     // 'data' => [$totalQuantity, $totalItems, $sales_grand_total, "ToTal Paid " . $sales_paid],
                     'data' => [$totalQuantity, $totalItems,  $sales_grand_total, $sales_paid],

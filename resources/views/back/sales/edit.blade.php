@@ -284,15 +284,20 @@
                     <div class="row mt-2 px-3">
                         <div class="col-md-8"></div>
                         <div class="col-md-4 border rounded-2">
-                            <div class="row border-bottom subheading">
+                            <div class="row border-bottom">
                                 <div class="col-md-6 col-6">Order Tax</div>
                                 <div class="col-md-6 col-6" id="order_tax_display">${{ $sale->order_tax ?? '' }}</div>
                                 {{-- <span> (0.00%)</span> --}}
                             </div>
+                            @php
+                                $subTotal = $sale->productItems->sum('sub_total') ?? 0.00;
+                                $discountPercentage = $sale->discount ?? 0;
+                                $discountAmount = ($subTotal * $discountPercentage) / 100;
+                            @endphp
 
                             <div class="row border-bottom">
                                 <div class="col-md-6 col-6">Discount</div>
-                                <div class="col-md-6 col-6" id="discount_display">${{ $sale->discount ?? '' }}</div>
+                                <div class="col-md-6 col-6" id="discount_display">${{ number_format($discountAmount, 2) }} ({{ number_format($discountPercentage, 2) }}%)</div>
                             </div>
 
                             <div class="row border-bottom">
@@ -761,19 +766,19 @@
                                                                         <span class="fw-bold">Prev
                                                                             Balance:
                                                                         </span>
-                                                                        <span id="invoice_prev_balance"></span>
+                                                                        <span id="invoice_prev_balance">$0.00</span>
                                                                         <br>
                                                                     </p>
                                                                     <p>
                                                                         <span class="fw-bold">Total Due
-                                                                            Balance:</span>$
-                                                                        <span id="invoice_total_due"></span>
+                                                                            Balance:</span>
+                                                                        <span id="invoice_total_due">$0.00</span>
                                                                         <br>
                                                                     </p>
                                                                 </td>
 
-                                                                <td class="" style="width: 300px;text-align: end;">
-                                                                    <p><span class="fw-bold">Todays Total Due:</span> <span
+                                                                <td class="" style="width: 200px;">
+                                                                    {{-- <p><span class="fw-bold">Todays Total Due:</span> <span
                                                                             style="text-decoration: underline;">$<span
                                                                                 id="invoice_today_total_due">0.00</span>
                                                                         </span><br><span class="fw-bold">Discounts:</span>
@@ -787,7 +792,69 @@
 
                                                                         </span>
                                                                         <br>
-                                                                    </p>
+                                                                    </p> --}}
+                                                                    <table style="width: 100%; border-collapse: collapse;">
+                                                                        <!-- Sub Total -->
+                                                                        <tr>
+                                                                            <td style="text-align: left; width: 60%;" class="fw-bold">Sub Total -</td>
+                                                                            <td style="text-align: right;" id="invoice_sub_total">0.00</td>
+                                                                        </tr>
+
+                                                                        <!-- Tax -->
+                                                                        <tr>
+                                                                            <td style="text-align: left;" class="fw-bold">Tax -</td>
+                                                                            <td style="text-align: right;" id="invoice_order_tax">$0.00</td>
+                                                                        </tr>
+
+                                                                        <!-- Shipping Fee -->
+                                                                        <tr>
+                                                                            <td style="text-align: left;" class="fw-bold">Shipping Fee -</td>
+                                                                            <td style="text-align: right;" id="invoice_shipping">$0.00</td>
+                                                                        </tr>
+
+                                                                        <!-- Discounts -->
+                                                                        <tr>
+                                                                            <td style="text-align: left;" class="fw-bold">Discounts -</td>
+                                                                            <td style="text-align: right;" id="invoice_discount">$0.00</td>
+                                                                        </tr>
+
+                                                                        <!-- Divider -->
+                                                                        <tr>
+                                                                            <td colspan="2">
+                                                                                <div class="border border-2 border-dark mb-2 mt-1"></div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        <!-- Grand Total -->
+                                                                        <tr>
+                                                                            <td style="text-align: left;" class="fw-bold">Grand Total -</td>
+                                                                            <td style="text-align: right;" id="invoice_total">$0.00</td>
+                                                                        </tr>
+
+                                                                        <!-- Divider -->
+                                                                        <tr>
+                                                                            <td colspan="2">
+                                                                                <div class="border border-2 border-dark mt-2"></div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        <!-- Paid -->
+                                                                        <tr>
+                                                                            <td style="text-align: left;" class="fw-bold">Paid -</td>
+                                                                            <td style="text-align: right;" id="invoice_amount_paid">$0.00</td>
+                                                                        </tr>
+
+                                                                        <!-- Payment Method -->
+                                                                        <tr>
+                                                                            <td style="text-align: left;" class="fw-bold">Payment Method:</td>
+                                                                            <td style="text-align: right;" id="invoice_payment_method">N/A</td>
+                                                                        </tr>
+
+                                                                        <!-- Hidden Field -->
+                                                                        <tr style="display: none;">
+                                                                            <td colspan="2" id="invoice_today_total_due">0.00</td>
+                                                                        </tr>
+                                                                    </table>
                                                                 </td>
 
                                                             </tr>
@@ -922,9 +989,15 @@
 
             $('#customers').change(function() {
                 var discount = $('option:selected', this).data('discount');
-                $('#discount').val(discount);
+                
                 // $('#discount_display').text('$' + discount.toFixed(2));
-                $('#discount_display').text('%' + discount.toFixed(2));
+
+                let saleCustomerId = "{{$sale->customer_id}}";
+                if(saleCustomerId != $('option:selected', this).val()){
+                    $('#discount').val(discount);
+                    $('#discount_display').text('%' + discount.toFixed(2));
+                }
+
                 // $('#discount').trigger('input');
                 var tax_id = $('option:selected', this).data('tax-id');
                 $('#ntn_no').val(tax_id);
@@ -1315,9 +1388,12 @@
 
             const grandTotal = subtotal + taxAmount - discountValue + shipping;
 
+            let orderTaxInPercentage = orderTax * 100;
             // Update the UI
-            $('#order_tax_display').text(`$${taxAmount.toFixed(2)} (${orderTax * 100}%)`);
-            $('#discount_display').text(`$${discountValue.toFixed(2)}`);
+            // $('#order_tax_display').text(`$${taxAmount.toFixed(2)} (${orderTax * 100}%)`);
+            $('#order_tax_display').text(`$${taxAmount.toFixed(2)} (${orderTaxInPercentage.toFixed()}%)`);
+            // $('#discount_display').text(`$${discountValue.toFixed(2)}`);
+            $('#discount_display').text(`$${discountValue.toFixed(2)} (${(discountPercentage * 100).toFixed(2)}%)`);
             $('#shipping_display').text(`$${shipping.toFixed(2)}`);
             $('#grand_total').text(`$${grandTotal.toFixed(2)}`);
             // if ($('#payment_status').val() == 'paid') {
@@ -1600,6 +1676,8 @@
 
         $(document).ready(function() {
 
+            calculateTotal();
+
             // function populateModalTable() {
             //     // Get the main table rows
             //     const mainTableRows = document.querySelectorAll('#mainTable tbody tr');
@@ -1726,8 +1804,11 @@
                 $('.invoice_cust_no').text(phone);
                 $('.invoice_cust_email').text(email);
 
-                $('#invoice_prev_balance').text(balance);
-                $('#invoice_total_due').text(total_due);
+                // $('#invoice_prev_balance').text(balance);
+                let saleDue = "{{$sale->amount_due}}";
+                let invoice_prev_balance = (total_due - parseInt(saleDue));
+                $('#invoice_prev_balance').text("$"+ invoice_prev_balance.toFixed(2));
+                $('#invoice_total_due').text("$"+total_due.toFixed(2));
                 $('#invoice_date').text($('#date').val() || new Date().toISOString().slice(0, 10));
             });
 
@@ -1763,8 +1844,10 @@
 
 
 
+            let invoiceSubTotal = 0;
             function populateModalTable() {
                 // Get the main table rows
+                invoiceSubTotal = 0;
                 const mainTableRows = document.querySelectorAll('#mainTable tbody tr');
 
                 // Select the modal table body
@@ -1779,6 +1862,9 @@
                     const qty = row.querySelector('.product_qty').value;
                     const price = row.querySelector('.product_price').textContent;
                     const sku = row.querySelector('.product_sku').textContent;
+                    invoiceSubTotal += parseFloat(price);
+
+
 
 
                     const newRow = `
@@ -1826,15 +1912,18 @@
 
 
                 document.getElementById('invoice_discount').innerHTML = discount ?? 0;
-                document.getElementById('invoice_amount_paid').innerHTML = am_recieved ?? 0;
+                document.getElementById('invoice_amount_paid').innerHTML = "$"+am_recieved.toFixed(2) ?? 0;
                 document.getElementById('invoice_today_total_due').innerHTML = (am_due ?? "0");
-                document.getElementById('invoice_payment_method').innerHTML = $('#payment_method option:selected')
-                    .text();
+                document.getElementById('invoice_payment_method').innerHTML = $('#payment_method option:selected').text();
 
 
                 // const invoice_id = {{$sale->invoice->invoice_id ?? '12345'}};
                 const invoice_id = @json($sale->invoice->invoice_id);
                 document.getElementById('invoice_number').innerHTML = invoice_id;
+
+                $('#invoice_total').html(total);
+                $('#invoice_sub_total').html('$'+ invoiceSubTotal.toFixed(2));
+                $('#invoice_order_tax').html(getOrderTax);
 
             }
 

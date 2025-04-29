@@ -268,7 +268,7 @@
                                             @foreach ($warehouses as $warehouse)
                                                 <option value="{{ $warehouse->id }}"
                                                     @if ($product->warehouse_id == $warehouse->id) selected @endif>
-                                                    {{ $warehouse->users->name }}</option>
+                                                    {{ $warehouse->users->name ?? '' }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -423,7 +423,7 @@
                                                     class="text-danger">*</span></label>
                                             <input type="number" class="form-control" id="product_weight"
                                                 placeholder="Weight" name="product_weight"
-                                                value="{{ $product->product_weight ?? '' }}" required>
+                                                value="{{ $product->product_weight ?? '' }}" required step="0.01">
                                             <span class="small">lbs / kg</span>
                                         </div>
                                     </div>
@@ -448,7 +448,7 @@
                                                     class="text-danger">*</span></label>
                                             <input type="number" class="form-control" id="product_length"
                                                 placeholder="Length" name="product_length" required
-                                                value="{{ $product->product_length ?? '' }}">
+                                                value="{{ $product->product_length ?? '' }}" step="0.01">
                                             <span class="small">in / cm</span>
                                         </div>
                                     </div>
@@ -460,7 +460,7 @@
                                                     class="text-danger">*</span></label>
                                             <input type="number" class="form-control" id="product_width"
                                                 placeholder="Width" name="product_width" required
-                                                value="{{ $product->product_width ?? '' }}">
+                                                value="{{ $product->product_width ?? '' }}" step="0.01">
                                             <span class="small">in / cm</span>
                                         </div>
                                     </div>
@@ -470,7 +470,7 @@
                                                     class="text-danger">*</span></label>
                                             <input type="number" class="form-control" id="product_height"
                                                 placeholder="Height" name="product_height" required
-                                                value="{{ $product->product_height ?? '' }}">
+                                                value="{{ $product->product_height ?? '' }}" step="0.01">
                                             <span class="small">in / cm</span>
                                         </div>
                                     </div>
@@ -671,7 +671,7 @@
                                     <div class="col-1">
                                         <label for="myCheckbox09" class="checkbox d-flex mt-1">
                                             <input type="checkbox" class="checkbox__input" name="status"
-                                                id="product_live" value="1" />
+                                                id="product_live" value="1" {{ $product->status == 1 ? 'checked' : '' }} />
                                             <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 22 22">
                                                 <rect width="21" height="21" x=".5" y=".5" fill="#FFF"

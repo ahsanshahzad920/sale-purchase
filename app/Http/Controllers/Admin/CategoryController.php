@@ -171,10 +171,10 @@ class CategoryController extends BaseController
         // dd($category->status );
         if($category->status==1){
             $category->status=0;
-            $message= trans('Blacklist Successfully');
+            $message= trans('Deactivated successfully.');
         }else{
             $category->status=1;
-            $message= trans('Active Successfully');
+            $message= trans('Activated successfully.');
         }
         $category->save();
         return response()->json($message);

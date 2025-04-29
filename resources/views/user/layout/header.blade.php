@@ -51,6 +51,7 @@
                                 <span class="fa fa-search search-icon text-secondary"></span>
                             </div>
                         </form>
+                        <div id="suggestionsContainerLoading" style="display: none;"></div>
                     </div>
                 </div>
 

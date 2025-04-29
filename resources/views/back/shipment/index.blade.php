@@ -56,6 +56,8 @@
                             <button class="btn pdf rounded-3 mt-2" id="download-pdf">
                                 Pdf <i class="bi bi-file-earmark"></i>
                             </button>
+                            <a href="{{ route('shipment.create') }}" class="btn create-btn rounded-3 mt-2">Create <i
+                                class="bi bi-plus-lg"></i></a>
                         </div>
                     </div>
                 </div>
@@ -81,69 +83,29 @@
                                     </label>
                                 </th>
                                 <th>Date</th>
-                                <th>Shipment Ref</th>
-                                <th>Sale Ref</th>
-                                <th>Customer</th>
-                                <th>Warehouse</th>
+                                <th>Shipment ID</th>
+                                <th>Tracking Url</th>
+                                <th>Destination Email</th>
+                                <th>Total Parcel</th>
+                                <th>Total Charges</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach ($shipments as $shipment)
-                                <tr>
-                                    <td class="align-middle">
-                                        <label for="select-checkbox" class="checkbox">
-                                            <input class="checkbox__input select-checkbox deleteRow" type="checkbox"
-                                                id="select-checkbox" data-id="{{$shipment->id}}"/>
-                                            <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 22 22">
-                                                <rect width="21" height="21" x=".5" y=".5" fill="#FFF"
-                                                    stroke="rgba(76, 73, 227, 1)" rx="3" />
-                                                <path class="tick" stroke="rgba(76, 73, 227, 1)" fill="none"
-                                                    stroke-linecap="round" stroke-width="3" d="M4 10l5 5 9-9" />
-                                            </svg>
-                                        </label>
-                                    </td>
-                                    <td class="align-middle">{{ $shipment->date ?? '' }}</td>
-                                    <td class="align-middle">{{ $shipment->reference ?? '' }}</td>
-                                    <td class="align-middle">{{ $shipment->sales->reference ?? '' }}</td>
-                                    <td class="align-middle">{{ $shipment->sales->customer->user->name ?? 'N/A' }}</td>
-                                    <td class="align-middle">{{ $shipment->sales->warehouse->users->name ?? 'N/A' }}</td>
-                                    <td class="align-middle">
-                                        <span
-                                            class="badges {{ $shipment->status == 'packed' ? 'packed-bg' : '' }}
-                                            {{ $shipment->status == 'shipped' ? 'shiped-bg' : '' }}
-                                            {{ $shipment->status == 'cancelled' ? 'cancelled-bg' : '' }}
-                                            {{ $shipment->status == 'delivered' ? 'delivered-bg' : '' }}
-                                            {{ $shipment->status == 'ordered' ? 'bg-dark' : '' }} text-center">{{ $shipment->status ?? '' }}</span>
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="d-flex justify-content-start">
-
-                                            <a class=" text-decoration-none btn edit-category-btn" data-bs-toggle="modal"
-                                                data-bs-target="#editShippmentModel{{ $shipment->id }}">
-                                                <img src="{{ asset('back/assets/dasheets/img/edit-2.svg') }}"
-                                                    class="p-0 me-2 ms-0" alt="" />
-                                            </a>
-
-                                            <form class="d-inline delete-category-form" method="post"
-                                                action="{{ route('shipment.destroy', $shipment->id) }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn text-danger btn-outline-light">
-                                                    <img src="{{ asset('back/assets/dasheets/img/plus-circle.svg') }}"
-                                                        class="p-0" data-bs-target="#exampleModalToggle2"
-                                                        data-bs-toggle="modal" alt="" />
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
+                        <tbody id="tbody">
+                            {{-- <tr class="text-center d-flex justify-content-center align-items-center">
+                                 <td colspan="8" rowspan="12">
+                                      <div class="spinner-border text-primary" role="status">
+                                      <span class="visually-hidden">Loading...</span> </div>
+                              </td>
+                           </tr> --}}
 
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-center" >
+                        <div class="spinner-border spinner-dark text-primary" role="status" id="loader" style="display:none;">
+                            <span class="visually-hidden">Loading...</span> </div>
+                    </div>
                 </div>
 
                 <div class="card-footer bg-white border-0 rounded-3">
@@ -182,68 +144,6 @@
 
 
 
-        <!-- Edit Shipping Modal STart -->
-        @foreach ($shipments as $shipping)
-            <div class="modal fade" id="editShippmentModel{{ $shipping->id }}" aria-hidden="true"
-                aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header border-0">
-                            <h3 class="all-adjustment text-center pb-2 mb-0" style="width: 57%;">
-                                Edit Shipment
-                            </h3>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{ route('shipment.update', $shipping->id) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <div class="form-group">
-                                    <label for="exampleFormControlInput1">Status</label>
-                                    <select name="status" id="status" class="form-select">
-                                        <option>Choose Status</option>
-                                        <option value="ordered"
-                                            {{ ($shipping->status ?? '') == 'ordered' ? 'selected' : '' }}>Ordered</option>
-                                        <option value="packed"
-                                            {{ ($shipping->status ?? '') == 'packed' ? 'selected' : '' }}>Packed</option>
-                                        <option value="shipped"
-                                            {{ ($shipping->status ?? '') == 'shipped' ? 'selected' : '' }}>Shipped</option>
-                                        <option value="delivered"
-                                            {{ ($shipping->status ?? '') == 'delivered' ? 'selected' : '' }}>Delivered
-                                        </option>
-                                        <option value="cancelled"
-                                            {{ ($shipping->status ?? '') == 'cancelled' ? 'selected' : '' }}>Cancelled
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group mt-2">
-                                    <label for="exampleFormControlInput1">Delivered To</label>
-                                    <input type="text" class="form-control subheading" name="delivered_to"
-                                        id="exampleFormControlInput1" placeholder="Delivered To"
-                                        value="{{ $shipping->delivered_to ?? '' }}">
-                                </div>
-
-                                <div class="form-group mt-2">
-                                    <label for="address">Address</label>
-                                    <textarea class="form-control subheading" id="address" name="address" rows="3" placeholder="Enter Address"
-                                        value="{{ $shipping->address ?? '' }}"></textarea>
-                                </div>
-                                <div class="form-group mt-2">
-                                    <label for="address">Please provide any details</label>
-                                    <textarea class="form-control subheading" id="address" name="details" rows="3"
-                                        placeholder="Please provide any details" value="{{ $shipping->details ?? '' }}"></textarea>
-                                </div>
-                                <button class="btn save-btn text-white mt-2">Submit</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-        <!-- Modal End -->
-
 
 
     </div>
@@ -256,43 +156,12 @@
     <script>
         $(document).ready(function() {
 
-            // var table = $('#example').DataTable({
-            //     dom: 'Bfrtip',
-            //     select: true,
-            //     select: {
-            //         style: 'multi'
-            //     },
-            //     buttons: [{
-            //             extend: 'pdf',
-            //             footer: true,
-            //             exportOptions: {
-            //                 columns: [0, 1, 2, 3, 4, 5, 6,]
-            //             }
-            //         },
-            //         {
-            //             extend: 'csv',
-            //             footer: false,
-            //             exportOptions: {
-            //                 columns: [0, 1, 2, 3, 4, 5, 6,]
-            //             }
-
-            //         },
-            //         {
-            //             extend: 'excel',
-            //             footer: false,
-            //             exportOptions: {
-            //                 columns: [0, 1, 2, 3, 4, 5, 6,]
-            //             }
-            //         }
-            //     ]
-            // });
-
-
             var table = $('#example').DataTable({
                 dom: 'Bfrtip',
                 select: true,
                 select: {
-                    style: 'multi'
+                    style: 'multi',
+                    selector: 'td:first-child .select-checkbox',
                 },
                 buttons: [{
                         extend: 'pdf',
@@ -322,6 +191,61 @@
             // });
 
 
+            // // Select all checkbox click handler
+            // $('#myCheckbox09').on('click', function() {
+            //     var isSelected = $(this).is(':checked'); // Check if checkbox is checked
+
+            //     // Select/deselect all checkboxes with class 'select-checkbox'
+            //     $('.select-checkbox').prop('checked', isSelected);
+
+            //     // Optional: Update DataTables selection based on checkbox state
+            //     if (isSelected) {
+            //         table.rows().select(); // Select all rows in DataTables (adjust if needed)
+            //         // confirm('Are you sure you want to delete all record?');
+            //         $('#deletedAlert').css('display','block');
+            //         $('#deleteRowCount').text($('.deleteRow:checked').length);
+
+
+            //     } else {
+            //         table.rows().deselect(); // Deselect all rows in DataTables (adjust if needed)
+            //         $('#deletedAlert').css('display','none');
+            //     }
+            // });
+
+            // table.on('select.dt', function (e, dt, type, indexes) {
+            //         // console.log("slected")
+            //         var row = table.row(indexes[0]); // Get the selected row
+
+            //         // Find checkbox within the selected row
+            //         var checkbox = row.node().querySelector('.select-checkbox');
+
+            //         if (checkbox) {  // Check if checkbox exists
+            //             // console.log("slected")
+            //             checkbox.checked = true; // Check the checkbox
+            //             $('#deletedAlert').css('display','block');
+            //             $('#deleteRowCount').text($('.deleteRow:checked').length);
+
+            //         }
+            // });
+
+            // table.on('deselect.dt', function (e, dt, type, indexes) {
+            //     var selectedRows = table.rows('.selected').count();
+            //     var row = table.row(indexes[0]); // Get the selected/deselected row
+            //     var checkbox = row.node().querySelector('.select-checkbox');
+
+            //     if (checkbox) {
+            //         // Update checkbox state based on event type
+            //         checkbox.checked = type === 'select';
+            //     }
+            //     $// Show/hide delete alert based on selection count
+            //     if (selectedRows === 0) {
+            //         $('#deletedAlert').css('display', 'none');
+            //     } else {
+            //         $('#deletedAlert').css('display', 'block');
+            //         $('#deleteRowCount').text($('.deleteRow:checked').length);
+            //     }
+            // });
+
             // Select all checkbox click handler
             $('#myCheckbox09').on('click', function() {
                 var isSelected = $(this).is(':checked'); // Check if checkbox is checked
@@ -332,50 +256,49 @@
                 // Optional: Update DataTables selection based on checkbox state
                 if (isSelected) {
                     table.rows().select(); // Select all rows in DataTables (adjust if needed)
-                    // confirm('Are you sure you want to delete all record?');
-                    $('#deletedAlert').css('display','block');
+                    $('#deletedAlert').css('display', 'block');
                     $('#deleteRowCount').text($('.deleteRow:checked').length);
-
-
                 } else {
                     table.rows().deselect(); // Deselect all rows in DataTables (adjust if needed)
-                    $('#deletedAlert').css('display','none');
+                    $('#deletedAlert').css('display', 'none');
                 }
             });
 
-            table.on('select.dt', function (e, dt, type, indexes) {
-                    // console.log("slected")
-                    var row = table.row(indexes[0]); // Get the selected row
+            // Handle click on checkbox to toggle row selection
+            $('#example tbody').on('click', '.select-checkbox', function(e) {
+                var $row = $(this).closest('tr');
 
-                    // Find checkbox within the selected row
-                    var checkbox = row.node().querySelector('.select-checkbox');
+                // Check the checkbox state and toggle row selection accordingly
+                if (this.checked) {
+                    table.row($row).select();
+                    // $('#myCheckbox09').prop('checked', true);
+                } else {
+                    table.row($row).deselect();
+                    // if ($('.deleteRow:checked').length === 0)
+                    //     $('#myCheckbox09').prop('checked', false);
 
-                    if (checkbox) {  // Check if checkbox exists
-                        // console.log("slected")
-                        checkbox.checked = true; // Check the checkbox
-                        $('#deletedAlert').css('display','block');
-                        $('#deleteRowCount').text($('.deleteRow:checked').length);
+                }
 
-                    }
+                // Prevent click event from propagating to parent
+                e.stopPropagation();
             });
 
-            table.on('deselect.dt', function (e, dt, type, indexes) {
+            // Handle click on table cells with .select-checkbox
+            $('#example tbody').on('click', 'td.select-checkbox', function(e) {
+                $(this).parent().find('input[type="checkbox"]').trigger('click');
+            });
+
+            // Update the count and alert display whenever the selection changes
+            table.on('select.dt deselect.dt', function() {
                 var selectedRows = table.rows('.selected').count();
-                var row = table.row(indexes[0]); // Get the selected/deselected row
-                var checkbox = row.node().querySelector('.select-checkbox');
-
-                if (checkbox) {
-                    // Update checkbox state based on event type
-                    checkbox.checked = type === 'select';
-                }
-                $// Show/hide delete alert based on selection count
                 if (selectedRows === 0) {
                     $('#deletedAlert').css('display', 'none');
                 } else {
                     $('#deletedAlert').css('display', 'block');
-                    $('#deleteRowCount').text($('.deleteRow:checked').length);
+                    $('#deleteRowCount').text(selectedRows);
                 }
             });
+
 
             $('#deleteRowTrigger').on("click", function(event){ // triggering delete one by one
                 if(confirm("Are you sure you won't be able to revert this!")){
@@ -460,30 +383,76 @@
 
             table.draw();
 
-        });
+            // let spinner = `<td colspan="8">
+            //     <div class="spinner-border text-primary" role="status">
+            //     <span class="visually-hidden">Loading...</span> </div>
+            //     </td>`;
 
-        $(document).ready(function() {
 
-            $.ajaxSetup({
+
+            // table.rows.add(spinner).draw();
+
+            // let spinner = `<tr >
+            //     <td colspan="8">
+            //      <div class="spinner-border text-primary" role="status">
+            //      <span class="visually-hidden">Loading...</span> </div>
+            //      </td>
+            //     </tr>`;
+
+            // table.rows.add(spinner).draw();
+            // $('#tbody').textContent = `<tr >
+            //      <td colspan="8">
+            //       <div class="spinner-border text-primary" role="status">
+            //       <span class="visually-hidden">Loading...</span> </div>
+            //       </td>
+            //      </tr>`;
+
+            $('#loader').show();
+            let access_token = "prod_7BdvYJbNSKV5R7Bo8jtkQ8M10ldY7lObKnw5nVSutqo=";
+            $.ajax({
+                type: "get",
+                url: "https://api.easyship.com/2023-01/shipments?easyship_shipment_id=&pickup_state=",
                 headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    accept: 'application/json',
+                    authorization: `Bearer ${access_token}`,
+                },
+                success: function (response) {
+                    console.log(response)
+                    const shipment = response.shipments.map(shipment => {
+
+                        return [
+                            `<label for="myCheckbox09" class="checkbox">
+                                <input class="checkbox__input select-checkbox deleteRow" type="checkbox" id="select-checkbox" data-id="${shipment.id}" />
+                                <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
+                                    <rect width="21" height="21" x=".5" y=".5" fill="#FFF"
+                                        stroke="rgba(76, 73, 227, 1)" rx="3" />
+                                    <path class="tick" stroke="rgba(76, 73, 227, 1)" fill="none"
+                                        stroke-linecap="round" stroke-width="3" d="M4 10l5 5 9-9" />
+                                </svg>
+                            </label>`,
+                            shipment.created_at,
+                            shipment.easyship_shipment_id,
+                            `<a href="${shipment.tracking_page_url}">Tracking Page</a>`,
+                            shipment.destination_address.contact_email,
+                            shipment.total_parcel ?? 2,
+                            shipment?.rates?.[0]?.rates_in_origin_currency?.total_charge ?? "N/A",
+                            shipment.pickup_state,
+                            `<a href="/shipment/${shipment.easyship_shipment_id}/edit" class="text-decoration-none btn"><img src="{{ asset('back/assets/dasheets/img/edit-2.svg') }}"
+                                                    class="p-0 me-2 ms-0" alt="" /></a>`,
+                        ]
+                    })
+
+                    table.rows.add(shipment).draw();
+                    $('#loader').hide();
+
+                },
+                complete: function(){
+                    $('#loader').hide();
                 }
             });
-
-            $(document).on('click', '.delete-category-link', function(e) {
-                e.preventDefault();
-                $(this).find('.delete-category-form').submit();
-            });
-
-            $(".delete-category-form").submit(function() {
-                var decision = confirm("Are you sure, You want to Delete this record?");
-                if (decision) {
-                    return true;
-                }
-                return false;
-            });
-
-
         });
+
+
+
     </script>
 @endsection

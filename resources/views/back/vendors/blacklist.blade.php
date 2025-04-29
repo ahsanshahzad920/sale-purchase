@@ -18,7 +18,7 @@
 @section('title', 'Blacklist Vendor')
 @section('content')
 
-    <div class="content">
+    <div class="content" style="margin-bottom: 200px">
 
         <div class="container-fluid pt-4 px-4 mb-5">
             <div class="border-bottom">

@@ -3,6 +3,52 @@
 @section('style')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.4.0/nouislider.min.css" rel="stylesheet" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
+    <style>
+        /* For WebKit browsers (Chrome, Safari) */
+        #categoriesList::-webkit-scrollbar {
+            width: 12px;
+            /* Width of the scrollbar */
+        }
+
+        #categoriesList::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            /* Background of the scrollbar track */
+        }
+
+        #categoriesList::-webkit-scrollbar-thumb {
+            background: rgba(76, 73, 227, 1);
+            /* Color of the scrollbar thumb */
+            border-radius: 6px;
+            /* Rounded corners */
+        }
+
+        #categoriesList::-webkit-scrollbar-thumb:hover {
+            background: #555;
+            /* Darker color on hover */
+        }
+
+        /* For Firefox */
+        #categoriesList {
+            scrollbar-width: thin;
+            /* Make scrollbar thinner */
+            scrollbar-color: rgba(76, 73, 227, 1) #f1f1f1;
+            /* Thumb color and track color */
+        }
+
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeIn 0.5s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 @endsection
 @section('content')
     <section class="">
@@ -29,25 +75,30 @@
                                     id="categorySearchInput" />
                                 <span class="fa fa-search search-icon text-secondary"></span>
                             </div>
-                            <div id="categoriesList">
+                            <div id="categoriesList" class="p-2" style="height: 700px; overflow-y: scroll;">
                                 @forelse ($categories as $category)
                                     @if ($category->products->count() > 0)
                                         <div class="d-flex justify-content-between gap-2 align-items-center mt-3 flex-wrap category-item"
                                             data-category-name="{{ strtolower($category->name) }}">
                                             <div class="d-flex gap-3 align-items-center">
-                                                <div class="checkbox">
-                                                    <input class="checkbox__input" type="checkbox"
-                                                        id="category{{ $category->id }}" name="categories[]"
-                                                        value="{{ $category->id }}" />
-                                                    <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 0 22 22">
-                                                        <rect width="21" height="21" x=".5" y=".5" fill="#FFF"
-                                                            stroke="rgba(76, 73, 227, 1)" rx="3" />
-                                                        <path class="tick" stroke="rgba(76, 73, 227, 1)" fill="none"
-                                                            stroke-linecap="round" stroke-width="3" d="M4 10l5 5 9-9" />
-                                                    </svg>
-                                                </div>
-                                                <label for="category{{ $category->id }}">{{ $category->name ?? '' }}</label>
+                                                {{-- <div class="checkbox">
+                                                        <input class="checkbox__input" type="checkbox"
+                                                            id="category{{ $category->id }}" name="categories[]"
+                                                            value="{{ $category->id }}" />
+                                                        <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg"
+                                                            viewBox="0 0 22 22">
+                                                            <rect width="21" height="21" x=".5" y=".5" fill="#FFF"
+                                                                stroke="rgba(76, 73, 227, 1)" rx="3" />
+                                                            <path class="tick" stroke="rgba(76, 73, 227, 1)" fill="none"
+                                                                stroke-linecap="round" stroke-width="3" d="M4 10l5 5 9-9" />
+                                                        </svg>
+                                                    </div> --}}
+                                                {{-- bootstrap checkbox  --}}
+
+                                                <input class="form-check-input" type="checkbox"
+                                                    id="category{{ $category->id }}" name="categories[]"
+                                                    value="{{ $category->id }}" style="width: 1.375em;height:1.375em;" />
+                                                <label for="category{{ $category->id }}" class="form-check-label" style="cursor: pointer;">{{ $category->name ?? '' }}</label>
                                             </div>
                                             <div class="">
                                                 <p class="bg-light p-1 rounded-3 m-0 text-end">
@@ -145,14 +196,13 @@
                 <div class="col-lg-9">
                     <div class="card rounded-4 border-0">
                         <div class="card-body">
-                            <div class="d-flex flex-wrap mt-3">
+                            <div class="d-flex flex-wrap mt-3" id="product-list" style="transition: all 0.8s;">
                                 @forelse ($products as $product)
-                                    <div class="selling-product col-lg-3 col-md-4 p-2 border">
+                                    <div class="selling-product col-sm-12 col-lg-3 col-md-4 p-2 border">
                                         <a
                                             href="{{ route('user.product.index', ['code' => $product->category->code, 'sku' => $product->sku]) }}">
                                             <div class="card tab-card border-0 rounded-0">
                                                 <div class="card-body p-0 text-center">
-
                                                     @if (count($product->images) > 0)
                                                         <img src="{{ asset('/storage' . $product->images[0]['img_path']) }}"
                                                             alt="No" class="img-fluid">
@@ -161,9 +211,8 @@
                                                             alt="" class="" />
                                                     @endif
                                                 </div>
-                                                <div class="card-footer border-0  bg-transparent text-center">
-                                                    <p class="product-category">
-                                                        {{ $product->category->name ?? '' }}</p>
+                                                <div class="card-footer border-0 bg-transparent text-center">
+                                                    <p class="product-category">{{ $product->category->name ?? '' }}</p>
                                                     <h3 class="product-name">
                                                         <a
                                                             href="{{ route('user.product.index', ['code' => $product->category->code, 'sku' => $product->sku]) }}">{{ $product->name }}</a>
@@ -176,28 +225,34 @@
                                                             <i class="fa-regular fa-star"></i>
                                                         @endfor
                                                     </div>
-                                                  
                                                     @if ($setting->show_pricing == 1)
                                                         <h4 class="product-price product-old-price">
-                                                            ${{ $product->sell_price ?? '0.00' }}
-                                                        </h4>
+                                                            ${{ $product->sell_price ?? '0.00' }}</h4>
                                                     @else
                                                         @auth
                                                             <h4 class="product-price product-old-price">
-                                                                ${{ $product->sell_price ?? '0.00' }}
-                                                            </h4>
+                                                                ${{ $product->sell_price ?? '0.00' }}</h4>
                                                         @endauth
                                                     @endif
                                                 </div>
                                             </div>
                                         </a>
-
                                     </div>
                                 @empty
                                     <div class="mt-3 w-100">
                                         <h4 class="text-center">No Product Found!</h4>
                                     </div>
                                 @endforelse
+                            </div>
+
+                            <div class="text-center mt-3">
+                                <button id="load-more" class="btn btn-primary">
+                                    Load More
+                                    <div id="loading-spinner"
+                                        class=" me-3 spinner-border spinner-border-sm text-light d-none" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                </button>
 
                             </div>
                         </div>
@@ -225,12 +280,12 @@
                     <div id="categoriesList">
                         @forelse ($categories as $category)
                             @if ($category->products->count() > 0)
-                                <div class="d-flex justify-content-between gap-2 align-items-center mt-3 flex-wrap category-item"
+                                <div class="d-flex justify-content-between gap-2 align-items-center mt-3 flex-wrap category-item2"
                                     data-category-name="{{ strtolower($category->name) }}">
                                     <div class="d-flex gap-3 align-items-center">
                                         <div class="checkbox">
                                             <input class="checkbox__input" type="checkbox"
-                                                id="category{{ $category->id }}" name="categories[]"
+                                                id="category-m-{{ $category->id }}" name="categories[]"
                                                 value="{{ $category->id }}" />
                                             <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 22 22">
@@ -240,7 +295,7 @@
                                                     stroke-linecap="round" stroke-width="3" d="M4 10l5 5 9-9" />
                                             </svg>
                                         </div>
-                                        <label for="category{{ $category->id }}">{{ $category->name ?? '' }}</label>
+                                        <label for="category-m-{{ $category->id }}">{{ $category->name ?? '' }}</label>
                                     </div>
                                     <div class="">
                                         <p class="bg-light p-1 rounded-3 m-0 text-end">
@@ -336,6 +391,7 @@
 
         });
     </script>
+
     {{-- <script>
         $(document).ready(function() {
             var priceRange = document.getElementById("priceRange");
@@ -513,7 +569,7 @@
                 var brandName = item.getAttribute('data-brand-name');
 
                 if (brandName && brandName.toLowerCase().includes(
-                    searchQuery)) { // Add null check and convert brandName to lowercase
+                        searchQuery)) { // Add null check and convert brandName to lowercase
                     item.classList.remove("d-none");
                     item.classList.add("d-flex");
                 } else {
@@ -525,7 +581,7 @@
 
         document.getElementById('categorySearchInput2').addEventListener('input', function() {
             var searchQuery = this.value.toLowerCase();
-            var categoryItems = document.querySelectorAll('.category-item');
+            var categoryItems = document.querySelectorAll('.category-item2');
             // console.log("Search Query:", searchQuery);
             categoryItems.forEach(function(item) {
                 var categoryName = item.getAttribute('data-category-name');
@@ -562,6 +618,125 @@
                     // console.log("Hiding:", brandName);
                 }
             });
+        });
+    </script>
+
+    {{-- <script>
+        let page = 1;
+
+        document.getElementById('load-more').addEventListener('click', function() {
+
+            const loadMoreButton = document.getElementById('load-more');
+            const loadingSpinner = document.getElementById('loading-spinner');
+
+
+            loadingSpinner.classList.remove('d-none');
+            loadMoreButton.disabled = true;
+            page++;
+            let fullUrl = window.location.href;
+            fetch(`${fullUrl}?page=${page}`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.data.length > 0) {
+                        data.data.forEach(product => {
+                            const productHtml = `
+                    <div class="selling-product col-lg-3 col-md-4 p-2 border">
+                        <a href="/category/${product.category.code}/product/${product.sku}">
+                            <div class="card tab-card border-0 rounded-0">
+                                <div class="card-body p-0 text-center">
+                                    <img src="${product.images.length > 0 ? '/storage' + product.images[0].img_path : 'back/assets/image/no-image.png'}" alt="No" class="img-fluid">
+                                </div>
+                                <div class="card-footer border-0 bg-transparent text-center">
+                                    <p class="product-category">${product.category.name}</p>
+                                    <h3 class="product-name">
+                                        <a href="/category/${product.category.code}/product/${product.sku}">${product.name}</a>
+                                    </h3>
+                                </div>
+                            </div>
+                        </a>
+                    </div>`;
+                            document.getElementById('product-list').insertAdjacentHTML('beforeend',
+                                productHtml);
+                        });
+                    } else {
+                        document.getElementById('load-more').style.display = 'none';
+                    }
+                })
+                .catch(error => console.error('Error fetching products:', error))
+                .finally(() => {
+                    loadingSpinner.classList.add('d-none');
+                    loadMoreButton.disabled = false;
+                });
+
+
+        });
+    </script> --}}
+
+    <script>
+        let page = 1;
+
+        document.getElementById('load-more').addEventListener('click', function() {
+            const loadMoreButton = document.getElementById('load-more');
+            const loadingSpinner = document.getElementById('loading-spinner');
+
+            loadingSpinner.classList.remove('d-none');
+            loadMoreButton.disabled = true;
+            page++;
+            let fullUrl = window.location.href;
+
+            fetch(`${fullUrl}?page=${page}`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.data.length > 0) {
+                        data.data.forEach(product => {
+                            const productHtml = `
+                                <div class="selling-product col-sm-12 col-lg-3 col-md-4 p-2 border fade-in">
+                                    <a href="/category/${product.category.code}/product/${product.sku}">
+                                        <div class="card tab-card border-0 rounded-0">
+                                            <div class="card-body p-0 text-center">
+                                                <img src="${product.images.length > 0 ? '/storage' + product.images[0].img_path : 'back/assets/image/no-image.png'}" alt="No" class="img-fluid">
+                                            </div>
+                                            <div class="card-footer border-0 bg-transparent text-center">
+                                                <p class="product-category">${product.category.name}</p>
+                                                <h3 class="product-name">
+                                                    <a href="/category/${product.category.code}/product/${product.sku}">${product.name}</a>
+                                                </h3>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>`;
+
+                            // Append the product to the product list
+                            const productList = document.getElementById('product-list');
+                            productList.insertAdjacentHTML('beforeend', productHtml);
+
+                            // Remove fade-in class after the animation completes
+                            const newProduct = productList.lastElementChild;
+                            setTimeout(() => {
+                                newProduct.classList.remove('fade-in');
+                            }, 500); // Matches the animation duration (0.5s)
+                        });
+                    } else {
+                        document.getElementById('load-more').style.display = 'none';
+                    }
+                })
+                .catch(error => console.error('Error fetching products:', error))
+                .finally(() => {
+                    loadingSpinner.classList.add('d-none');
+                    loadMoreButton.disabled = false;
+                });
         });
     </script>
 @endsection

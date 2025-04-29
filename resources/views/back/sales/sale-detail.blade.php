@@ -227,7 +227,6 @@
                         </div>
 
                         <div class="details">
-
                             @if ($sale->invoice->saleInvoicePayment->count() > 0)
                                 <h6 class="pb-1 fw-bold">Payment History</h6>
                                 <div class="table-responsive">
@@ -264,34 +263,172 @@
 
 
                             <div class="row">
-                                <div class=" col-md-6">
+                                <div class=" col-md-9">
+                                    <p>
+                                        <span class="fw-bold">Total Qty:</span> {{$sale?->productItems?->sum('quantity')}}<br>
+                                    </p>
                                     <p>
                                         <span class="fw-bold">Prev
-                                            Balance:</span>${{ $totalDue ?? '0.00' }} <br>
+                                            Balance:</span>${{ ($totalDue - $sale->amount_due) ?? '0.00' }} <br>
                                     </p>
                                     <p>
                                         @php
-                                            $total_due_balance = $totalDue + $sale->amount_due;
+                                            // $total_due_balance = $totalDue + $sale->amount_due;
+                                            $total_due_balance = $totalDue
                                         @endphp
                                         <span class="fw-bold">Total Due
                                             Balance:</span>${{ $total_due_balance ?? '0.00' }}<br>
                                     </p>
                                 </div>
-                                <div class=" col-md-6 text-md-end text-sm-start">
-                                    <p>
-                                        <span class="fw-bold">Grand Total:</span> <span
-                                            style="text-decoration: underline;">${{ $sale->grand_total ?? '0.00' }}</span><br>
-                                        <span class="fw-bold">Todays Total Due:</span> <span
-                                            style="text-decoration: underline;">${{ $sale->amount_due ?? '0.00' }}</span><br>
-                                        <span class="fw-bold">Shipping Fee:</span> <span
-                                            style="text-decoration: underline;">${{ $sale->shipping ?? '0.00' }}</span><br>
-                                        <span class="fw-bold">Discounts:</span> <span
-                                            style="text-decoration: underline;">${{ $sale->discount ?? '0.00' }}</span><br>
-                                        <span class="fw-bold">Amount Paid:</span> <span
-                                            style="text-decoration: underline;">${{ $sale->amount_recieved ?? '0.00' }}</span><br><span
-                                            class="fw-bold">Payment Method:
+                                <div class=" col-md-3 text-md-end text-sm-start">
+                                    @php
+                                            $subTotal = $sale->productItems->sum('sub_total') ?? 0.00;
+                                            $discountPercentage = $sale->discount ?? 0;
+                                            $discountAmount = ($subTotal * $discountPercentage) / 100;
+                                            $orderPercentage = $sale->order_tax ?? 0;
+                                            $orderAmount = ($subTotal * $orderPercentage) / 100;
+                                            // dd($orderAmount);
+                                    @endphp
 
+                                    <div class="table-responsive">
+                                        <table class="table table-borderless">
+                                            <tbody>
+                                                <!-- Sub Total -->
+                                                <tr>
+                                                    <td class="fw-bold pe-3" style="width: 40%">Sub Total:</td>
+                                                    <td class="text-end" style="text-decoration: underline">${{ number_format($subTotal, 2) }}</td>
+                                                </tr>
 
+                                                <!-- Tax -->
+                                                <tr>
+                                                    <td class="fw-bold pe-3">Tax:</td>
+                                                    <td class="text-end" style="text-decoration: underline">
+
+                                                        ${{number_format($orderAmount,2)}} ({{ $orderPercentage }}%)
+                                                    </td>
+                                                </tr>
+
+                                                <!-- Shipping Fee -->
+                                                <tr>
+                                                    <td class="fw-bold pe-3">Shipping Fee:</td>
+                                                    <td class="text-end" style="text-decoration: underline">${{ number_format($sale->shipping ?? 0, 2) }}</td>
+                                                </tr>
+
+                                                <!-- Discount -->
+                                                <tr>
+                                                    <td class="fw-bold pe-3">Discount:</td>
+                                                    <td class="text-end" style="text-decoration: underline">
+                                                        ${{ number_format($discountAmount, 2) }} ({{ number_format($discountPercentage, 2) }}%)
+                                                    </td>
+                                                </tr>
+
+                                                <!-- Grand Total Separator -->
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <hr class="border border-2 border-dark my-1">
+                                                    </td>
+                                                </tr>
+
+                                                <!-- Grand Total -->
+                                                <tr>
+                                                    <td class="fw-bold pe-3">Grand Total:</td>
+                                                    <td class="text-end" style="text-decoration: underline">${{ number_format($sale->grand_total ?? 0, 2) }}</td>
+                                                </tr>
+
+                                                <!-- Paid Separator -->
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <hr class="border border-2 border-dark my-1">
+                                                    </td>
+                                                </tr>
+
+                                                <!-- Paid Amount -->
+                                                <tr>
+                                                    <td class="fw-bold pe-3">Paid:</td>
+                                                    <td class="text-end" style="text-decoration: underline">${{ number_format($sale->amount_recieved ?? 0, 2) }}</td>
+                                                </tr>
+
+                                                <!-- Payment Method -->
+                                                <tr>
+                                                    <td class="fw-bold pe-3">Payment Method:</td>
+                                                    <td class="text-end">
+                                                        @if (count($sale->invoice->saleInvoicePayment) > 1)
+                                                            <span>Multiple</span>
+                                                        @elseif ($sale->invoice->saleInvoicePayment->count() == 1)
+                                                            @foreach ($sale->invoice->saleInvoicePayment as $payment)
+                                                                @if ($payment->salesPayment->card)
+                                                                    {{ $payment->salesPayment->card->card_brand ?? 'Visa' }}:
+                                                                    (Last 4):
+                                                                    {{ $payment->salesPayment->card->card_last_four ?? '' }}
+                                                                @else
+                                                                    {{ $payment->salesPayment->payment_method ?? '' }}
+                                                                @endif
+                                                            @endforeach
+                                                        @else
+                                                            <span>N/A</span>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {{-- <p>
+                                        <span class="fw-bold me-5">Sub Total - </span>
+
+                                        @php
+                                            $subTotal = $sale->productItems->sum('sub_total') ?? 0.00;
+                                            $discountPercentage = $sale->discount ?? 0;
+                                            $discountAmount = ($subTotal * $discountPercentage) / 100;
+                                        @endphp
+                                        <span style="text-decoration: underline;">${{ $subTotal }}</span><br>
+                                        <span class="fw-bold me-5">Tax - </span>
+                                        <span style="text-decoration: underline;">$0.00</span><br>
+                                        <span class="fw-bold me-2">Shipping Fee - </span> &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span style="text-decoration: underline;">${{ $sale->shipping ?? '0.00' }}</span><br>
+                                        <span class="fw-bold me-2">Discounts - </span>  &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span style="text-decoration: underline;">${{ number_format($discountAmount, 2) }} ({{ number_format($discountPercentage, 2) }}%)</span><br>
+
+                                        <span class="border border-2 border-dark mb-2 d-block mt-1"></span>
+                                            <span class="fw-bold me-3">Grand Total - </span>
+                                            <span style="text-decoration: underline;">${{ $sale->grand_total ?? '0.00' }}</span><br>
+                                        <span class="border border-2 border-dark mt-2 d-block"></span>
+
+                                        <span class="fw-bold me-5">Paid - </span>
+                                        <span style="text-decoration: underline;">${{ $sale->amount_recieved ?? '0.00' }}</span><br>
+                                        <span class="fw-bold ">Payment Method :
+                                            @if (count($sale->invoice->saleInvoicePayment) > 1)
+                                                <span>Multiple</span>
+
+                                                @elseif ($sale->invoice->saleInvoicePayment->count() == 1)
+                                                    @foreach ($sale->invoice->saleInvoicePayment as $payment)
+                                                        @if ($payment->salesPayment->card)
+                                                            {{ $payment->salesPayment->card->card_brand ?? 'Visa' }}:
+                                                            (Last 4)
+                                                            :
+                                                            {{ $payment->salesPayment->card->card_last_four ?? '' }}
+                                                        @else
+                                                            {{ $payment->salesPayment->payment_method ?? '' }}
+                                                        @endif
+                                                    @endforeach
+                                                @else
+                                                    <span>N/A</span>
+                                                @endif
+                                        </span>
+                                        <br>
+                                    </p> --}}
+                                    {{-- <p>
+                                        <span class="fw-bold">Grand Total:</span>
+                                        &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span style="text-decoration: underline;">${{ $sale->grand_total ?? '0.00' }}</span><br>
+                                        <span class="fw-bold">Todays Total Due:</span>  &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span style="text-decoration: underline;">${{ $sale->amount_due ?? '0.00' }}</span><br>
+                                        <span class="fw-bold">Shipping Fee:</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span style="text-decoration: underline;">${{ $sale->shipping ?? '0.00' }}</span><br>
+                                        <span class="fw-bold">Discounts:</span>  &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span style="text-decoration: underline;">${{ $sale->discount ?? '0.00' }}</span><br>
+                                        <span class="fw-bold">Amount Paid:</span>  &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span style="text-decoration: underline;">${{ $sale->amount_recieved ?? '0.00' }}</span><br>
+                                        <span class="fw-bold">Payment Method:
                                             @if (count($sale->invoice->saleInvoicePayment) > 1)
                                                 <span>Multiple</span>
                                             @else
@@ -308,10 +445,13 @@
                                             @endif
                                         </span>
                                         <br>
-                                    </p>
+                                    </p> --}}
                                 </div>
                             </div>
                         </div>
+                        {{-- <div class="footer">
+                            {!! DNS1D::getBarcodeHTML($sale->invoice->invoice_id, 'C128A') !!}
+                        </div> --}}
                         <div class="footer">
                             <p>Powered By 77Clouds.com</p>
                         </div>

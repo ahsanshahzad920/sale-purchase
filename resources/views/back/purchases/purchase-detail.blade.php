@@ -102,16 +102,27 @@
                         </div>
                         <div class="row mt-2 px-3 ">
                             <div class="col-md-8"></div>
+                            @php
+                                $subtotal = $purchase->purchaseItems->sum('sub_total') ?? '0.00';
+                                $discountPercentage = $purchase->discount / $subtotal * 100;
+                                $orderPercentage = $purchase->order_tax ?? 0;
+                                $orderAmount = ($subtotal * $orderPercentage) / 100;
+                            @endphp
                             <div class="col-md-4 border rounded-2 py-2">
-                                <div class="row border-bottom subheading">
+                                <div class="row border-bottom">
                                     <div class="col-md-6 col-6">Order Tax</div>
                                     {{-- {{$sale->grand_total * ($sale->order_tax ?? 0 / 100)}} --}}
-                                    <div class="col-md-6 col-6">$ {{ $purchase->order_tax ?? '0' }} %</div>
+                                    {{-- <div class="col-md-6 col-6">$ {{ $purchase->order_tax ?? '0' }} %</div> --}}
+                                    <div class="col-md-6 col-6">${{number_format($orderAmount,2)}} ({{ $orderPercentage }}%)</div>
                                 </div>
 
                                 <div class="row border-bottom">
                                     <div class="col-md-6 col-6">Discount</div>
-                                    <div class="col-md-6 col-6">$ {{ $purchase->discount ?? '0.00' }}</div>
+                                    {{-- <div class="col-md-6 col-6">$ {{ $purchase->discount ?? '0.00' }}</div> --}}
+                                    <div class="col-md-6 col-6">
+
+                                        $ {{ $purchase->discount ?? '0.00' }} ({{ number_format($discountPercentage,2) ."%"}})
+                                    </div>
                                 </div>
 
                                 <div class="row border-bottom">
@@ -125,7 +136,7 @@
                                 </div>
                                 <div class="row border-bottom">
                                     <div class="col-md-6 col-6">Paid</div>
-                                    <div class="col-md-6 col-6">$ {{ $purchase->amount_recieved ?? '0.00' }}</div>
+                                    <div class="col-md-6 col-6">$ {{ number_format($purchase->amount_recieved ?? '0.00',2) }}</div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-6">Due</div>

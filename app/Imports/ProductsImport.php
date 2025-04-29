@@ -36,8 +36,8 @@ class ProductsImport implements ToModel, WithStartRow, WithHeadingRow, WithValid
         if (empty($row['name'])) {
             return null;
         }
+
         $existingProduct = Product::where([
-            ['name', '=', $row['name']],
             ['sku', '=', $row['sku']]
         ])->first();
 
@@ -81,6 +81,7 @@ class ProductsImport implements ToModel, WithStartRow, WithHeadingRow, WithValid
             'sale_price' => 'required',
             // Add other required fields here
         ]);
+
         if ($validator->fails()) {
             // Handle validation errors, e.g., log, throw exception, or return null
             Log::error('Product import validation failed: ' . $validator->errors()->toJson());
@@ -118,7 +119,7 @@ class ProductsImport implements ToModel, WithStartRow, WithHeadingRow, WithValid
             'tax_type' => $row['tax_type'] ?? null,
             'product_type' => $row['product_type'],
             'order_tax' => $row['order_tax'] ?? 0,
-            'status' => $row['status'] ?? 0,
+            'status' => 1,
             'warehouse_id' => $row['warehouse'] ?? null,
             'product_live' => $row['product_live'] ?? 0,
             'new_product' => $row['new_product'] ?? 0,

@@ -274,7 +274,7 @@
                                     class="form-control mt-2">
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary mt-2" id="editSaveBtn">Save</button>
+                        <button type="submit" class="btn btn-primary mt-2" id="editSaveBtn">Update</button>
                     </form>
                 </div>
 
@@ -412,7 +412,7 @@
             });
 
             $('#deleteRowTrigger').on("click", function(event){ // triggering delete one by one
-                if(confirm("Are you sure you won't be able to revert this!")){
+                if(confirm("Are you sure you want to proceed? You won't be able to undo this action!")){
                     if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
                         var ids = [];
                         $('.deleteRow').each(function(){

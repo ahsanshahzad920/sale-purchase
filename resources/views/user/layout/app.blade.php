@@ -15,8 +15,8 @@
         type="text/css" />
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
-      <!-- Dynamically set favicon using the site logo -->
-      <link rel="icon" type="image/png" href="{{Storage::url(getLogo())}}" />
+    <!-- Dynamically set favicon using the site logo -->
+    <link rel="icon" type="image/png" href="{{ Storage::url(getLogo()) }}" />
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
 
@@ -109,6 +109,24 @@
             display: block;
         } */
     </style>
+    <style>
+        @media(max-width: 576px) {
+
+            .selling-product {
+                width: 100% !important;
+            }
+
+        }
+    </style>
+    <style>
+        .search-icon-spinner{
+            position: absolute;
+            top: 30%;
+            left: 10px;
+            transform: translateY(-50%);
+            font-size: 18px;
+        }
+    </style>
 </head>
 
 <body>
@@ -177,14 +195,72 @@
 
 
     <script>
+        // document.addEventListener("DOMContentLoaded", function() {
+
+        //     const searchInput = document.getElementById("searchInput");
+
+        //     var suggestionsContainer = $("#suggestionsContainer");
+        //     $("#searchInput").autocomplete({
+        //         source: function(request, response) {
+        //             var searchTerm = request.term;
+        //             performAddressSearch(searchTerm, response);
+        //         },
+        //         minLength: 1,
+        //         select: function(event, ui) {
+        //             console.log(ui.item);
+        //         },
+        //         appendTo: "#suggestionsContainer"
+        //     }).autocomplete("instance")._renderItem = function(ul, item) {
+        //         // return $("<li>").append("<div> <a href='/product/details'> " + item.label + "</div>").appendTo(ul);
+        //         return $("<li>").append(
+        //             `<div> <a href='/category/${item.product.category.code}/product/${item.product.sku}' class="nav-link"> ${item.label} </a> </div>`
+        //         ).appendTo(ul);
+        //     };
+
+        //     function performAddressSearch(searchTerm, response) {
+
+        //         let category = $('#searchCategoryId').val();
+        //         let url = '/search-products';
+
+        //         if (category != null && category != '') {
+        //             url = '/search-products/' + category;
+        //         }
+
+        //         $.ajax({
+        //             url: url,
+        //             dataType: "json",
+        //             data: {
+        //                 query: searchTerm,
+        //             },
+        //             success: function(data) {
+        //                 console.log(data);
+        //                 var suggestions = [];
+        //                 for (var i = 0; i < data.product.length; i++) {
+        //                     suggestions.push({
+        //                         value: data.product[i].name,
+        //                         label: data.product[i].name,
+        //                         id: data.product[i].id,
+        //                         product: data.product[i]
+        //                     });
+        //                 }
+        //                 response(suggestions);
+        //             }
+        //         });
+
+        //     }
+
+        // });
+
+        // with loading and not found message
         document.addEventListener("DOMContentLoaded", function() {
-
             const searchInput = document.getElementById("searchInput");
-
             var suggestionsContainer = $("#suggestionsContainer");
+
             $("#searchInput").autocomplete({
                 source: function(request, response) {
                     var searchTerm = request.term;
+                    $('.search-icon').removeClass('fa fa-search search-icon').addClass('fa fa-spinner fa-spin search-icon-spinner');
+
                     performAddressSearch(searchTerm, response);
                 },
                 minLength: 1,
@@ -192,15 +268,15 @@
                     console.log(ui.item);
                 },
                 appendTo: "#suggestionsContainer"
-            }).autocomplete("instance")._renderItem = function(ul, item) {
-                // return $("<li>").append("<div> <a href='/product/details'> " + item.label + "</div>").appendTo(ul);
+            })
+            .autocomplete("instance")._renderItem = function(ul, item) {
                 return $("<li>").append(
-                    `<div> <a href='/category/${item.product.category.code}/product/${item.product.sku}' class="nav-link"> ${item.label} </a> </div>`
+                    `<div><a class="${item.textColorClass}" href='/category/${item.product?.category?.code}/product/${item?.product?.sku}' class="nav-link"> ${item?.label} </a></div>`
                 ).appendTo(ul);
+
             };
 
             function performAddressSearch(searchTerm, response) {
-
                 let category = $('#searchCategoryId').val();
                 let url = '/search-products';
 
@@ -217,30 +293,115 @@
                     success: function(data) {
                         console.log(data);
                         var suggestions = [];
-                        for (var i = 0; i < data.product.length; i++) {
+
+                        // Create suggestions from the returned data
+                        if (data.product && data.product.length > 0) {
+                            for (var i = 0; i < data.product.length; i++) {
+                                suggestions.push({
+                                    value: data.product[i].name,
+                                    label: data.product[i].name,
+                                    id: data.product[i].id,
+                                    product: data.product[i],
+                                    textColorClass: 'text-dark'
+                                });
+                            }
+                        }
+                        else
+                        {
                             suggestions.push({
-                                value: data.product[i].name,
-                                label: data.product[i].name,
-                                id: data.product[i].id,
-                                product: data.product[i]
+                                value: "Product not found",
+                                label: "Product not found",
+                                id: 0,
+                                product: {},
+                                textColorClass: 'text-danger'
                             });
                         }
+
                         response(suggestions);
+                    },
+                    error: function() {
+                        // Handle error and show appropriate message
+                        $('#suggestionsContainerLoading').html(
+                            '<div class="error-message">An error occurred while searching. Please try again.</div>'
+                            );
+                    },
+                    complete: function() {
+                        // Hide the loading spinner
+                        $('#suggestionsContainerLoading').hide();
+                        $('.search-icon-spinner').removeClass('fa fa-spinner fa-spin search-icon-spinner').addClass('fa fa-search search-icon');
                     }
                 });
-
             }
-
         });
+
+
+
         // search for mobile view
+        // document.addEventListener("DOMContentLoaded", function() {
+
+        //     const searchInput = document.getElementById("searchInput2");
+
+        //     var suggestionsContainer = $("#suggestionsContainer2");
+        //     $("#searchInput2").autocomplete({
+        //         source: function(request, response) {
+        //             var searchTerm = request.term;
+        //             performAddressSearch(searchTerm, response);
+        //         },
+        //         minLength: 1,
+        //         select: function(event, ui) {
+        //             console.log(ui.item);
+        //         },
+        //         appendTo: "#suggestionsContainer2"
+        //     }).autocomplete("instance")._renderItem = function(ul, item) {
+        //         // return $("<li>").append("<div> <a href='/product/details'> " + item.label + "</div>").appendTo(ul);
+        //         return $("<li>").append(
+        //             `<div> <a href='/category/${item.product.category.code}/product/${item.product.sku}' class="nav-link"> ${item.label} </a> </div>`
+        //         ).appendTo(ul);
+        //     };
+
+        //     function performAddressSearch(searchTerm, response) {
+
+        //         let category = $('#searchCategoryId').val();
+        //         let url = '/search-products';
+
+        //         if (category != null && category != '') {
+        //             url = '/search-products/' + category;
+        //         }
+
+        //         $.ajax({
+        //             url: url,
+        //             dataType: "json",
+        //             data: {
+        //                 query: searchTerm,
+        //             },
+        //             success: function(data) {
+        //                 console.log(data);
+        //                 var suggestions = [];
+        //                 for (var i = 0; i < data.product.length; i++) {
+        //                     suggestions.push({
+        //                         value: data.product[i].name,
+        //                         label: data.product[i].name,
+        //                         id: data.product[i].id,
+        //                         product: data.product[i]
+        //                     });
+        //                 }
+        //                 response(suggestions);
+        //             }
+        //         });
+
+        //     }
+
+        // });
+
         document.addEventListener("DOMContentLoaded", function() {
-
             const searchInput = document.getElementById("searchInput2");
-
             var suggestionsContainer = $("#suggestionsContainer2");
+
             $("#searchInput2").autocomplete({
                 source: function(request, response) {
                     var searchTerm = request.term;
+                    $('.search-icon').removeClass('fa fa-search search-icon').addClass('fa fa-spinner fa-spin search-icon-spinner');
+
                     performAddressSearch(searchTerm, response);
                 },
                 minLength: 1,
@@ -248,15 +409,15 @@
                     console.log(ui.item);
                 },
                 appendTo: "#suggestionsContainer2"
-            }).autocomplete("instance")._renderItem = function(ul, item) {
-                // return $("<li>").append("<div> <a href='/product/details'> " + item.label + "</div>").appendTo(ul);
+            })
+            .autocomplete("instance")._renderItem = function(ul, item) {
                 return $("<li>").append(
-                    `<div> <a href='/category/${item.product.category.code}/product/${item.product.sku}' class="nav-link"> ${item.label} </a> </div>`
+                    `<div><a class="${item.textColorClass}" href='/category/${item.product?.category?.code}/product/${item?.product?.sku}' class="nav-link"> ${item?.label} </a></div>`
                 ).appendTo(ul);
+
             };
 
             function performAddressSearch(searchTerm, response) {
-
                 let category = $('#searchCategoryId').val();
                 let url = '/search-products';
 
@@ -273,20 +434,45 @@
                     success: function(data) {
                         console.log(data);
                         var suggestions = [];
-                        for (var i = 0; i < data.product.length; i++) {
+
+                        // Create suggestions from the returned data
+                        if (data.product && data.product.length > 0) {
+                            for (var i = 0; i < data.product.length; i++) {
+                                suggestions.push({
+                                    value: data.product[i].name,
+                                    label: data.product[i].name,
+                                    id: data.product[i].id,
+                                    product: data.product[i],
+                                    textColorClass: 'text-dark'
+                                });
+                            }
+                        }
+                        else
+                        {
                             suggestions.push({
-                                value: data.product[i].name,
-                                label: data.product[i].name,
-                                id: data.product[i].id,
-                                product: data.product[i]
+                                value: "Product not found",
+                                label: "Product not found",
+                                id: 0,
+                                product: {},
+                                textColorClass: 'text-danger'
                             });
                         }
+
                         response(suggestions);
+                    },
+                    error: function() {
+                        // Handle error and show appropriate message
+                        $('#suggestionsContainerLoading').html(
+                            '<div class="error-message">An error occurred while searching. Please try again.</div>'
+                            );
+                    },
+                    complete: function() {
+                        // Hide the loading spinner
+                        $('#suggestionsContainerLoading').hide();
+                        $('.search-icon-spinner').removeClass('fa fa-spinner fa-spin search-icon-spinner').addClass('fa fa-search search-icon');
                     }
                 });
-
             }
-
         });
     </script>
 

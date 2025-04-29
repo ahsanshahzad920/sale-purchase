@@ -72,11 +72,15 @@
                         {{-- <div class="carousel-item active">
                           <img src="dasheets/img/pepsi.svg" class="img-fluid w-100 align-middle" alt="">
                         </div> --}}
-                        @foreach($product->images as $image)
+                        @forelse($product->images as $image)
                             <div class="carousel-item @if($loop->iteration == 1) active @endif">
                                 <img src="{{asset('/storage'.(isset($image->img_path) ? $image->img_path : '') )}}" class="img-fluid w-100 align-middle" alt="No Image">
                             </div>
-                        @endforeach
+                        @empty
+                            <div class="carousel-item active">
+                                <img src="{{ asset('back/assets/image/no-image.png') }}" alt="" class="img-fluid w-100 align-middle" />
+                            </div>
+                        @endforelse
 
                       </div>
                       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
@@ -90,6 +94,9 @@
                         <span class="visually-hidden">Next</span>
                       </button>
                     </div>
+                    {{-- <div class=" mt-3 bg-white d-flex justify-content-center py-2">
+                        {!! DNS1D::getBarcodeHTML($product->sku ?? '78797979', 'C128A') !!}
+                    </div> --}}
                   </div>
                 </div>
 
@@ -148,9 +155,7 @@
                 </div>
               </div>
 
-              <div class="card-footer bg-white">
-                <p class="m-0 p-3">Eveniet dignissimos</p>
-              </div>
+
             </div>
           </div>
     </div>

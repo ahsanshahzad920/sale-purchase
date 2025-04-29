@@ -221,7 +221,7 @@
                     <div class="row mt-2 px-3">
                         <div class="col-md-8"></div>
                         <div class="col-md-4 border rounded-2">
-                            <div class="row border-bottom subheading">
+                            <div class="row border-bottom">
                                 <div class="col-md-6 col-6">Order Tax</div>
                                 <div class="col-md-6 col-6" id="order_tax_display">$0.00</div>
                             </div>
@@ -436,7 +436,7 @@
                                                 <div class="spinner-border text-light spinner-border-sm ms-2 me-2"
                                                     role="status" id="btn-spinner" style="display: none">
                                                 </div>
-                                                <span id="#btn-text">Create New sale</span>
+                                                <span id="#btn-text">To Finish</span>
                                             </button>
                                         </div>
 
@@ -554,27 +554,116 @@
                                                                     </p>
                                                                 </td>
 
-                                                                <td class="" style="width: 300px;text-align: end;">
-                                                                    <p><span class="fw-bold">Todays Total Due:</span> <span
-                                                                            style="text-decoration: underline;">$<span
-                                                                                id="invoice_today_total_due">0.00</span>
-                                                                        </span><br>
-                                                                        <span class="fw-bold">Shipping:</span>
-                                                                        <span style="text-decoration: underline;"><span
-                                                                                id="invoice_shipping">0.00</span></span><br>
+                                                                {{-- <p><span class="fw-bold">Todays Total Due:</span> <span
+                                                                        style="text-decoration: underline;">$<span
+                                                                            id="invoice_today_total_due">0.00</span>
+                                                                    </span>
+                                                                    <br>
+                                                                    <span class="fw-bold">Shipping:</span>
+                                                                    <span style="text-decoration: underline;"><span
+                                                                            id="invoice_shipping">0.00</span></span><br>
 
-                                                                        <span class="fw-bold">Discounts:</span>
-                                                                        <span style="text-decoration: underline;"><span
-                                                                                id="invoice_discount">0.00</span></span><br><span
-                                                                            class="fw-bold">Amount Paid:</span> <span
-                                                                            style="text-decoration: underline;">$ <span
-                                                                                id="invoice_amount_paid">0.00</span></span><br><span
-                                                                            class="fw-bold">Payment Method: <span
-                                                                                id="invoice_payment_method"></span>
+                                                                    <span class="fw-bold">Discounts:</span>
+                                                                    <span style="text-decoration: underline;"><span
+                                                                            id="invoice_discount">0.00</span></span><br><span
+                                                                        class="fw-bold">Amount Paid:</span> <span
+                                                                        style="text-decoration: underline;">$ <span
+                                                                            id="invoice_amount_paid">0.00</span></span><br><span
+                                                                        class="fw-bold">Payment Method: <span
+                                                                            id="invoice_payment_method"></span>
 
+                                                                    </span>
+                                                                    <br>
+                                                                </p> --}}
+                                                                {{-- <td class="" style="width: 200px;text-align: end;">
+                                                                    <p>
+                                                                        <span class="fw-bold me-5">Sub Total - </span>
+
+                                                                        <span style="" id="invoice_sub_total">0.00</span><br>
+                                                                        <span class="fw-bold me-5">Tax - </span>
+                                                                        <span style="margin-left:20px;">$0.00</span><br>
+                                                                        <span class="fw-bold">Shipping Fee - </span>&nbsp;
+                                                                        <span style="" id="invoice_shipping">$0.00</span><br>
+                                                                        <span class="fw-bold me-2">Discounts - </span>  &nbsp;&nbsp;&nbsp;&nbsp;
+                                                                        <span style="" id="invoice_discount">$0.00</span><br>
+
+                                                                        <div class="border border-2 border-dark mb-2 d-block mt-1"></div>
+                                                                            <span class="fw-bold me-3">Grand Total - </span>
+                                                                            <span style="margin-left:10px;" id="invoice_total">$0.00</span><br>
+                                                                        <div class="border border-2 border-dark mt-2 d-block"></div>
+
+                                                                        <span class="fw-bold me-5">Paid - </span>
+                                                                        <span style="margin-left:50px;" id="invoice_amount_paid">$0.00</span><br>
+                                                                        <span class="fw-bold ">Payment Method :
+                                                                            <span id="invoice_payment_method">N/A</span>
                                                                         </span>
+                                                                        <span id="invoice_today_total_due" style="visibility: hidden">0.00</span>
                                                                         <br>
                                                                     </p>
+                                                                </td> --}}
+                                                                <td style="width: 200px;">
+                                                                    <table style="width: 100%; border-collapse: collapse;">
+                                                                        <!-- Sub Total -->
+                                                                        <tr>
+                                                                            <td style="text-align: left; width: 60%;" class="fw-bold">Sub Total -</td>
+                                                                            <td style="text-align: right;" id="invoice_sub_total">0.00</td>
+                                                                        </tr>
+
+                                                                        <!-- Tax -->
+                                                                        <tr>
+                                                                            <td style="text-align: left;" class="fw-bold">Tax -</td>
+                                                                            <td style="text-align: right;" id="invoice_tax">$0.00</td>
+                                                                        </tr>
+
+                                                                        <!-- Shipping Fee -->
+                                                                        <tr>
+                                                                            <td style="text-align: left;" class="fw-bold">Shipping Fee -</td>
+                                                                            <td style="text-align: right;" id="invoice_shipping">$0.00</td>
+                                                                        </tr>
+
+                                                                        <!-- Discounts -->
+                                                                        <tr>
+                                                                            <td style="text-align: left;" class="fw-bold">Discounts -</td>
+                                                                            <td style="text-align: right;" id="invoice_discount">$0.00</td>
+                                                                        </tr>
+
+                                                                        <!-- Divider -->
+                                                                        <tr>
+                                                                            <td colspan="2">
+                                                                                <div class="border border-2 border-dark mb-2 mt-1"></div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        <!-- Grand Total -->
+                                                                        <tr>
+                                                                            <td style="text-align: left;" class="fw-bold">Grand Total -</td>
+                                                                            <td style="text-align: right;" id="invoice_total">$0.00</td>
+                                                                        </tr>
+
+                                                                        <!-- Divider -->
+                                                                        <tr>
+                                                                            <td colspan="2">
+                                                                                <div class="border border-2 border-dark mt-2"></div>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        <!-- Paid -->
+                                                                        <tr>
+                                                                            <td style="text-align: left;" class="fw-bold">Paid -</td>
+                                                                            <td style="text-align: right;" id="invoice_amount_paid">$0.00</td>
+                                                                        </tr>
+
+                                                                        <!-- Payment Method -->
+                                                                        <tr>
+                                                                            <td style="text-align: left;" class="fw-bold">Payment Method:</td>
+                                                                            <td style="text-align: right;" id="invoice_payment_method">N/A</td>
+                                                                        </tr>
+
+                                                                        <!-- Hidden Field -->
+                                                                        <tr style="display: none;">
+                                                                            <td colspan="2" id="invoice_today_total_due">0.00</td>
+                                                                        </tr>
+                                                                    </table>
                                                                 </td>
 
                                                             </tr>
@@ -831,7 +920,7 @@
                             <td class=" align-middle product_sku">${ui.item.product.sku}</td>
                             <td class="product_sell_price align-middle ">${ui.item.product.sell_price}</td>
                             <td class="align-middle">
-                            <span class="badges bg-darkwarning p-1" product_stock data-converted-unit="${ui.item.product.sale_units?.id ? ui.item.product.sale_units.id : ''}">${quantity}${ui.item.product.sale_units?.short_name ? ui.item.product.sale_units.short_name : '' }</span>
+                            <span class="badges bg-darkwarning p-1 text-white" product_stock data-converted-unit ="${ui.item.product.sale_units?.id ? ui.item.product.sale_units.id : ''}">${quantity}${ui.item.product.sale_units?.short_name ? ui.item.product.sale_units.short_name : '' }</span>
                             </td>
                             <td class="align-middle">
                             <div
@@ -900,8 +989,6 @@
                         document.getElementById('package_length').value = package_length;
                         document.getElementById('package_width').value = package_width;
                         document.getElementById('package_height').value = package_height;
-
-
 
 
                     }
@@ -1159,6 +1246,37 @@
 
 
 
+            // // Remove existing handlers to prevent duplicate bindings
+            // $(document).off("click", ".qty-minus-btn").on("click", ".qty-minus-btn", function() {
+            //     var input = $(this).siblings(".qty-input");
+            //     var currentValue = parseInt(input.val());
+            //     if (currentValue > 1) {
+            //         input.val(currentValue - 1).change();
+            //     }
+            // });
+
+            // $(document).off("click", ".qty-plus-btn").on("click", ".qty-plus-btn", function() {
+            //     var input = $(this).siblings(".qty-input");
+            //     var currentValue = parseInt(input.val());
+            //     input.val(currentValue + 1).change();
+            // });
+
+            // // Handle changes in quantity
+            // $(document).on('change', '.qty-input', function() {
+            //     const quantity = $(this).val();
+            //     const stock = $(this).closest('tr').find('td:nth-child(5)').text();
+            //     if (quantity > parseFloat(stock)) {
+            //         toastr.error('Quantity exceeded');
+            //         $(this).val(parseFloat(stock));
+            //     }
+            //     const price = $(this).closest('tr').find('td:nth-child(4)').text();
+
+            //     // const subtotal = parseInt(quantity) * parseFloat(price);
+            //     const subtotal = (parseFloat(quantity) * parseFloat(price));
+            //     $(this).closest('tr').find('td:nth-child(8)').text(subtotal.toFixed(2));
+            //     calculateTotal();
+            // });
+
             // Remove existing handlers to prevent duplicate bindings
             $(document).off("click", ".qty-minus-btn").on("click", ".qty-minus-btn", function() {
                 var input = $(this).siblings(".qty-input");
@@ -1171,21 +1289,31 @@
             $(document).off("click", ".qty-plus-btn").on("click", ".qty-plus-btn", function() {
                 var input = $(this).siblings(".qty-input");
                 var currentValue = parseInt(input.val());
-                input.val(currentValue + 1).change();
+                var stock = parseFloat($(this).closest('tr').find('td:nth-child(5)').text());
+
+                // Prevent increasing quantity beyond available stock
+                if (currentValue < stock) {
+                    input.val(currentValue + 1).change();
+                } else {
+                    toastr.error('Quantity cannot exceed available stock');
+                }
             });
 
             // Handle changes in quantity
             $(document).on('change', '.qty-input', function() {
-                const quantity = $(this).val();
-                const stock = $(this).closest('tr').find('td:nth-child(5)').text();
-                if (quantity > parseFloat(stock)) {
-                    toastr.error('Quantity exceeded');
-                    $(this).val(parseFloat(stock));
-                }
-                const price = $(this).closest('tr').find('td:nth-child(4)').text();
+                const quantity = parseFloat($(this).val());
+                const stock = parseFloat($(this).closest('tr').find('td:nth-child(5)').text());
+                const price = parseFloat($(this).closest('tr').find('td:nth-child(4)').text());
 
-                // const subtotal = parseInt(quantity) * parseFloat(price);
-                const subtotal = (parseFloat(quantity) * parseFloat(price));
+                // Validate quantity against stock
+                if (quantity > stock) {
+                    toastr.error('Quantity exceeded available stock');
+                    $(this).val(stock);
+                    return; // Exit the function without calculating subtotal
+                }
+
+                // Only calculate subtotal if quantity is valid
+                const subtotal = (quantity * price);
                 $(this).closest('tr').find('td:nth-child(8)').text(subtotal.toFixed(2));
                 calculateTotal();
             });
@@ -1671,8 +1799,10 @@
 
         $(document).ready(function() {
 
+            let allSubtotal = 0;
             function populateModalTable() {
                 // Get the main table rows
+                allSubtotal = 0;
                 const mainTableRows = document.querySelectorAll('#mainTable tbody tr');
 
                 // Select the modal table body
@@ -1688,6 +1818,8 @@
                     const price = row.querySelector('.product_price').textContent;
                     const sku = row.querySelector('.product_sku').textContent;
                     // const tax = row.querySelector('.product_tax').textContent;
+
+                    allSubtotal += parseFloat(row.querySelector('.product_price').textContent);
 
                     const newRow = `
                         <tr>
@@ -1717,6 +1849,7 @@
                 var discount = document.getElementById('discount_display').innerHTML;
                 var shipping = document.getElementById('shipping_display').innerHTML;
                 var total = document.getElementById('grand_total').innerHTML;
+                var tax = document.getElementById('order_tax_display').innerHTML;
 
                 // var am_pay = document.getElementById('amount_pay').innerHTML;
                 // var am_recieved = document.getElementById('amount_recieved').value;
@@ -1724,17 +1857,19 @@
 
                 var am_pay = document.getElementById('paying_amount').value;
                 // var am_recieved = document.getElementById('amount_recieved').value;
-                let am_recieved = 0;
+                let am_recieved = 0.00;
                 $('.amount-received').each(function() {
-                    am_recieved += parseFloat($(this).val()) || 0;
+                    am_recieved += parseFloat($(this).val()) || 0.00;
                 });
 
                 // let am_due = document.getElementById('due_amount').innerHTML;
                 let am_due = document.getElementById('due_amount').value;
 
 
-                document.getElementById('invoice_discount').innerHTML = discount ?? 0;
-                document.getElementById('invoice_amount_paid').innerHTML = am_recieved ?? 0;
+                // console.log(discount);
+
+                document.getElementById('invoice_discount').innerHTML = discount ?? 0.00;
+                document.getElementById('invoice_amount_paid').innerHTML = "$"+am_recieved.toFixed(2) ?? 0.00;
                 // document.getElementById('invoice_today_total_due').innerHTML = (am_due ?? "0");
                 document.getElementById('invoice_today_total_due').innerHTML = $('#payment_status').val() ==
                     'pending' ? parseFloat(document.getElementById('grand_total').textContent.replace('$', '')) :
@@ -1754,9 +1889,14 @@
                 let shippingValue = parseFloat(document.getElementById('shipping').value) || 0;
 
                 // Set the innerHTML of the target element
-                document.getElementById('invoice_shipping').innerHTML = shippingValue.toFixed(2);
+                document.getElementById('invoice_shipping').innerHTML = "$"+shippingValue.toFixed(2);
                 document.getElementById('invoice_shipping_method').innerHTML = $('#shipping_method option:selected')
                     .text();
+
+                $('#invoice_total').html(total);
+                $('#invoice_sub_total').html('$'+ allSubtotal.toFixed(2));
+                $('#invoice_tax').html(tax);
+
 
             }
 

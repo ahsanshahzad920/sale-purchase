@@ -61,11 +61,7 @@
 @endsection
 
 @section('content')
-    <div class="content ">
-
-
-
-
+    <div class="content">
         <div class="container-fluid pt-4 px-4 mb-5">
             <div class="border-bottom">
                 <h3 class="all-adjustment text-center pb-2 mb-0">All Products</h3>
@@ -157,7 +153,7 @@
                     <table class="table " id="example">
                         <thead class="fw-bold">
                             <tr>
-                                <th>
+                                {{-- <th>
                                     <label for="myCheckbox09" class="checkbox">
                                         <input class="checkbox__input" type="checkbox" id="myCheckbox09" />
                                         <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
@@ -167,7 +163,7 @@
                                                 stroke-linecap="round" stroke-width="3" d="M4 10l5 5 9-9" />
                                         </svg>
                                     </label>
-                                </th>
+                                </th> --}}
                                 <th class="text-secondary">Image</th>
                                 <th class="text-secondary">Name</th>
                                 <th class="text-secondary">SKU</th>
@@ -179,12 +175,12 @@
                                 <th class="text-secondary">Unit</th>
                                 <th class="text-secondary">Qty</th>
                                 {{-- <th class="text-secondary">Status</th> --}}
-                                
+
                                 <th class="text-secondary">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($products as $product)
+                            {{-- @forelse ($products as $product)
                                 <tr>
                                     <td class="align-middle">
                                         <label for="select-checkbox" class="checkbox">
@@ -217,56 +213,55 @@
                                     <td class="align-middle">{{ $product->product_type ?? '....' }}</td>
                                     <td class="align-middle">{{ $product->category->name }}</td>
                                     <td class="align-middle">{{ $product->brand->name ?? '' }}</td>
-                                    <td class="align-middle">${{ $product->purchase_price ?? '....'}}</td>
+                                    <td class="align-middle">${{ $product->purchase_price ?? '....' }}</td>
                                     <td class="align-middle">${{ $product->sell_price }}</td>
                                     <td class="align-middle">{{ $product->unit->short_name ?? '....' }}</td>
-                                    {{-- <td class="align-middle">{{ $product->product_warehouses->sum('quantity') ?? '0' }}</td> --}}
                                     <td class="align-middle">
                                         @if (auth()->user()->hasRole(['Cashier', 'Manager']))
                                             {{ $product->product_warehouses->where('warehouse_id', auth()->user()->warehouse_id)->first()->quantity ?? '0' }}
                                         @elseif (session('selected_warehouse_id'))
                                             {{ $product->product_warehouses->where('warehouse_id', session('selected_warehouse_id'))->first()->quantity ?? '0' }}
                                         @else
-                                            {{ $product->product_warehouses->sum('quantity') ?? '0' }}                                                                                        
+                                            {{ $product->product_warehouses->sum('quantity') ?? '0' }}
                                         @endif
                                     </td>
                                     <td class="align-middle">
                                         <div class="">
                                             <a class="btn btn-secondary bg-transparent border-0 text-dark" role="button"
-                                            id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false">
-                                            <i class="fa-solid fa-ellipsis-v"></i>
-                                        </a>
-                                        <div class="dropdown-menu " aria-labelledby="dropdownMenuLink">
-                                            @can('products-show')
-                                                <a class="dropdown-item"
+                                                id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                                <i class="fa-solid fa-ellipsis-v"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                @can('products-show')
+                                                    <a class="dropdown-item"
                                                         href="{{ route('get-one-product-details', $product->id) }}">
                                                         <img src="{{ asset('back/assets/dasheets/img/menu.svg') }}"
                                                             class="img-fluid me-1" alt="" />
                                                         Product Detail
                                                     </a>
-                                            @endcan
-                                            @can('products-edit')
-                                                <a class="dropdown-item"
-                                                    href="{{ route('products.edit', $product->id) }}">
-                                                    <img src="{{ asset('back/assets/dasheets/img/menu.svg') }}"
-                                                        class="img-fluid me-1" alt="" />
-                                                    Edit Product
-                                                </a>
-                                            @endcan
-                                            @can('products-delete')
-                                                <form class=""
-                                                    action="{{ route('products.destroy', $product->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="dropdown-item confirm-text">
+                                                @endcan
+                                                @can('products-edit')
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('products.edit', $product->id) }}">
                                                         <img src="{{ asset('back/assets/dasheets/img/menu.svg') }}"
-                                                            class="img-fluid me-1" alt="">
-                                                        Delete Product
-                                                    </button>
-                                                </form>
-                                            @endcan
+                                                            class="img-fluid me-1" alt="" />
+                                                        Edit Product
+                                                    </a>
+                                                @endcan
+                                                @can('products-delete')
+                                                    <form class=""
+                                                        action="{{ route('products.destroy', $product->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="dropdown-item confirm-text">
+                                                            <img src="{{ asset('back/assets/dasheets/img/menu.svg') }}"
+                                                                class="img-fluid me-1" alt="">
+                                                            Delete Product
+                                                        </button>
+                                                    </form>
+                                                @endcan
                                                 <a class="dropdown-item"
                                                     href="{{ route('products.duplicate', $product->id) }}">
                                                     <img src="{{ asset('back/assets/dasheets/img/menu.svg') }}"
@@ -278,7 +273,7 @@
                                     </td>
                                 </tr>
                             @empty
-                            @endforelse
+                            @endforelse --}}
 
                         </tbody>
                     </table>
@@ -438,13 +433,14 @@
                     </div>
                     <div class="modal-footer justify-content-lg-between ">
                         <button type="button" class="btn  " data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary theme_btn_blue"><i
-                                class="fas fa-paper-plane me-1"></i>Save</button>
+                        <button type="submit" class="btn btn-primary theme_btn_blue">
+                            <i class="fas fa-paper-plane me-1"></i>Save</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+    
 
 @endsection
 
@@ -506,98 +502,67 @@
 
         $(document).ready(function() {
 
-            // var table = $('#example').DataTable({
-            //     dom: 'Bfrtip',
-            //     select: true,
-            //     select: {
-            //         style: 'multi'
-            //     },
-            //     buttons: [{
-            //             extend: 'pdf',
-            //             footer: true,
-            //             exportOptions: {
-            //                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-            //             }
-            //         },
-            //         {
-            //             extend: 'csv',
-            //             footer: false,
-            //             exportOptions: {
-            //                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-            //             }
-
-            //         },
-            //         {
-            //             extend: 'excel',
-            //             footer: false,
-            //             exportOptions: {
-            //                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
-            //             }
-            //         }
-            //     ]
-            // });
-
-            // // Select all checkbox click handler
-            // $('#myCheckbox09').on('click', function() {
-            //     var isSelected = $(this).is(':checked'); // Check if checkbox is checked
-
-            //     // Select/deselect all checkboxes with class 'select-checkbox'
-            //     $('.select-checkbox').prop('checked', isSelected);
-
-            //     // Optional: Update DataTables selection based on checkbox state
-            //     if (isSelected) {
-            //         table.rows().select(); // Select all rows in DataTables (adjust if needed)
-            //         // confirm('Are you sure you want to delete all record?');
-            //         $('#deletedAlert').css('display', 'block');
-            //         $('#deleteRowCount').text($('.deleteRow:checked').length);
-
-
-            //     } else {
-            //         table.rows().deselect(); // Deselect all rows in DataTables (adjust if needed)
-            //         $('#deletedAlert').css('display', 'none');
-            //     }
-            // });
-
-            // table.on('select.dt', function(e, dt, type, indexes) {
-            //     // console.log("slected")
-            //     var row = table.row(indexes[0]); // Get the selected row
-
-            //     // Find checkbox within the selected row
-            //     var checkbox = row.node().querySelector('.select-checkbox');
-
-            //     if (checkbox) { // Check if checkbox exists
-            //         // console.log("slected")
-            //         checkbox.checked = true; // Check the checkbox
-            //         $('#deletedAlert').css('display', 'block');
-            //         $('#deleteRowCount').text($('.deleteRow:checked').length);
-
-            //     }
-            // });
-
-            // table.on('deselect.dt', function(e, dt, type, indexes) {
-            //     var selectedRows = table.rows('.selected').count();
-            //     var row = table.row(indexes[0]); // Get the selected/deselected row
-            //     var checkbox = row.node().querySelector('.select-checkbox');
-
-            //     if (checkbox) {
-            //         // Update checkbox state based on event type
-            //         checkbox.checked = type === 'select';
-            //     }
-            //     $ // Show/hide delete alert based on selection count
-            //     if (selectedRows === 0) {
-            //         $('#deletedAlert').css('display', 'none');
-            //     } else {
-            //         $('#deletedAlert').css('display', 'block');
-            //         $('#deleteRowCount').text($('.deleteRow:checked').length);
-            //     }
-            // });
 
 
             var table = $('#example').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    // url: '{{ route('products.index') }}', // Update with your endpoint
+                    url: window.location.href,
+                    type: 'GET',
+                    data: function(d) {
+                        d.search = $('#search-input').val(); // Pass any additional parameters if needed
+                    }
+                },
+                columns: [
+                    // {
+                    //     data: 'checkbox',
+                    //     orderable: false,
+                    //     searchable: false
+                    // }, // Checkbox column
+                    {
+                        data: 'image',
+                        orderable: false,
+                        searchable: false
+                    },
+                    {
+                        data: 'name'
+                    },
+                    {
+                        data: 'sku'
+                    },
+                    {
+                        data: 'product_type'
+                    },
+                    {
+                        data: 'category'
+                    },
+                    {
+                        data: 'brand'
+                    },
+                    {
+                        data: 'purchase_price'
+                    },
+                    {
+                        data: 'sell_price'
+                    },
+                    {
+                        data: 'unit'
+                    },
+                    {
+                        data: 'quantity'
+                    },
+                    {
+                        data: 'actions',
+                        orderable: false,
+                        searchable: false
+                    }
+                ],
                 dom: 'Bfrtip',
                 select: {
                     style: 'multi',
-                    selector: 'td:first-child .select-checkbox' // Add this line to restrict row selection to the first cell
+                    selector: 'td:first-child .select-checkbox'
                 },
                 buttons: [{
                         extend: 'pdf',
@@ -612,7 +577,6 @@
                         exportOptions: {
                             columns: [0, 1, 2, 3, 4, 5, 6, 7, 8]
                         }
-
                     },
                     {
                         extend: 'excel',
@@ -623,6 +587,7 @@
                     }
                 ]
             });
+
 
             // Select all checkbox click handler
             $('#myCheckbox09').on('click', function() {

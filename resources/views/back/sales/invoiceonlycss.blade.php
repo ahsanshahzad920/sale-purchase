@@ -315,6 +315,9 @@
                                 </div>
                             </div>
                         </div>
+                        {{-- <div class="footer">
+                            {!! DNS1D::getBarcodeHTML($sale->invoice->invoice_id ?? '12', 'C128A') !!}
+                        </div> --}}
                     </div>
                 </div>
             </div>

@@ -347,7 +347,7 @@
                                             <label for="product_weight" class="mb-1">Weight <span
                                                     class="text-danger">*</span></label>
                                             <input type="number" class="form-control" id="product_weight"
-                                                placeholder="Weight" name="product_weight" required>
+                                                placeholder="Weight" name="product_weight" required step="0.01" value="1">
                                             <span class="small">lbs / kg</span>
                                         </div>
                                     </div>
@@ -367,7 +367,7 @@
                                             <label for="product_length" class="mb-1"> Length <span
                                                     class="text-danger">*</span></label>
                                             <input type="number" class="form-control" id="product_length"
-                                                placeholder="Length" name="product_length" required>
+                                                placeholder="Length" name="product_length" required step="0.01" value="1">
                                             <span class="small">in / cm</span>
                                         </div>
                                     </div>
@@ -378,7 +378,7 @@
                                             <label for="product_width" class="mb-1">Width <span
                                                     class="text-danger">*</span></label>
                                             <input type="number" class="form-control" id="product_width"
-                                                placeholder="Width" name="product_width" required>
+                                                placeholder="Width" name="product_width" required step="0.01" value="1">
                                             <span class="small">in / cm</span>
                                         </div>
                                     </div>
@@ -387,7 +387,7 @@
                                             <label for="product_height" class="mb-1">Height <span
                                                     class="text-danger">*</span></label>
                                             <input type="number" class="form-control" id="product_height"
-                                                placeholder="Height" name="product_height" required>
+                                                placeholder="Height" name="product_height" required step="0.01" value="1">
                                             <span class="small">in / cm</span>
                                         </div>
                                     </div>
@@ -513,8 +513,8 @@
                                             <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 22 22">
                                                 <rect width="21" height="21" x=".5" y=".5" fill="#FFF"
-                                                    stroke="rgba(76, 73, 227, 1)" rx="3"></rect>
-                                                <path class="tick" stroke="rgba(76, 73, 227, 1)" fill="none"
+                                                     stroke="#FE9F43" rx="3"></rect>
+                                                <path class="tick"  stroke="#FE9F43" fill="none"
                                                     stroke-linecap="round" stroke-width="3" d="M4 10l5 5 9-9"></path>
                                             </svg>
                                         </label>
@@ -532,8 +532,8 @@
                                             <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 22 22">
                                                 <rect width="21" height="21" x=".5" y=".5" fill="#FFF"
-                                                    stroke="rgba(76, 73, 227, 1)" rx="3"></rect>
-                                                <path class="tick" stroke="rgba(76, 73, 227, 1)" fill="none"
+                                                     stroke="#FE9F43" rx="3"></rect>
+                                                <path class="tick"  stroke="#FE9F43" fill="none"
                                                     stroke-linecap="round" stroke-width="3" d="M4 10l5 5 9-9"></path>
                                             </svg>
                                         </label>
@@ -560,8 +560,8 @@
                                             <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 22 22">
                                                 <rect width="21" height="21" x=".5" y=".5" fill="#FFF"
-                                                    stroke="rgba(76, 73, 227, 1)" rx="3" />
-                                                <path class="tick" stroke="rgba(76, 73, 227, 1)" fill="none"
+                                                     stroke="#FE9F43" rx="3" />
+                                                <path class="tick"  stroke="#FE9F43" fill="none"
                                                     stroke-linecap="round" stroke-width="3" d="M4 10l5 5 9-9" />
                                             </svg>
                                         </label>
@@ -581,8 +581,8 @@
                                             <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 22 22">
                                                 <rect width="21" height="21" x=".5" y=".5" fill="#FFF"
-                                                    stroke="rgba(76, 73, 227, 1)" rx="3" />
-                                                <path class="tick" stroke="rgba(76, 73, 227, 1)" fill="none"
+                                                     stroke="#FE9F43" rx="3" />
+                                                <path class="tick"  stroke="#FE9F43" fill="none"
                                                     stroke-linecap="round" stroke-width="3" d="M4 10l5 5 9-9" />
                                             </svg>
                                         </label>
@@ -601,8 +601,8 @@
                                             <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 22 22">
                                                 <rect width="21" height="21" x=".5" y=".5" fill="#FFF"
-                                                    stroke="rgba(76, 73, 227, 1)" rx="3" />
-                                                <path class="tick" stroke="rgba(76, 73, 227, 1)" fill="none"
+                                                     stroke="#FE9F43" rx="3" />
+                                                <path class="tick"  stroke="#FE9F43" fill="none"
                                                     stroke-linecap="round" stroke-width="3" d="M4 10l5 5 9-9" />
                                             </svg>
                                         </label>
@@ -621,8 +621,8 @@
                                             <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 22 22">
                                                 <rect width="21" height="21" x=".5" y=".5" fill="#FFF"
-                                                    stroke="rgba(76, 73, 227, 1)" rx="3" />
-                                                <path class="tick" stroke="rgba(76, 73, 227, 1)" fill="none"
+                                                     stroke="#FE9F43" rx="3" />
+                                                <path class="tick"  stroke="#FE9F43" fill="none"
                                                     stroke-linecap="round" stroke-width="3" d="M4 10l5 5 9-9" />
                                             </svg>
                                         </label>
@@ -678,7 +678,7 @@
             </form>
         </div>
     </div>
-    </div>
+
 @endsection
 
 @section('scripts')

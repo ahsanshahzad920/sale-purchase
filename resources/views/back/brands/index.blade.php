@@ -200,7 +200,7 @@
                                 <textarea class="form-control" id="exampleFormControlTextarea1" name="description" rows="3"></textarea>
                             </div>
 
-                            <button type="submit" class="btn save-btn me-2 text-white">Submit</button>
+                            <button type="submit" class="btn save-btn me-2 text-white">Create</button>
 
                         </form>
                     </div>
@@ -249,7 +249,7 @@
                                     <textarea class="form-control" id="exampleFormControlTextarea1" name="description" rows="3">{{ $brand->description }}</textarea>
                                 </div>
 
-                                <button type="submit" class="btn save-btn me-2 text-white">Submit</button>
+                                <button type="submit" class="btn save-btn me-2 text-white">Update</button>
 
                             </form>
                         </div>

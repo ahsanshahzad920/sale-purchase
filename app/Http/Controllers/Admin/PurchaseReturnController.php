@@ -210,6 +210,8 @@ class PurchaseReturnController extends Controller
             $purchase->details = $request->details;
             $purchase->grand_total = $request->grand_total;
             $purchase->purchase_id = $request->purchase_id;
+            $purchase->created_by = auth()->user()->id;
+            $purchase->updated_by = auth()->user()->id;
             $purchase->save();
 
             // Iterate over each product item
@@ -314,6 +316,7 @@ class PurchaseReturnController extends Controller
             $purchase->amount_due = $request->grand_total;
             $purchase->details = $request->details;
             $purchase->grand_total = $request->grand_total;
+            $purchase->updated_by = auth()->user()->id;
             $purchase->save();
 
             // Iterate over each product item
