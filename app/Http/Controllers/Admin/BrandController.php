@@ -80,8 +80,9 @@ class BrandController extends BaseController
      * @param  \App\Models\Brand  $brand
      * @return \Illuminate\Http\Response
      */
-    public function show(Brand $brand)
+    public function show($id)
     {
+        $brand = Brand::findOrFail($id);
         return $this->handleException(function () use ($brand) {
             $brand = new BrandResource($brand);
 
@@ -96,8 +97,9 @@ class BrandController extends BaseController
      * @param  \App\Models\Brand  $brand
      * @return \Illuminate\Http\Response
      */
-    public function edit(Brand $brand)
+    public function edit($subdomain, $id)
     {
+        $brand = Brand::findOrFail($id);
         return $this->handleException(function () use ($brand) {
             $brand = new BrandResource($brand);
 
@@ -112,32 +114,34 @@ class BrandController extends BaseController
      * @param  \App\Models\Brand  $brand
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Brand $brand)
+    public function update($subdomain, Request $request, $id)
     {
-            // dd($request->all());
-            $data = $request->validate([
-                'name' => 'required|unique:brands,name,' . $brand->id,
-                'brand_img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'description' => 'nullable',
-            ]);
-            $data['updated_by'] = auth()->user()->id;
-            if ($request->hasFile('brand_img')) {
-                if (Storage::disk('public')->exists('brand/' . $brand->brand_img)) {
-                    Storage::disk('public')->delete('brand/' . $brand->brand_img);
-                }
-
-                $image = $request->file('brand_img');
-                $filename = $data['name'] . '-' . time() . '.' . $image->getClientOriginalExtension();
-                $data['brand_img'] = $filename;
-
-                Storage::disk('public')->put('brand/' . $filename, file_get_contents($image));
-            } else {
-                unset($data['brand_img']);
+        $brand = Brand::findOrFail($id);
+        // dd($brand);
+        // dd($request->all());
+        $data = $request->validate([
+            'name' => 'required|unique:brands,name,' . $brand->id,
+            'brand_img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'description' => 'nullable',
+        ]);
+        $data['updated_by'] = auth()->user()->id;
+        if ($request->hasFile('brand_img')) {
+            if (Storage::disk('public')->exists('brand/' . $brand->brand_img)) {
+                Storage::disk('public')->delete('brand/' . $brand->brand_img);
             }
-            $brand->update($data);
 
-            return redirect()->route('brands.index')
-                ->with('success', 'Brand updated successfully');
+            $image = $request->file('brand_img');
+            $filename = $data['name'] . '-' . time() . '.' . $image->getClientOriginalExtension();
+            $data['brand_img'] = $filename;
+
+            Storage::disk('public')->put('brand/' . $filename, file_get_contents($image));
+        } else {
+            unset($data['brand_img']);
+        }
+        $brand->update($data);
+
+        return redirect()->route('brands.index')
+            ->with('success', 'Brand updated successfully');
     }
 
     /**
@@ -146,25 +150,26 @@ class BrandController extends BaseController
      * @param  \App\Models\Brand  $brand
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Brand $brand)
+    public function destroy($subdomain, $id)
     {
+        $brand = Brand::find($id);
 
-            return $this->handleException(function () use ($brand) {
-                $brand->delete();
+        return $this->handleException(function () use ($brand) {
+            $brand->delete();
 
-                return redirect()->route('brands.index')
-                    ->with('success', 'Brand deleted successfully');
-            });
+            return redirect()->route('brands.index')
+                ->with('success', 'Brand deleted successfully');
+        });
     }
-    public function deleteBrand(Request $req)
+    public function deleteBrand($subdomain, Request $req)
     {
 
-        if(!empty($req->ids) && is_array($req->ids)){
+        if (!empty($req->ids) && is_array($req->ids)) {
             // dd($req->all());
             foreach ($req->ids as $id) {
                 Brand::find($id)->delete();
             }
-            return response()->json(['status' => 200,'message' => 'Brand Deleted Successfully!']);
+            return response()->json(['status' => 200, 'message' => 'Brand Deleted Successfully!']);
         }
     }
 }

@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class SavedCreditCard extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
+    protected $table = 'saved_credit_cards';
     protected $fillable = [
         'user_id',
         'card_id',
@@ -33,6 +35,14 @@ class SavedCreditCard extends Model
     {
         static::addGlobalScope('latest', function (Builder $builder) {
             $builder->latest();
+        });
+
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('saved_credit_cards.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
         });
     }
 }

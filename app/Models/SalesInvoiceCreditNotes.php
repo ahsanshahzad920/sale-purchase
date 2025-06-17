@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SalesInvoiceCreditNotes extends Model
 {
     use HasFactory;
+    protected $table = 'sales_invoice_credit_notes';
 
     protected $guarded = ['id'];
 
@@ -29,5 +30,16 @@ class SalesInvoiceCreditNotes extends Model
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('tenant', function ($builder) {
+            $builder->where('sales_invoice_credit_notes.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
+        });
     }
 }

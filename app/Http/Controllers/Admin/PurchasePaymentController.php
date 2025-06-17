@@ -183,7 +183,7 @@ class PurchasePaymentController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(string $id)
+    public function edit($subdomain,string $id)
     {
 
         $purchaseInvoicePayment = PurchaseInvoicePayment::findOrFail($id);
@@ -204,7 +204,7 @@ class PurchasePaymentController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request,$subdomain, string $id)
     {
         // dd($request->all());
         $data = $request->validate([
@@ -240,7 +240,7 @@ class PurchasePaymentController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(string $id)
+    public function destroy($subdomain,string $id)
     {
         // $purchaseInvoicePayment = PurchaseInvoicePayment::findOrFail($id);
         // $result = $this->purchasePaymentService->destroyPayment($purchaseInvoicePayment);
@@ -264,7 +264,7 @@ class PurchasePaymentController extends BaseController
     }
 
 
-    public function multipleDelete(Request $req)
+    public function multipleDelete($subdomain,Request $req)
     {
 
         foreach ($req->ids as $key => $id) {

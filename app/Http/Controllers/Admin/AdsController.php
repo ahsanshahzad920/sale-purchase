@@ -15,7 +15,7 @@ class AdsController extends Controller
      */
     public function index()
     {
-        $ads = Ad::all();
+        $ads = Ad::where('tenant_id',getTenantId())->get();
         return view('back.cms.ads.index',compact('ads'));
     }
 
@@ -85,7 +85,7 @@ class AdsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,$subdomain ,$id)
     {
         $ad = Ad::find($id);
         $request->validate([
@@ -112,7 +112,7 @@ class AdsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($subdomain,$id)
     {
         Ad::find($id)->delete();
         return redirect()->back()->with('success', 'Ad Deleted Successfully');

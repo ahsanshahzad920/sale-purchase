@@ -94,7 +94,7 @@ class AddCardForAdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,$subdomain, $id)
     {
         $request->validate([
             'card_brand' => 'required|string',
@@ -128,7 +128,7 @@ class AddCardForAdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($subdomain,$id)
     {
         AdminCreditCard::find($id)->delete();
         return redirect()->back()->with('success', 'Card has been deleted successfully!');

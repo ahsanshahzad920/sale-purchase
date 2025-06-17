@@ -20,8 +20,9 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($code, $sku)
+    public function index($subdomain,$code, $sku,)
     {
+        // dd($sku, $code);
         $category = Category::where('code', $code)->first();
         if (!$category) {
             return abort(404);

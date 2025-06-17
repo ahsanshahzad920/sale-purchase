@@ -41,7 +41,12 @@
           </div>
         </div>
         <p class="description fs-5">
-          Sorry but the page you are looking for does not exist
+          {{-- Sorry but the page you are looking for does not exist --}}
+            @if($exception && $exception->getMessage())
+                {{ $exception->getMessage() }}
+            @else
+                Sorry but the page you are looking for does not exist
+            @endif
         </p>
         <!-- <h1 class="for-zero-heading m-0">404</h1> -->
         <a href="/" class="btn bag-btn text-white px-2">

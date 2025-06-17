@@ -101,8 +101,9 @@ class CategoryController extends BaseController
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
+    public function edit($subdomain,$id)
     {
+        $category = Category::findOrFail($id);
         return $this->handleException(function () use ($category) {
             $category = new CategoryResource($category);
 
@@ -117,8 +118,10 @@ class CategoryController extends BaseController
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(CategoryUpdateRequest $request, Category $category)
+    public function update($subdomain,CategoryUpdateRequest $request, $id)
     {
+        $category = Category::findOrFail($id);
+
         $data = $request->validated();
 
         $data['updated_by'] = auth()->user()->id;
@@ -144,8 +147,9 @@ class CategoryController extends BaseController
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($subdomain,$id)
     {
+        $category = Category::findOrFail($id);
         return $this->handleException(function () use ($category) {
             $category->delete();
 
@@ -154,8 +158,9 @@ class CategoryController extends BaseController
         });
     }
 
-    public function deleteCategory(Request $req)
+    public function deleteCategory($subdomain,Request $req)
     {
+
         if(!empty($req->ids) && is_array($req->ids)){
             // dd($req->all());
             foreach ($req->ids as $id) {
@@ -166,9 +171,9 @@ class CategoryController extends BaseController
         }
 
     }
-    public function change_status(Category $category)
+    public function change_status($subdomain, Request $req,$id)
     {
-        // dd($category->status );
+        $category = Category::findOrFail($id);
         if($category->status==1){
             $category->status=0;
             $message= trans('Deactivated successfully.');

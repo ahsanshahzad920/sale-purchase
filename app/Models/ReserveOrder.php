@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class ReserveOrder extends Model
 {
     use HasFactory;
+    protected $table = 'reserve_orders';
 
     protected $fillable = [
         'customer_id',
@@ -29,6 +30,14 @@ class ReserveOrder extends Model
     {
         static::addGlobalScope('latest', function (Builder $builder) {
             $builder->latest();
+        });
+
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('reserve_orders.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
         });
     }
 }

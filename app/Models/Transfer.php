@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Transfer extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
+    protected $table = 'transfers';
 
     public function from_warehouse()
     {
@@ -28,6 +30,14 @@ class Transfer extends Model
     {
         static::addGlobalScope('latest', function (Builder $builder) {
             $builder->latest();
+        });
+
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('transfers.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
         });
     }
 }

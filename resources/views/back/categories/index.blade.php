@@ -267,7 +267,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label for="cate_name_input">Category Name</label>
                                     <input type="text" class="form-control subheading" name="name"

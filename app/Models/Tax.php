@@ -12,6 +12,7 @@ class Tax extends Model
 {
     use HasFactory, SoftDeletes;
     protected $guarded = ['id'];
+    protected $table = 'taxes';
     protected $fillable = ['name', 'information', 'created_by', 'updated_by', 'deleted_by'];
 
 
@@ -19,6 +20,13 @@ class Tax extends Model
     {
         static::addGlobalScope('latest', function (Builder $builder) {
             $builder->latest();
+        });
+
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('taxes.tenant_id', getTenantId());
+        });
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
         });
     }
 }

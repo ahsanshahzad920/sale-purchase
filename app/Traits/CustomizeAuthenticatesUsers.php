@@ -24,9 +24,7 @@ trait CustomizeAuthenticatesUsers
 
     public function showLinkRequestForm()
     {
-
         return view('back.auth.passwords.email');
-        // return "Hello";
     }
 
     public function showResetForm(Request $request){

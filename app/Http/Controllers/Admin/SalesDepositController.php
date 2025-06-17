@@ -65,8 +65,9 @@ class SalesDepositController extends Controller
         return redirect()->route('sales-deposits.index')->with('success', $response['message']);
     }
 
-    public function destroy(SalesInvoiceCreditNotes $salesInvoiceCreditNotes)
+    public function destroy($subdomain,$id)
     {
+        $salesInvoiceCreditNotes = SalesInvoiceCreditNotes::findOrFail($id);
         $response = $this->salesPaymentService->destroyPayment($salesInvoiceCreditNotes);
 
         if (!$response['success']) {

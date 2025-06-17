@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class ManualReturn extends Model
 {
     use HasFactory;
+    protected $table = 'manual_returns';
 
     public function customer()
     {
@@ -28,6 +29,14 @@ class ManualReturn extends Model
     {
         static::addGlobalScope('latest', function (Builder $builder) {
             $builder->latest();
+        });
+
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('manual_returns.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
         });
     }
 }

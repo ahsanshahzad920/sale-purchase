@@ -270,7 +270,7 @@ class PurchaseReturnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($subdomain,$id)
     {
         $purchase = Purchase::find($id);
         $purchase->load('purchaseItems', 'vendor');
@@ -284,7 +284,7 @@ class PurchaseReturnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($subdomain,$id)
     {
         $purchase_return = PurchaseReturn::find($id);
         $purchase_return->load('return_items', 'purchase');
@@ -299,7 +299,7 @@ class PurchaseReturnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,$subdomain, $id)
     {
         // return $request->all();
         try {
@@ -393,7 +393,7 @@ class PurchaseReturnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($subdomain,$id)
     {
         $purchase_return = PurchaseReturn::find($id);
         if ($purchase_return) {
@@ -430,7 +430,7 @@ class PurchaseReturnController extends Controller
             return redirect()->back()->with('success', 'Purchase return has been deleted successfully!');
         }
     }
-    public function deletePurchaseReturns(Request $req)
+    public function deletePurchaseReturns($subdomain,Request $req)
     {
         if (!empty($req->ids) && is_array($req->ids)) {
 
@@ -473,7 +473,7 @@ class PurchaseReturnController extends Controller
         }
     }
 
-    public function detail($id)
+    public function detail($subdomain,$id)
     {
         $purchase_return = PurchaseReturn::find($id);
         $purchase_return->load('return_items.product.unit', 'return_items.product.purchase_unit');

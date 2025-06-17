@@ -33,7 +33,7 @@
                                     <label for="exampleFormControlSelect1" class="mb-1 fw-bold">Date <span
                                             class="text-danger">*</span></label>
 
-                                    <input class="form-control subheading" type="date" value="{{ $sale->date }}" />
+                                    <input class="form-control subheading" type="date" value="{{ date('Y-m-d') }}" />
 
                                 </div>
                             </div>
@@ -104,7 +104,7 @@
                                                 </button>
                                             </div>
                                         </td>
-                                        <td class="align-middle">{{ $product->discount ?? '' }} </td>
+                                        <td class="align-middle">{{ $product->discount ?? number_format(0,2) }} </td>
                                         <td class="align-middle">{{ $product->order_tax ?? '' }} </td>
                                         <td class="product_price align-middle" id="subtotal">$ 0.00 </td>
                                     </tr>
@@ -350,50 +350,20 @@
                 $(this).find('td:nth-child(8)').text(itemSubtotal.toFixed(2)); // Update subtotal for each row
             });
 
-             // Assume `orderTax` is a percentage value from an input field
-             const orderTax = parseFloat($('#order_tax').val() == '' ? 0 : $('#order_tax').val()) / 100;
-            const taxAmount = subtotal * orderTax;
+            // Calculate total tax, discount, shipping, and grand total
+            const orderTax = parseFloat($('#order_tax').val()) || 0;
+            const discountValue = parseFloat($('#discount').val()) || 0;
+            const shipping = parseFloat($('#shipping').val()) || 0;
 
-            // Discount is now a percentage
-            const discountPercentage = parseFloat($('#discount').val() == '' ? 0 : $('#discount').val()) / 100;
-            const discountAmount = subtotal * discountPercentage;
+            const taxAmount = subtotal * (orderTax / 100);
+            const grandTotal = subtotal + taxAmount - discountValue + shipping;
 
-            const shipping = parseFloat($('#shipping').val() == '' ? 0 : $('#shipping').val());
-
-            const grandTotal = subtotal + taxAmount - discountAmount + shipping;
-
-            // Update the UI
-            let orderTaxInPercentage = orderTax * 100;
-            $('#order_tax_display').text(`$${taxAmount.toFixed(2)} (${orderTaxInPercentage.toFixed()}%)`);
-            $('#discount_display').text(`$${discountAmount.toFixed(2)} (${(discountPercentage * 100).toFixed(2)}%)`);
+            // Update UI with calculated values
+            $('#order_tax_display').text(`$${taxAmount.toFixed(2)} (${orderTax}%)`);
+            $('#discount_display').text(`$${discountValue.toFixed(2)}`);
             $('#shipping_display').text(`$${shipping.toFixed(2)}`);
             $('#grand_total').text(`$${grandTotal.toFixed(2)}`);
         }
-        // function calculateTotal() {
-        //     let subtotal = 0;
-        //     $('.table tbody tr').each(function() {
-        //         const quantity = parseInt($(this).find('td:nth-child(5) input').val()) ||
-        //         0; // Parse quantity as integer
-        //         const price = parseFloat($(this).find('td:nth-child(3)').text()) || 0; // Parse price as float
-        //         const itemSubtotal = quantity * price;
-        //         subtotal += itemSubtotal;
-        //         $(this).find('td:nth-child(8)').text(itemSubtotal.toFixed(2)); // Update subtotal for each row
-        //     });
-
-        //     // Calculate total tax, discount, shipping, and grand total
-        //     const orderTax = parseFloat($('#order_tax').val()) || 0;
-        //     const discountValue = parseFloat($('#discount').val()) || 0;
-        //     const shipping = parseFloat($('#shipping').val()) || 0;
-
-        //     const taxAmount = subtotal * (orderTax / 100);
-        //     const grandTotal = subtotal + taxAmount - discountValue + shipping;
-
-        //     // Update UI with calculated values
-        //     $('#order_tax_display').text(`$${taxAmount.toFixed(2)} (${orderTax}%)`);
-        //     $('#discount_display').text(`$${discountValue.toFixed(2)}`);
-        //     $('#shipping_display').text(`$${shipping.toFixed(2)}`);
-        //     $('#grand_total').text(`$${grandTotal.toFixed(2)}`);
-        // }
 
 
 

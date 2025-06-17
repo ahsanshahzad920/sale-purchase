@@ -27,7 +27,7 @@ class SaleReturnController extends BaseController
     {
         // $returns = SaleReturn::with('sales')->get();
         $returns = SaleReturn::all();
-        if(auth()->user()->hasRole(['Cashier','Manager'])){
+        if (auth()->user()->hasRole(['Cashier', 'Manager'])) {
 
             $returns = SaleReturn::whereHas('sales', function ($query) {
                 $query->where('warehouse_id', auth()->user()->warehouse_id);
@@ -36,7 +36,7 @@ class SaleReturnController extends BaseController
             $customers = Customer::all();
             $warehouses = Warehouse::all();
             // dd($returns->sales);
-            return view('back.sale-return.index', compact('returns','customers','warehouses'));
+            return view('back.sale-return.index', compact('returns', 'customers', 'warehouses'));
         }
 
         if (session()->has('selected_warehouse_id') && auth()->user()->hasRole('Admin')) {
@@ -44,49 +44,49 @@ class SaleReturnController extends BaseController
             $returns = SaleReturn::whereHas('sales', function ($query) use ($warehouseId) {
                 $query->where('warehouse_id', $warehouseId);
             })->get();
-        } 
+        }
 
 
         $returns->load('sales');
         $customers = Customer::all();
         $warehouses = Warehouse::all();
         // dd($returns->sales);
-        return view('back.sale-return.index', compact('returns','customers','warehouses'));
+        return view('back.sale-return.index', compact('returns', 'customers', 'warehouses'));
     }
 
-    public function filterSalereturns(Request $req){
+    public function filterSalereturns(Request $req)
+    {
         $query = SaleReturn::with('sales');
 
         $filters = $req->all();
 
-        if(isset($filters['date'])){
+        if (isset($filters['date'])) {
             $query->where('date', $filters['date']);
         }
 
-        if(isset($filters['reference'])){
+        if (isset($filters['reference'])) {
             $query->where('reference', $filters['reference']);
         }
 
-        if(isset($filters['customer_id']) && $filters['customer_id'] > 0){
+        if (isset($filters['customer_id']) && $filters['customer_id'] > 0) {
             $customer = $filters['customer_id'];
-            $query->whereHas('sales', function ($query) use ($customer){
+            $query->whereHas('sales', function ($query) use ($customer) {
                 $query->where('customer_id', $customer);
             });
-
         }
 
-        if(isset($filters['warehouse_id'])  && $filters['warehouse_id'] > 0){
+        if (isset($filters['warehouse_id'])  && $filters['warehouse_id'] > 0) {
             // $query->where('warehouse_id', $filters['warehouse_id']);
             $warehouse = $filters['warehouse_id'];
-            $query->whereHas('sales', function ($query) use ($warehouse){
+            $query->whereHas('sales', function ($query) use ($warehouse) {
                 $query->where('warehouse_id', $warehouse);
             });
         }
 
-        if(isset($filters['status'])  && $filters['status'] > 0 ){
+        if (isset($filters['status'])  && $filters['status'] > 0) {
             $query->where('status', $filters['status']);
         }
-        if(isset($filters['payment_status'])  && $filters['payment_status'] > 0){
+        if (isset($filters['payment_status'])  && $filters['payment_status'] > 0) {
             $query->where('payment_status', $filters['payment_status']);
         }
 
@@ -96,9 +96,7 @@ class SaleReturnController extends BaseController
         $customers = Customer::all();
         $warehouses = Warehouse::all();
 
-        return view('back.sale-return.index', compact('returns','customers','warehouses'));
-
-
+        return view('back.sale-return.index', compact('returns', 'customers', 'warehouses'));
     }
 
     /**
@@ -117,17 +115,112 @@ class SaleReturnController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    // public function store(Request $request)
+    // {
+    //     // return $request->sale_id;
+    //     // dd($request->all());
+    //     try {
+
+    //         DB::beginTransaction();
+
+    //         // Generate a unique reference for the sale
+    //         $reference = substr(uniqid(), 0, 5);
+    //         // append 'SAL-' to the reference
+    //         $reference = 'RT-' . $reference;
+    //         // Create new Sale entry
+    //         $sale = new SaleReturn();
+    //         $sale->reference = $reference;
+    //         $sale->date = $request->date;
+    //         $sale->order_tax = $request->order_tax;
+    //         $sale->discount = $request->discount;
+    //         $sale->shipping = $request->shipping;
+    //         $sale->status = $request->status;
+    //         $sale->payment_status = "Unpaid";
+    //         $sale->amount_paid = "0.00";
+    //         $sale->amount_due = $request->grand_total;
+    //         $sale->details = $request->details;
+    //         $sale->grand_total = $request->grand_total;
+    //         $sale->sale_id = $request->sale_id;
+    //         $sale->created_by = auth()->user()->id;
+    //         $sale->updated_by = auth()->user()->id;
+    //         $sale->save();
+
+    //         $productPrice = 0;
+    //         // Iterate over each product item
+    //         foreach ($request->return_items as $itemData) {
+    //             $sale_unit = ProductItem::where('sale_id', $request->sale_id)->where('product_id', $itemData['id'])->first();
+    //             // return $unit ?? '43';
+    //             $productItem = new SaleReturnItem();
+    //             $productItem->sale_return_id = $sale->id;
+    //             $productItem->product_id = $itemData['id'];
+    //             $productItem->return_quantity = $itemData['quantityReturn'];
+    //             $productItem->price = $itemData['price'];
+    //             $productItem->subtotal = $itemData['subtotal'];
+    //             $productItem->sale_unit = $sale_unit->sale_unit;
+    //             $productItem->save();
+
+    //             $product = Product::with('unit', 'sale_units')->find($itemData['id']);
+    //             $productPrice += $itemData['subtotal'];
+    //             $sales = Sale::find($request->sale_id);
+
+    //             $warehouse_product = ProductWarehouse::where('product_id',$itemData['id'])->where('warehouse_id',$sales->warehouse_id)->first();
+    //             // dd($warehouse_product);
+    //             $item = ProductItem::where('sale_id', $request->sale_id)->where('product_id', $itemData['id'])->first();
+    //             // // $product_unit = $product->product_unit;
+
+    //             // $product->quantity += $itemData['quantityReturn'];
+    //             // $product->save();
+    //             $finalStock = 0;
+    //             if ($product->product_type != 'service') {
+    //                 // return $finalStock;
+    //                 if ($product->product_unit != $item->sale_unit) {
+    //                     $sale_unit = Unit::find($item->sale_unit);
+    //                     if ($sale_unit->parent_id != 0) {
+    //                         $expression = $warehouse_product->quantity . $product->unit->operator . $sale_unit->operator_value;
+    //                         $convertedStock = eval("return $expression;");
+    //                         $stock = $convertedStock + $itemData['quantityReturn'];
+    //                         $secondExp = $stock . $sale_unit->operator . $sale_unit->operator_value;
+    //                         $finalStock = eval("return $secondExp;");
+    //                     }
+    //                 } else {
+    //                     $finalStock =  $warehouse_product->quantity + $itemData['quantityReturn'];
+    //                 }
+    //             } else {
+    //                 $finalStock =  $warehouse_product->quantity + $itemData['quantityReturn'];
+    //             }
+
+    //             $warehouse_product->update(['quantity' => "$finalStock"]);
+    //         }
+
+    //         $customer = Customer::find($sales->customer_id);
+    //         $customer->balance += $productPrice;
+    //         $customer->save();
+
+    //         CreditActivity::create([
+    //             'customer_id' => $customer->id,
+    //             'action' => 'Modified',
+    //             'credit_balance' => $customer->balance,
+    //             'added_deducted' => $productPrice,
+    //             'comment' => "Balance returned to wallet due to sale return for #{$sales->reference}",
+    //         ]);
+
+
+    //         DB::commit();
+    //         return response()->json(['message' => 'Return successfully created', 'reference' => $reference], 200);
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return response()->json(['message' => 'Error occurred: ' . $e->getMessage()], 500);
+    //     }
+    // }
+
     public function store(Request $request)
     {
-        // return $request->sale_id;
         try {
-
             DB::beginTransaction();
 
             // Generate a unique reference for the sale
-            $reference = substr(uniqid(), 0, 5);
-            // append 'SAL-' to the reference
-            $reference = 'RT-' . $reference;
+            $reference = 'RT-' . substr(uniqid(), 0, 5);
+
             // Create new Sale entry
             $sale = new SaleReturn();
             $sale->reference = $reference;
@@ -147,52 +240,61 @@ class SaleReturnController extends BaseController
             $sale->save();
 
             $productPrice = 0;
-            // Iterate over each product item
+            $sales = Sale::find($request->sale_id);
+
             foreach ($request->return_items as $itemData) {
-                $sale_unit = ProductItem::where('sale_id', $request->sale_id)->where('product_id', $itemData['id'])->first();
-                // return $unit ?? '43';
+                $product = Product::with('unit', 'sale_units')->find($itemData['id']);
+                $sale_unit = null;
+
+                // Only get sale_unit if product is not a service
+                if ($product->product_type != 'service') {
+                    $sale_unit = ProductItem::where('sale_id', $request->sale_id)
+                        ->where('product_id', $itemData['id'])
+                        ->value('sale_unit');
+                }
+
+                // Create return item
                 $productItem = new SaleReturnItem();
                 $productItem->sale_return_id = $sale->id;
                 $productItem->product_id = $itemData['id'];
                 $productItem->return_quantity = $itemData['quantityReturn'];
                 $productItem->price = $itemData['price'];
                 $productItem->subtotal = $itemData['subtotal'];
-                $productItem->sale_unit = $sale_unit->sale_unit;
+                $productItem->sale_unit = $sale_unit; // Will be NULL for services
                 $productItem->save();
 
-                $product = Product::with('unit', 'sale_units')->find($itemData['id']);
                 $productPrice += $itemData['subtotal'];
-                $sales = Sale::find($request->sale_id);
 
-                $warehouse_product = ProductWarehouse::where('product_id',$itemData['id'])->where('warehouse_id',$sales->warehouse_id)->first();
-                // dd($warehouse_product);
-                $item = ProductItem::where('sale_id', $request->sale_id)->where('product_id', $itemData['id'])->first();
-                // // $product_unit = $product->product_unit;
-
-                // $product->quantity += $itemData['quantityReturn'];
-                // $product->save();
-                $finalStock = 0;
+                // Handle stock updates for non-service products
                 if ($product->product_type != 'service') {
-                    // return $finalStock;
-                    if ($product->product_unit != $item->sale_unit) {
-                        $sale_unit = Unit::find($item->sale_unit);
-                        if ($sale_unit->parent_id != 0) {
-                            $expression = $warehouse_product->quantity . $product->unit->operator . $sale_unit->operator_value;
-                            $convertedStock = eval("return $expression;");
-                            $stock = $convertedStock + $itemData['quantityReturn'];
-                            $secondExp = $stock . $sale_unit->operator . $sale_unit->operator_value;
-                            $finalStock = eval("return $secondExp;");
-                        }
-                    } else {
-                        $finalStock =  $warehouse_product->quantity + $itemData['quantityReturn'];
-                    }
-                } else {
-                    $finalStock =  $warehouse_product->quantity + $itemData['quantityReturn'];
-                }
+                    $warehouse_product = ProductWarehouse::where('product_id', $itemData['id'])
+                        ->where('warehouse_id', $sales->warehouse_id)
+                        ->first();
 
-                $warehouse_product->update(['quantity' => "$finalStock"]);
+                    if ($warehouse_product) {
+                        $item = ProductItem::where('sale_id', $request->sale_id)
+                            ->where('product_id', $itemData['id'])
+                            ->first();
+
+                        $finalStock = 0;
+                        if ($product->product_unit != $item->sale_unit) {
+                            $sale_unit = Unit::find($item->sale_unit);
+                            if ($sale_unit->parent_id != 0) {
+                                $expression = $warehouse_product->quantity . $product->unit->operator . $sale_unit->operator_value;
+                                $convertedStock = eval("return $expression;");
+                                $stock = $convertedStock + $itemData['quantityReturn'];
+                                $secondExp = $stock . $sale_unit->operator . $sale_unit->operator_value;
+                                $finalStock = eval("return $secondExp;");
+                            }
+                        } else {
+                            $finalStock = $warehouse_product->quantity + $itemData['quantityReturn'];
+                        }
+                        $warehouse_product->update(['quantity' => $finalStock]);
+                    }
+                }
             }
 
+            // Update customer balance
             $customer = Customer::find($sales->customer_id);
             $customer->balance += $productPrice;
             $customer->save();
@@ -205,7 +307,6 @@ class SaleReturnController extends BaseController
                 'comment' => "Balance returned to wallet due to sale return for #{$sales->reference}",
             ]);
 
-
             DB::commit();
             return response()->json(['message' => 'Return successfully created', 'reference' => $reference], 200);
         } catch (\Exception $e) {
@@ -213,14 +314,13 @@ class SaleReturnController extends BaseController
             return response()->json(['message' => 'Error occurred: ' . $e->getMessage()], 500);
         }
     }
-
     /**
      * Display the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($subdomain, $id)
     {
         // $sale = Sale::with('productItems.product','productItems.sale_units','warehouse','customer')->find($id);
         $sale = Sale::find($id);
@@ -236,7 +336,7 @@ class SaleReturnController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($subdomain, $id)
     {
         // $sale = Sale::with('productItems.product','warehouse','customer')->find($id);
         $sale_return = SaleReturn::find($id);
@@ -252,7 +352,7 @@ class SaleReturnController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $subdomain, $id)
     {
         // return $request->all();
         try {
@@ -281,7 +381,7 @@ class SaleReturnController extends BaseController
                 $productItem->load('product');
                 // return $productItem->product->unit;
                 $sales = Sale::find($sale->sale_id);
-                $warehouse_product = ProductWarehouse::where('product_id',$itemData['id'])->where('warehouse_id',$sales->warehouse_id)->first();
+                $warehouse_product = ProductWarehouse::where('product_id', $itemData['id'])->where('warehouse_id', $sales->warehouse_id)->first();
                 // dd($warehouse_product);
                 $finalStock = $productItem->product->quantity;
                 if ($productItem->return_quantity != $itemData['quantityReturn']) {
@@ -321,9 +421,7 @@ class SaleReturnController extends BaseController
                             $finalStock = $warehouse_product->quantity - $quantityDeference;
                         }
                     }
-
-                }
-                else {
+                } else {
                     // if quantity not updated
                 }
 
@@ -344,13 +442,14 @@ class SaleReturnController extends BaseController
     }
 
 
-    public function detail($id){
+    public function detail($subdomain, $id)
+    {
         $sale_return = SaleReturn::find($id);
         $sale = Sale::find($sale_return->sale_id);
-        $sale->load('productItems.product.unit', 'productItems.product.sale_units','customer');
-        $sale_return->load('return_items.product.unit','return_items.product.sale_units');
+        $sale->load('productItems.product.unit', 'productItems.product.sale_units', 'customer');
+        $sale_return->load('return_items.product.unit', 'return_items.product.sale_units');
         // dd($sale_return->sales->customer);
-        return view('back.sale-return.detail',compact('sale_return','sale'));
+        return view('back.sale-return.detail', compact('sale_return', 'sale'));
     }
 
     /**
@@ -359,36 +458,32 @@ class SaleReturnController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($subdomain, $id)
     {
         $sale_return = SaleReturn::find($id);
         if ($sale_return) {
             $return_items = SaleReturnItem::where('sale_return_id', $id)->get();
-            $return_items->load('product','sale_units');
+            $return_items->load('product', 'sale_units');
             foreach ($return_items as $return) {
                 // dd($return['return_quantity']);
                 $product = Product::find($return->product->id);
                 $sales = Sale::find($sale_return->sale_id);
-                $warehouse_product = ProductWarehouse::where('product_id',$return->product->id)->where('warehouse_id',$sales->warehouse_id)->first();
+                $warehouse_product = ProductWarehouse::where('product_id', $return->product->id)->where('warehouse_id', $sales->warehouse_id)->first();
                 // dd($warehouse_product);
 
                 $finalStock = 0;
-                if($return->product->product_type != 'service'){
-                    if($product->product_unit != $return['sale_unit']){
-                            $expression = $warehouse_product->quantity . $product->unit->operator . $return->sale_units->operator_value;
-                            $convertedStock = eval("return $expression;");
-                            $stock = $convertedStock - $return['return_quantity'];
-                            $secondExp = $stock . $return->sale_units->operator . $return->sale_units->operator_value;
-                            $finalStock = eval("return $secondExp;");
-                    }
-                    else
-                    {
+                if ($return->product->product_type != 'service') {
+                    if ($product->product_unit != $return['sale_unit']) {
+                        $expression = $warehouse_product->quantity . $product->unit->operator . $return->sale_units->operator_value;
+                        $convertedStock = eval("return $expression;");
+                        $stock = $convertedStock - $return['return_quantity'];
+                        $secondExp = $stock . $return->sale_units->operator . $return->sale_units->operator_value;
+                        $finalStock = eval("return $secondExp;");
+                    } else {
 
                         $finalStock = $warehouse_product->quantity - $return->return_quantity;
                     }
-                }
-                else
-                {
+                } else {
                     $finalStock = $warehouse_product->quantity - $return->return_quantity;
                 }
 
@@ -401,7 +496,7 @@ class SaleReturnController extends BaseController
         }
     }
 
-    public function deleteSaleReturn(Request $req)
+    public function deleteSaleReturn($subdomain, Request $req)
     {
         // return $req->all();
         foreach ($req->ids as $key => $id) {
@@ -409,31 +504,27 @@ class SaleReturnController extends BaseController
             $sale_return = SaleReturn::find($id);
             if ($sale_return) {
                 $return_items = SaleReturnItem::where('sale_return_id', $id)->get();
-                $return_items->load('product','sale_units');
+                $return_items->load('product', 'sale_units');
                 foreach ($return_items as $return) {
                     // dd($return['return_quantity']);
                     $product = Product::find($return->product->id);
                     $sales = Sale::find($sale_return->sale_id);
-                    $warehouse_product = ProductWarehouse::where('product_id',$return->product->id)->where('warehouse_id',$sales->warehouse_id)->first();
+                    $warehouse_product = ProductWarehouse::where('product_id', $return->product->id)->where('warehouse_id', $sales->warehouse_id)->first();
                     // dd($warehouse_product);
 
                     $finalStock = 0;
-                    if($return->product->product_type != 'service'){
-                        if($product->product_unit != $return['sale_unit']){
-                                $expression = $warehouse_product->quantity . $product->unit->operator . $return->sale_units->operator_value;
-                                $convertedStock = eval("return $expression;");
-                                $stock = $convertedStock - $return['return_quantity'];
-                                $secondExp = $stock . $return->sale_units->operator . $return->sale_units->operator_value;
-                                $finalStock = eval("return $secondExp;");
-                        }
-                        else
-                        {
+                    if ($return->product->product_type != 'service') {
+                        if ($product->product_unit != $return['sale_unit']) {
+                            $expression = $warehouse_product->quantity . $product->unit->operator . $return->sale_units->operator_value;
+                            $convertedStock = eval("return $expression;");
+                            $stock = $convertedStock - $return['return_quantity'];
+                            $secondExp = $stock . $return->sale_units->operator . $return->sale_units->operator_value;
+                            $finalStock = eval("return $secondExp;");
+                        } else {
 
                             $finalStock = $warehouse_product->quantity - $return->return_quantity;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         $finalStock = $warehouse_product->quantity - $return->return_quantity;
                     }
 
@@ -444,7 +535,6 @@ class SaleReturnController extends BaseController
                 $sale_return->delete();
             }
         }
-        return response()->json(['status' => 200,'message' => 'Sale Return Deleted Successfully!']);
-
+        return response()->json(['status' => 200, 'message' => 'Sale Return Deleted Successfully!']);
     }
 }

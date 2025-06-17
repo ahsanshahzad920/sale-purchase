@@ -157,7 +157,7 @@
                                     <td class="align-middle">{{ $user->contact_no ?? '' }}</td>
                                     <td class="align-middle">{{ $user->email }}</td>
                                     <td class="align-middle">{{ $user->customer->tax_number ?? '' }}</td>
-                                    <td class="align-middle">${{ number_format(($user->customer->totalDue() ?? 0) + ($user->customer->outstanding_balance ?? 0), 2) }}</td>
+                                    <td class="align-middle">${{ number_format(($user->customer?->totalDue() ?? 0) + ($user->customer->outstanding_balance ?? 0), 2) }}</td>
 
 
                                     <td class="align-middle">${{ number_format($user->customer->balance ?? 0, 2) }}</td>
@@ -190,7 +190,7 @@
                                             <div class="form-check form-switch">
                                                 <input class="form-check-input toggle-class-blacklist"
                                                     data-user-id="{{ $user->id }}" type="checkbox"
-                                                    {{ $user->customer ? ($user->customer->blacklist ? 'checked' : '') : '' }}>
+                                                    {{ $user->customer ? ($user->customer?->blacklist ? 'checked' : '') : '' }}>
                                                 <label class="form-check-label"
                                                     for="flexSwitchCheck{{ $user->id }}"></label>
                                             </div>
@@ -198,7 +198,7 @@
                                     </td>
                                     <td class="align-middle">
                                         <a class=" btn btn-sm save-btn" data-bs-toggle="modal"
-                                            data-bs-target="#addCustomerCard{{ $user->customer->id }}"
+                                            data-bs-target="#addCustomerCard{{ $user->customer?->id }}"
                                             style="cursor: pointer">
                                             Add Card
                                         </a>
@@ -234,7 +234,7 @@
                                                     </form>
                                                 </a>
                                                 <a class=" dropdown-item" data-bs-toggle="modal"
-                                                    data-bs-target="#addCustomerBalance{{ $user->customer->id }}"
+                                                    data-bs-target="#addCustomerBalance{{ $user->customer?->id }}"
                                                     style="cursor: pointer">
                                                     {{-- <img src="{{ asset('back/assets/dasheets/img/edit-2.svg') }}"
                                                         class="p-0 me-2 ms-0" alt="" style="width: 15px" /> --}}
@@ -243,7 +243,7 @@
                                                     Add Balance
                                                 </a>
                                                 <a class=" dropdown-item" data-bs-toggle="modal"
-                                                    data-bs-target="#addCustomerCard{{ $user->customer->id }}"
+                                                    data-bs-target="#addCustomerCard{{ $user->customer?->id }}"
                                                     style="cursor: pointer">
 
                                                     <img src="{{ asset('back/assets/dasheets/img/menu.svg') }}"

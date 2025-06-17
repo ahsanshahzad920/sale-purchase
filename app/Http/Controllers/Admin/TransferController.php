@@ -180,7 +180,7 @@ class TransferController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($subdomain,$id)
     {
         $transfer = Transfer::find($id);
         $transfer->load('from_warehouse', 'to_warehouse', 'transfer_products');
@@ -196,7 +196,7 @@ class TransferController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $req, $id)
+    public function update(Request $req,$subdomain, $id)
     {
         // return $request->all();
         $req->validate([
@@ -283,7 +283,7 @@ class TransferController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($subdomain,$id)
     {
         $transfer = Transfer::find($id);
 
@@ -309,7 +309,7 @@ class TransferController extends Controller
             return redirect()->route('transfers.index')->with('success', 'Transfer has been deleted successfully!');
         }
     }
-    public function deleteTransfer(Request $req)
+    public function deleteTransfer($subdomain,Request $req)
     {
         if (!empty($req->ids) && is_array($req->ids)) {
             // dd($req->all());

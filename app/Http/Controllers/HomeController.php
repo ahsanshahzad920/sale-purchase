@@ -35,18 +35,46 @@ class HomeController extends Controller
     public function index()
     {
         // return redirect(route('dashboard'));
-        $products = Product::with('images')->where('status','1')->take(8)->get();
-        $new_products = Product::with('images')->where('status','1')->latest()->take(6)->get();
-        $brands = Brand::all();
-        $categories = Category::where('status', 1)->get();
+        $user = app('currentTenant')->user;
+        // dd($user);
+        $products = Product::with('images')
+            ->where([
+                ['status', '1'],
+                ['tenant_id', getTenantId()],
+            ])
+            ->take(8)
+            ->get();
+
+        // $new_products = Product::with('images')->where('created_by',$user->id)->where('status','1')->latest()->take(6)->get();
+        $new_products = Product::with('images')
+            ->where([
+                ['status', '1'],
+                ['tenant_id', getTenantId()],
+            ])
+            ->latest()
+            ->take(6)
+            ->get();
+        $brands = Brand::where('tenant_id',getTenantId())->get();
+        $categories = Category::where('status', 1)->where('tenant_id',getTenantId())->get();
+        // $top_selling_products = ProductItem::with('product.category', 'product.images')
+        //     ->select('product_id', DB::raw('SUM(quantity) as total_quantity'), DB::raw('COUNT(*) as total_sales'))
+        //     ->groupBy('product_id')
+        //     ->limit(3)->get();
         $top_selling_products = ProductItem::with('product.category', 'product.images')
-            ->select('product_id', DB::raw('SUM(quantity) as total_quantity'), DB::raw('COUNT(*) as total_sales'))
-            ->groupBy('product_id')
-            ->limit(3)->get();
-        $banner_sections = BannerSection::get();
-        $ads = Ad::all();
-        $headings = LandingPageHeading::first();
-        $setting = Setting::first();
+        ->select('product_id', DB::raw('SUM(quantity) as total_quantity'), DB::raw('COUNT(*) as total_sales'))
+        ->where('tenant_id', getTenantId())
+        ->whereHas('product', function ($query) use ($user) {
+            $query->where('created_by', $user->id); // or use $user->id if passed explicitly
+        })
+        ->groupBy('product_id')
+        ->orderByDesc('total_quantity')
+        ->limit(3)
+        ->get();
+
+        $banner_sections = BannerSection::where('tenant_id',getTenantId())->get();
+        $ads = Ad::where('tenant_id',getTenantId())->get();
+        $headings = LandingPageHeading::where('tenant_id',getTenantId())->first();
+        $setting = Setting::where('tenant_id',getTenantId())->first();
         return view('user.index', compact('new_products', 'categories', 'brands', 'top_selling_products', 'banner_sections', 'ads', 'products','headings','setting'));
     }
 
@@ -54,15 +82,18 @@ class HomeController extends Controller
     public function search(Request $request)
     {
         $search = $request->input('search');
-        $products = Product::where('name', 'like', '%' . $search . '%')->get();
+        $products = Product::where('name', 'like', '%' . $search . '%')->where('tenant_id',getTenantId())->get();
         return view('user.search', compact('products'));
     }
 
 
     public function viewCategoryProducts($code){
         // dd($code);
-        $category = SubCategory::where('code',$code)->first();
-        $query = Product::with('images','product_warehouses')->where('status','1')->where('sub_category_id',$category->id);
+        $category = SubCategory::where('code',$code)->where('tenant_id',getTenantId())->first();
+        $query = Product::with('images','product_warehouses')
+            ->where('status','1')
+            ->where('sub_category_id',$category->id)
+            ->where('tenant_id',getTenantId());
 
 
 
@@ -77,10 +108,10 @@ class HomeController extends Controller
         $products = $query->get();
 
 
-        $min_price = Product::where('sell_price', '>', 0)->min('sell_price');
-        $max_price = Product::where('sell_price', '>', 0)->max('sell_price');
-        $ads = Ad::first();
-        $setting = Setting::first();
+        $min_price = Product::where('sell_price', '>', 0)->where('tenant_id',getTenantId())->min('sell_price');
+        $max_price = Product::where('sell_price', '>', 0)->where('tenant_id',getTenantId())->max('sell_price');
+        $ads = Ad::where('tenant_id',getTenantId())->first();
+        $setting = Setting::where('tenant_id',getTenantId())->first();
         return view('user.category_products',compact('products','category','min_price','max_price','ads','setting'));
     }
 
@@ -107,7 +138,8 @@ class HomeController extends Controller
     public function shopPage(Request $request)
     {
 
-        $query = Product::with('images','category')->where('status','1');
+        $query = Product::with('images','category')->where('status','1')
+            ->where('tenant_id',getTenantId());
 
         if ($request->has('categories')) {
 
@@ -149,13 +181,15 @@ class HomeController extends Controller
             return response()->json($products);
         }
 
-        $categories = Category::where('status', 1)->get();
-        $min_price = Product::where('sell_price', '>', 0)->min('sell_price');
-        $max_price = Product::where('sell_price', '>', 0)->max('sell_price');
+        $categories = Category::where('status', 1)
+            ->where('tenant_id', getTenantId())
+            ->get();
+        $min_price = Product::where('sell_price', '>', 0)->where('tenant_id',getTenantId())->min('sell_price');
+        $max_price = Product::where('sell_price', '>', 0)->where('tenant_id',getTenantId())->max('sell_price');
         // $max_price = 1000.00;
-        $brands = Brand::all();
-        $ads = Ad::first();
-        $setting = Setting::first();
+        $brands = Brand::where('tenant_id',getTenantId())->get();
+        $ads = Ad::where('tenant_id',getTenantId())->first();
+        $setting = Setting::where('tenant_id',getTenantId())->first();
 
 
         return view('user.shop', compact('products', 'categories', 'brands','min_price','max_price','ads','setting'));

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Warehouse extends Model
 {
     use HasFactory, Searchable;
+    protected $table = 'warehouses';
 
     protected $guarded = ['id'];
     protected $fillable = [
@@ -47,7 +48,7 @@ class Warehouse extends Model
     {
         return $this->hasMany(Purchase::class)->with('purchase_return');
     }
-    
+
     public function purchase_returns()
     {
         // purchase_return table has purchase_id column and purchases table has warehouse_id column
@@ -80,4 +81,15 @@ class Warehouse extends Model
     //         $builder->latest();
     //     });
     // }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('warehouses.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
+        });
+    }
 }

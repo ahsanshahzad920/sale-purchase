@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="col-md-8 col-12 text-end">
-                            <a href="{{ route('landing-page-heading.edit', 1) }}"
+                            <a href="{{ route('landing-page-heading.edit', getTenantId()) }}"
                                 class="btn save-btn text-white mt-2">Heading Section</a>
                             <a href="{{ route('ads.index') }}" class="btn save-btn text-white mt-2">Ads Section</a>
                             <button class="btn create-btn rounded-3 mt-2" data-bs-target="#exampleModalToggle"

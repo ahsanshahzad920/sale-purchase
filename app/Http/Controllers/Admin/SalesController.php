@@ -62,7 +62,7 @@ class SalesController extends BaseController
         $this->middleware('permission:sale-show', ['only' => ['show']]);
     }
 
-    public function index(Request $req)
+    public function index($subdomain, Request $req)
     {
         if ($req->filled('search')) {
 
@@ -136,7 +136,7 @@ class SalesController extends BaseController
         }
     }
 
-    public function filterSales(Request $req)
+    public function filterSales($subdomain, Request $req)
     {
         $query = Sale::with('customer', 'warehouse');
 
@@ -647,7 +647,7 @@ class SalesController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($subdomain, $id)
     {
         $sale = Sale::find($id);
         $sale->load('productItems', 'customer', 'warehouse', 'invoice');
@@ -657,7 +657,7 @@ class SalesController extends BaseController
         return view('back.sales.sale-detail', compact('sale', 'logo', 'totalDue'));
     }
 
-    public function downloadInvoice($id)
+    public function downloadInvoice($subdomain, $id)
     {
         $sale = Sale::find($id);
         $sale->load('productItems', 'customer', 'warehouse', 'invoice');
@@ -675,7 +675,7 @@ class SalesController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($subdomain, string $id)
     {
 
         $sale = Sale::find($id);
@@ -692,7 +692,7 @@ class SalesController extends BaseController
     }
 
 
-    public function update(Request $request, $id)
+    public function update($subdomain, Request $request, $id)
     {
         // dd($request->all());
         try {
@@ -913,7 +913,7 @@ class SalesController extends BaseController
 
 
 
-    public function destroy($id)
+    public function destroy($subdomain, $id)
     {
         try {
             // Find the sale in your local database
@@ -954,6 +954,8 @@ class SalesController extends BaseController
 
 
             $productItems = ProductItem::where('sale_id', $id)->get();
+            // dd($productItems);
+
             $productItems->load('sale_units', 'product.unit');
 
             foreach ($productItems as $product) {
@@ -1004,7 +1006,7 @@ class SalesController extends BaseController
     }
 
 
-    public function salesDelete(Request $req)
+    public function salesDelete($subdomain, Request $req)
     {
         if (!empty($req->ids) && is_array($req->ids)) {
             foreach ($req->ids as $key => $id) {
@@ -1056,7 +1058,7 @@ class SalesController extends BaseController
         }
     }
 
-    public function getProductDetails(Request $request)
+    public function getProductDetails($subdomain, Request $request)
     {
         if (!$request->query) {
             return response()->json(['success' => false]);
@@ -1081,7 +1083,8 @@ class SalesController extends BaseController
         }
     }
 
-    public function getProductDetailsByWarehouse(Request $request)
+    // working code 
+    public function getProductDetailsByWarehouse($subdomain,Request $request)
     {
 
         if (!$request->query) {
@@ -1091,6 +1094,7 @@ class SalesController extends BaseController
 
         $columns = [
             'products.id',
+            'products.tenant_id',
             'products.name',
             'products.sku',
             'products.barcode',
@@ -1160,6 +1164,90 @@ class SalesController extends BaseController
             return response()->json(['success' => false]);
         }
     }
+
+    // new code 
+    // public function getProductDetailsByWarehouse($subdomain, Request $request)
+    // {
+    //     if (!$request->query) {
+    //         return response()->json(['success' => false]);
+    //     }
+    
+    //     $code = $request->input('query');
+    //     $warehouseId = $request->warehouse_id;
+    //     $tenantId = getTenantId();
+    
+    //     $columns = [
+    //         'products.id',
+    //         'products.tenant_id',
+    //         'products.name',
+    //         'products.sku',
+    //         'products.barcode',
+    //         'products.purchase_price',
+    //         'products.sell_price',
+    //         'products.brand_id',
+    //         'products.category_id',
+    //         'products.sub_category_id',
+    //         'products.stock_alert',
+    //         'products.product_type',
+    //         'products.tax_type',
+    //         'products.order_tax',
+    //         'products.status',
+    //         'products.imei_no',
+    //         'products.product_unit',
+    //         'products.sale_unit',
+    //         'products.purchase_unit',
+    //         'products.warehouse_id',
+    //         'products.customer_id',
+    //         'products.quantity',
+    //         'products.shopify_id',
+    //         'products.created_by',
+    //         'products.updated_by',
+    //         'products.deleted_by',
+    //         'products.deleted_at',
+    //         'products.created_at',
+    //         'products.updated_at',
+    //         'products.product_live',
+    //         'products.new_product',
+    //         'products.featured_product',
+    //         'products.best_seller',
+    //         'products.recommended',
+    //         'products.product_weight_unit',
+    //         'products.product_weight',
+    //         'products.product_height',
+    //         'products.product_width',
+    //         'products.product_length',
+    //         'products.product_dimension_unit',
+    //     ];
+    
+    //     $product = Product::where(function ($query) use ($code, $tenantId) {
+    //         $query->where('products.sku', 'like', '%' . $code . '%')
+    //               ->orWhere('products.name', 'like', '%' . $code . '%')
+    //               ->orWhereHas('barcodes', function ($barcodeQuery) use ($code, $tenantId) {
+    //                   $barcodeQuery->where(function ($q) use ($code) {
+    //                       $q->where('barcodes.code', 'like', '%' . $code . '%');
+    //                   })
+    //                   ->where('barcodes.tenant_id', $tenantId); // Prefixed
+    //               });
+    //     })
+    //     ->with(['unit', 'sale_units', 'purchase_unit'])
+    //     ->leftJoin('product_warehouses', function ($join) use ($warehouseId) {
+    //         $join->on('products.id', '=', 'product_warehouses.product_id')
+    //              ->where('product_warehouses.warehouse_id', '=', $warehouseId);
+    //     })
+    //     ->select(array_merge($columns, ['product_warehouses.quantity as warehouse_quantity']))
+    //     ->whereNotNull('product_warehouses.product_id')
+    //     ->where('products.tenant_id', $tenantId) // Fully qualified
+    //     ->orderBy('products.created_at', 'desc')
+    //     ->get();
+    
+    //     if ($product->isNotEmpty()) {
+    //         return response()->json(['success' => true, 'product' => $product]);
+    //     } else {
+    //         return response()->json(['success' => false]);
+    //     }
+    // }
+    
+
     // public function getProductDetailsByWarehouse(Request $request)
     // {
 
@@ -1236,9 +1324,9 @@ class SalesController extends BaseController
         ];
         $products = Product::select($columns)
             ->with('category', 'unit', 'sale_units', 'images', 'product_warehouses')->whereHas('product_warehouses', function ($query) use ($request) {
-            $query->where('warehouse_id', $request->warehouse_id);
-            $query->where('quantity', '>', 0);
-        })->get();
+                $query->where('warehouse_id', $request->warehouse_id);
+                $query->where('quantity', '>', 0);
+            })->get();
 
         if ($products) {
             return response()->json(['success' => true, 'products' => $products]);
@@ -1581,7 +1669,7 @@ class SalesController extends BaseController
 
 
 
-    public function sendInvoiceToCustomer($email, $id)
+    public function sendInvoiceToCustomer($subdomain, $email, $id)
     {
 
         try {

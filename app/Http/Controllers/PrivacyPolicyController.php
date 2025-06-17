@@ -14,23 +14,23 @@ class PrivacyPolicyController extends Controller
      */
     public function index()
     {
-        $setting = Setting::first();
+        $setting = Setting::where('tenant_id',getTenantId())->first();
         return view('back.cms.privacy-policy',compact('setting'));
     }
     public function indexExchangePolicy()
     {
-        $setting = Setting::first();
+        $setting = Setting::where('tenant_id',getTenantId())->first();
         return view('back.cms.exchange-policy',compact('setting'));
     }
     public function indexReturnPolicy()
     {
-        $setting = Setting::first();
+        $setting = Setting::where('tenant_id',getTenantId())->first();
         return view('back.cms.return-policy',compact('setting'));
     }
 
     public function showInFrontEnd()
     {
-        $setting = Setting::first();
+        $setting = Setting::where('tenant_id',getTenantId())->first();
         return view('user.privacy-policy',compact('setting'));
     }
 
@@ -57,7 +57,7 @@ class PrivacyPolicyController extends Controller
         ]);
         
         Setting::updateOrCreate(
-            ['id' => 1],
+            ['tenant_id' => getTenantId()],
             ['privacy_policy' => $request->privacy_policy]
         );
         return redirect()->back()->with('success', 'Privacy policy updated successfully');
@@ -70,7 +70,7 @@ class PrivacyPolicyController extends Controller
         ]);
         
         Setting::updateOrCreate(
-            ['id' => 1],
+            ['tenant_id' => getTenantId()],
             ['exchange_policy' => $request->exchange_policy]
         );
         return redirect()->back()->with('success', 'Privacy policy updated successfully');
@@ -82,7 +82,7 @@ class PrivacyPolicyController extends Controller
         ]);
         
         Setting::updateOrCreate(
-            ['id' => 1],
+            ['tenant_id' => getTenantId()],
             ['return_policy' => $request->return_policy]
         );
         return redirect()->back()->with('success', 'Privacy policy updated successfully');

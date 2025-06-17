@@ -193,6 +193,7 @@ body {
   /* font-size: 11.382px; */
   font-size: 13.008px;
   font-weight: 400;
+  border:none !important;
 }
 
 .green-btn {

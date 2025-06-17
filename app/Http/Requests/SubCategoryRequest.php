@@ -23,7 +23,9 @@ class SubCategoryRequest extends FormRequest
      */
     public function rules()
     {
-        $subCategoryId = $this->route('sub_category') ? $this->route('sub_category')->id : null;
+        // $subCategoryId = $this->route('sub_category') ? $this->route('sub_category')->id : null;
+        $subCategoryId = $this->route('sub_category');
+        // dd($subCategoryId);
 
         if ($this->isMethod('post')) {
             return [

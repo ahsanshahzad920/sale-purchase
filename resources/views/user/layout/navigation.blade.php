@@ -135,11 +135,11 @@
                                 margin: 0px;
                                 transform: translate(0px, 40px);
                                 width: 228px;
-                                border-radius: 0 0 7px 7px;                              
+                                border-radius: 0 0 7px 7px;
                             "
                             data-popper-placement="bottom-start">
                             @php
-                                $brands = App\Models\Brand::with('category')->get();
+                                $brands = App\Models\Brand::where('created_by',app('currentTenant')->user->id)->with('category')->get();
                                 $visibleBrands = request()->routeIs('shop') || request()->routeIs('category.products') ? 2:5;  // Number of brands to show initially
                             @endphp
 

@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PurchaseInvoice extends Model
 {
     use HasFactory;
+    protected $table = 'purchase_invoices';
     protected $guarded = ['id'];
 
 
@@ -33,6 +35,18 @@ class PurchaseInvoice extends Model
     public function purchase(){
         return $this->belongsTo(Purchase::class,'purchase_id');
     }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('purchase_invoices.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
+        });
+    }
+
 
 
 }

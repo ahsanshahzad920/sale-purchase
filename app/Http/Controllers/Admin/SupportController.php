@@ -15,7 +15,7 @@ class SupportController extends Controller
      */
     public function index()
     {
-        $tickets = SupportTicket::orderBy('id','desc')->get();
+        $tickets = SupportTicket::orderBy('id','desc')->where('tenant_id',getTenantId())->get();
         return view('back.cms.support-ticket',compact('tickets'));
     }
 

@@ -1,0 +1,168 @@
+/* pre define css media query  */
+
+@media(max-width:992px) {
+    h1 {
+        font-size: 40px;
+    }
+
+    h2 {
+        font-size: 28px;
+    }
+
+    p {
+        font-size: 14px;
+    }
+
+    section {
+        padding: 40px 0;
+    }
+
+}
+
+@media(max-width:768px) {
+    .btn-primary {
+        padding: 4px 30px !important;
+    }
+
+
+
+}
+
+
+@media(max-width:375px) {
+    h1 {
+        font-size: 32px;
+    }
+
+}
+
+/* ************************************************** 992px  ************************************************** */
+@media(max-width:992px) {
+
+    /* navbar start  */
+    .navbar {
+        text-align: center;
+    }
+
+
+    .navbar .navbar-nav {
+        border-radius: 20px;
+        padding: 0;
+    }
+
+
+    .navbar .nav-link {
+        margin: 10px 0;
+    }
+
+    .navbar-toggler-icon {
+        background: none;
+    }
+
+    .navbar-toggler {
+        border: none;
+    }
+
+    /* navbar end */
+
+    /* #mad-for-everone section start  */
+    #made-for-everyone .box {
+        margin: 15px 0;
+    }
+
+    #made-for-everyone p {
+        margin: 20px 0 0 0;
+    }
+
+    /* #mad-for-everone section end */
+
+    /* feature section start  */
+    #feature p {
+        margin-bottom: 30px;
+    }
+
+    /* feature section emd */
+
+    /* pricing section start  */
+    #pricing .card {
+        margin: 20px 0;
+    }
+
+    #pricing p {
+        margin-bottom: 30px;
+    }
+
+    /* pricing section end */
+
+
+    /* Testimonials section start  */
+    #review p {
+        margin-bottom: 30px;
+    }
+
+    /* Testimonials section end */
+
+    /* footer start  */
+    #footer {
+        padding: 40px 0 0 0;
+    }
+
+    #footer .cta h2 {
+        width: 80%;
+    }
+
+    #footer .footer_contant ul {
+        justify-content: center;
+    }
+
+    #footer .footer_contant p {
+        margin: 30px 0;
+    }
+
+    #footer .footer_contant {
+        padding: 60px 0 0 0;
+    }
+
+    /* footer end */
+
+
+
+}
+
+
+/* ************************************************** 768px ************************************************** */
+
+@media(max-width:768px) {
+
+    /* hero section start  */
+    #hero h1 {
+        margin: 0 0 30px 0;
+    }
+
+    /* hero section end */
+
+    /* footer start  */
+    #footer {
+        padding: 40px 0 0 0;
+    }
+
+    #footer .cta h2 {
+        width: 100%;
+    }
+
+    #footer .cta {
+        padding: 20px 0;
+    }
+
+    #footer .footer_img {
+        margin: 50px 0 20px 0;
+    }
+
+    /* footer end */
+}
+
+
+/* ************************************************** 375px ************************************************** */
+
+
+@media(max-width:375px) {}

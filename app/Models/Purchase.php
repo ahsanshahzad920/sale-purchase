@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Purchase extends Model
 {
     use HasFactory, Searchable;
+    protected $table = 'purchases';
 
     protected $fillable = [
         'date',
@@ -95,6 +96,15 @@ class Purchase extends Model
         static::addGlobalScope('latest', function (Builder $builder) {
             $builder->latest();
         });
+
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('purchases.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
+        });
+
     }
 
     public function account()

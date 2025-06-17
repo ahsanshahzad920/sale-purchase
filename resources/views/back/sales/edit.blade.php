@@ -336,7 +336,6 @@
                                     <label for="discount" class="mb-1 fw-bold">Discount</label>
                                     <input type="number" placeholder="$0.00" class="form-control subheading"
                                         id="discount" value="{{ $sale->discount ?? '' }}" />
-
                                 </div>
                             </div>
                         </div>
@@ -989,13 +988,12 @@
 
             $('#customers').change(function() {
                 var discount = $('option:selected', this).data('discount');
-                
                 // $('#discount_display').text('$' + discount.toFixed(2));
 
                 let saleCustomerId = "{{$sale->customer_id}}";
                 if(saleCustomerId != $('option:selected', this).val()){
-                    $('#discount').val(discount);
                     $('#discount_display').text('%' + discount.toFixed(2));
+                    $('#discount').val(discount);
                 }
 
                 // $('#discount').trigger('input');
@@ -1634,7 +1632,8 @@
 
                 // AJAX request to server
                 $.ajax({
-                    url: "/sales/{{ $sale->id }}",
+                    // url: "/sales/{{ $sale->id }}",
+                    url: "{{route('sales.update', $sale->id)}}",
                     type: 'PUT',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

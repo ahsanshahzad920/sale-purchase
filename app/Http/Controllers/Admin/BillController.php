@@ -79,7 +79,7 @@ class BillController extends BaseController
 
     }
 
-    public function addPayment(Request $req,){
+    public function addPayment(Request $req,$subdomain){
             $req->validate([
                 'account_id' => 'required',
                 'amount' => 'required',
@@ -110,7 +110,7 @@ class BillController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($subdomain,$id)
     {
         $bill = Purchase::find($id);
         $bill->load('vendor','warehouse','purchaseItems','bill');
@@ -127,7 +127,7 @@ class BillController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($subdomain,$id)
     {
         $bill = Bill::find($id);
         $bill->load('vendor','warehouse','ProductItems');
@@ -144,7 +144,7 @@ class BillController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $req, $id)
+    public function update(Request $req,$subdomain, $id)
     {
          // Define validation rules
          $req->validate([
@@ -176,7 +176,7 @@ class BillController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($subdomain,$id)
     {
         $bill = PayBill::where('purchase_id',$id)->first();
         if($bill){

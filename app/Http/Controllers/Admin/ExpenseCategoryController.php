@@ -62,8 +62,10 @@ class ExpenseCategoryController extends BaseController
      * @param  \App\Models\ExpenseCategory  $expenseCategory
      * @return \Illuminate\Http\Response
      */
-    public function show(ExpenseCategory $expenseCategory)
+    public function show($subdomain,$id)
     {
+        $expenseCategory = ExpenseCategory::findOrFail($id);
+
         return $this->handleException(function () use ($expenseCategory) {
             return view('back.expense-categories.show', compact('expenseCategory'));
         });
@@ -75,8 +77,9 @@ class ExpenseCategoryController extends BaseController
      * @param  \App\Models\ExpenseCategory  $expenseCategory
      * @return \Illuminate\Http\Response
      */
-    public function edit(ExpenseCategory $expenseCategory)
+    public function edit($subdomain,$id)
     {
+        $expenseCategory = ExpenseCategory::findOrFail($id);
         return $this->handleException(function () use ($expenseCategory) {
             return view('back.expense-categories.edit', compact('expenseCategory'));
         });
@@ -89,8 +92,10 @@ class ExpenseCategoryController extends BaseController
      * @param  \App\Models\ExpenseCategory  $expenseCategory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ExpenseCategory $expenseCategory)
+    public function update(Request $request,$subdomain ,$id)
     {
+        $expenseCategory = ExpenseCategory::findOrFail($id);
+
         return $this->handleException(function () use ($request, $expenseCategory) {
             $data = $request->validate([
                 'name' => 'required|string',
@@ -112,16 +117,17 @@ class ExpenseCategoryController extends BaseController
      * @param  \App\Models\ExpenseCategory  $expenseCategory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ExpenseCategory $expenseCategory)
+    public function destroy($subdomain,$id)
     {
+        $expenseCategory = ExpenseCategory::findOrFail($id);
         return $this->handleException(function () use ($expenseCategory) {
             $expenseCategory->delete();
             return redirect()->route('expense-categories.index')
                 ->with('success', 'Expense category deleted successfully.');
         });
     }
-    
-    public function deleteExpenseCategory(Request $req)
+
+    public function deleteExpenseCategory($subdomain,Request $req)
     {
         if(!empty($req->ids) && is_array($req->ids)){
             // dd($req->all());

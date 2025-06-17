@@ -1306,10 +1306,8 @@
                         $('#fedex_api_section .list-group').append(freeShippingOption);
                         $('#fedex_api_section .list-group').append(storePickupOption);
                     }
-
                 });
             }
-
 
             getFedexMethods();
 

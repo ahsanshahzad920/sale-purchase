@@ -18,7 +18,7 @@ class ProductReviewController extends Controller
     }
     public function adminPageIndex()
     {
-        $reviews = ProductReview::with('product')->get();
+        $reviews = ProductReview::with('product')->where('tenant_id',getTenantId())->get();
         return view('back.cms.product-feedback.index',compact('reviews'));
 
     }
@@ -55,7 +55,8 @@ class ProductReviewController extends Controller
             'email' => $request->email,
             'review' => $request->review,
             'product_id' => $request->product_id,
-            'rating' => $request->rating
+            'rating' => $request->rating,
+            'tenant_id' => getTenantId()
         ]);
 
         return redirect()->back()->with('success', 'Review submitted successfully!');

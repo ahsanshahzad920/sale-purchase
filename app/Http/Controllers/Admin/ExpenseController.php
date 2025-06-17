@@ -108,8 +108,9 @@ class ExpenseController extends BaseController
      * @param  \App\Models\Expense  $expense
      * @return \Illuminate\Http\Response
      */
-    public function show(Expense $expense)
+    public function show($subdomain,$id)
     {
+        $expense = Expense::findOrFail($id);
         return $this->handleException(function () use ($expense) {
             return view('back.expenses.show', compact('expense'));
         });
@@ -121,7 +122,7 @@ class ExpenseController extends BaseController
      * @param  \App\Models\Expense  $expense
      * @return \Illuminate\Http\Response
      */
-    public function edit(Expense $expense)
+    public function edit($subdomain,Expense $expense)
     {
         return $this->handleException(function () use ($expense) {
             $warehouses = Warehouse::all();
@@ -138,7 +139,7 @@ class ExpenseController extends BaseController
      * @param  \App\Models\Expense  $expense
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Expense $expense)
+    public function update(Request $request,$subdomain, Expense $expense)
     {
 
         return $this->handleException(function () use ($request, $expense) {
@@ -173,7 +174,7 @@ class ExpenseController extends BaseController
      * @param  \App\Models\Expense  $expense
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Expense $expense)
+    public function destroy($subdomain,Expense $expense)
     {
         return $this->handleException(function () use ($expense) {
             $account = Account::find($expense->account_id);
@@ -187,7 +188,7 @@ class ExpenseController extends BaseController
         });
     }
 
-    public function deleteExpenses(Request $req)
+    public function deleteExpenses($subdomain,Request $req)
     {
         if(!empty($req->ids) && is_array($req->ids)){
             // dd($req->all());

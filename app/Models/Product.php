@@ -62,6 +62,7 @@ class Product extends Model
         'rack',
         'shelf',
         'bin',
+        'tenant_id',
     ];
 
     public function category()
@@ -221,6 +222,14 @@ class Product extends Model
     {
         static::addGlobalScope('latest', function (Builder $builder) {
             $builder->latest();
+        });
+
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('products.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
         });
     }
 }

@@ -74,6 +74,9 @@ class Kernel extends HttpKernel
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
         'isAdminOrManager' => \App\Http\Middleware\isAdminOrManager::class,
         'isNotUser' => \App\Http\Middleware\isNotUser::class,
+        'append.subdomain' => \App\Http\Middleware\AppendSubdomain::class,
+        'check.subdomain.status' => \App\Http\Middleware\CheckSubdomainStatus::class,
+        'check.plan.limitation' => \App\Http\Middleware\CheckPlanLimitation::class,
 
     ];
 }

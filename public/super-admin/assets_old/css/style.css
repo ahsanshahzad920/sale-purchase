@@ -1,0 +1,395 @@
+/* google font link  */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+
+/* css reset or pre define css   */
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Inter", sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 60px;
+    font-weight: bold;
+    color: var(--heading);
+}
+
+h2 {
+    font-size: 48px;
+    font-weight: bold;
+    color: var(--heading);
+}
+
+h3 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+p {
+    color: var(--text);
+    line-height: 140%;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+section {
+    padding: 80px 0;
+}
+
+
+/* css variable  */
+:root {
+    --main: #EB9646;
+    --heading: #000000;
+    --text: #525E6F;
+    --background: #FAFAFA;
+}
+
+
+
+/* coustom class  */
+
+.icon_btn {
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    color: black;
+    font-size: 18px;
+    font-weight: 600;
+    transition: all 0.2s linear !important;
+
+}
+
+.icon_btn:hover {
+    transform: scale(1.2) !important;
+    transition: all 0.2s linear !important;
+}
+
+.btn-primary {
+    border: 1px solid transparent;
+    background-color: black;
+    color: white;
+    border-radius: 100px;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 10px 40px;
+    box-shadow: 0 10px 34px -16px black;
+
+}
+
+.btn-primary:hover {
+    border: 1px solid black;
+    background-color: transparent;
+    color: black;
+    border-radius: 100px;
+}
+
+.btn-primary:focus {
+    border: 1px solid var(--heading) !important;
+    background-color: transparent !important;
+    color: var(--text) !important;
+    border-radius: 100px;
+}
+
+/* navbar design start  */
+.navbar {
+    background-color: transparent;
+    padding-top: 20px;
+}
+
+.navbar .navbar-nav {
+    background-color: black;
+    border-radius: 100px;
+    padding: 8px 20px;
+}
+
+.navbar .nav-item {
+    margin: 0 20px;
+    padding: 0;
+    transition: all 0.2s linear;
+
+}
+
+.navbar .nav-item:hover {
+    transform: scale(1.2);
+    transition: all 0.2s linear;
+}
+
+.navbar .nav-link {
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+
+
+}
+
+.navbar .nav-link:hover {
+    color: var(--main);
+
+}
+
+.navbar .active {
+    color: var(--main) !important;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+}
+
+
+/* navbar design end */
+
+
+/* hero section start  */
+#hero {
+    padding-bottom: 0 !important;
+}
+
+#header {
+    background: url(../images/hero_bg.svg) center center/cover;
+}
+
+#hero h1 span {
+    color: #AAAAAA;
+}
+
+#hero p {
+    color: #000000;
+}
+
+
+/* hero section end */
+
+/* made-for-everyone section start  */
+
+#made-for-everyone .box {
+    background-color: var(--background);
+    padding: 30px;
+    text-align: center;
+}
+
+#made-for-everyone .box .img-fluid {
+    margin-bottom: 20px;
+}
+
+
+/* made-for-everyone section end */
+
+/* about us section start  */
+#about {
+    background-color: var(--background);
+}
+
+#about ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#about ul li p {
+    margin: 0;
+    padding: 0;
+}
+
+#about ul li {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+}
+
+/* about us section end */
+
+/* feature section start  */
+
+
+#feature p {
+    margin-bottom: 60px;
+}
+
+#feature .card {
+    margin: 20px 0;
+    padding: 16px !important;
+    border-radius: 12px;
+    transition: all 0.2s linear;
+    background-color: var(--background);
+
+}
+
+#feature .card:hover {
+    transform: translateY(-10px);
+    transition: all 0.2s linear;
+}
+
+#feature .card p {
+    margin-bottom: 0 !important;
+}
+
+#feature .card .img-fluid {
+    width: 56px;
+}
+
+/* feature section end  */
+
+/* pricing section start  */
+#pricing {
+    background-color: var(--background);
+}
+
+#pricing p {
+    margin-bottom: 60px;
+}
+
+#pricing .card {
+    border: none;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+#pricing .card h4 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+#pricing .card h3 {
+    font-size: 36px;
+    margin: 10px 0;
+}
+
+#pricing .card span {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+#pricing .card p {
+    margin: 0 !important;
+}
+
+#pricing .card ul {
+    list-style: none;
+    margin: 14px 0;
+    padding: 0;
+}
+
+#pricing .card ul li {
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+}
+
+#pricing .card .img-fluid {
+    margin-right: 10px;
+}
+
+#pricing .card:hover {
+    transform: scale(1.2);
+    z-index: 999;
+    cursor: pointer;
+    transition: all 0.2s linear;
+
+}
+
+/* pricing section end */
+
+/* Testimonials section start  */
+
+#review p {
+    margin-bottom: 60px;
+}
+
+#review .review_card {
+    background-color: var(--background);
+    padding: 20px;
+}
+
+#review .review_text p {
+    font-size: 16px;
+    margin: 0;
+}
+
+#review .client_name h4 {
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Testimonials section end */
+
+/* footer start  */
+#footer {
+    padding: 80px 0 0 0;
+    background: url(../images/footer_bg.svg);
+    background-repeat: no-repeat;
+    background-position: bottom;
+}
+
+#footer .cta {
+    background-color: var(--background);
+    padding: 64px 0;
+    text-align: center;
+    box-shadow: 0 0 0px 10px #E8EAFE;
+    border-radius: 12px;
+    /* margin-bottom: -200px; */
+}
+
+#footer .cta h2 {
+    width: 70%;
+    display: inline-flex;
+    margin: 30px 0;
+}
+
+#footer .cta p {
+    margin-bottom: 30px;
+}
+
+
+#footer .footer_contant {
+    padding: 100px 0 60px 0;
+}
+
+#footer .footer_contant p {
+    margin: 0;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+}
+
+#footer .footer_contant .border_box {
+    padding: 30px 0;
+    border-top: 1px solid var(--main);
+    border-bottom: 1px solid var(--main);
+}
+
+#footer .footer_contant ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    justify-content: end;
+
+}
+
+#footer .footer_contant li {
+    margin: 0;
+    padding: 0;
+    margin: 0 5px;
+    transition: all 0.2s linear;
+
+}
+
+#footer .footer_contant li:hover {
+    transform: scale(1.2);
+    transition: all 0.2s linear;
+}
+
+#footer .footer_img {
+    margin: -250px 0 0 0;
+}
+
+/* footer end */

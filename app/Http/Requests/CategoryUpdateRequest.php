@@ -23,9 +23,17 @@ class CategoryUpdateRequest extends FormRequest
      */
     public function rules()
     {
+        // return [
+        //     'name' => 'required|unique:categories,name,' . $this->category->id . '|max:255',
+        //     'code' => 'required|unique:categories,code,' . $this->category->id . '|max:255',
+        //     'description' => 'nullable',
+        //     'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        //     'brand_id' => 'required|exists:brands,id',
+        // ];
+        dd($this->id);
         return [
-            'name' => 'required|unique:categories,name,' . $this->category->id . '|max:255',
-            'code' => 'required|unique:categories,code,' . $this->category->id . '|max:255',
+            'name' => 'required|unique:categories,name,' . $this->id . '|max:255',
+            'code' => 'required|unique:categories,code,' . $this->id . '|max:255',
             'description' => 'nullable',
             'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'brand_id' => 'required|exists:brands,id',

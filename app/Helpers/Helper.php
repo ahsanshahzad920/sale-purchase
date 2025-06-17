@@ -161,3 +161,14 @@ if (!function_exists('adminSidebarRoutes')) {
 
     }
 }
+
+
+function getTenant()
+{
+    return app('currentTenant');
+}
+
+function getTenantId()
+{
+    return app('currentTenant')?->id;
+}

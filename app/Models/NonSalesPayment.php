@@ -54,5 +54,13 @@ class NonSalesPayment extends Model
         static::addGlobalScope('latest', function (Builder $builder) {
             $builder->latest();
         });
+
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('non_sales_payment.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
+        });
     }
 }

@@ -104,7 +104,7 @@ class UnitController extends BaseController
      * @param  \App\Models\Unit  $unit
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $req,$id)
+    public function update($subdomain,Request $req,$id)
     {
 
         $unit = Unit::find($id);
@@ -144,14 +144,16 @@ class UnitController extends BaseController
      * @param  \App\Models\Unit  $unit
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Unit $unit)
+    public function destroy($subdomain,$id)
     {
+            $unit = Unit::find($id);
             $unit->delete();
 
             return redirect()->route('units.index')
                 ->with('success', 'Unit deleted successfully.');
     }
-    public function deleteUnit(Request $req)
+
+    public function deleteUnit($subdomain,Request $req)
     {
         if(!empty($req->ids) && is_array($req->ids)){
             // dd($req->all());
@@ -159,8 +161,8 @@ class UnitController extends BaseController
                 Unit::find($id)->delete();
             }
             return response()->json(['status' => 200,'message' => 'Unit Deleted Successfully!']);
-           
-        }          
+
+        }
 
     }
 }

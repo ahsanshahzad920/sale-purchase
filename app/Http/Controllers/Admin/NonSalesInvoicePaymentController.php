@@ -279,7 +279,7 @@ class NonSalesInvoicePaymentController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(string $id)
+    public function edit($subdomain,string $id)
     {
         $customers = Customer::with('sales', 'sales.invoice')->get();
         $accounts = Account::all();
@@ -295,7 +295,7 @@ class NonSalesInvoicePaymentController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $subdomain,string $id)
     {
         // dd($request->all());
         $data = $request->validate([
@@ -323,7 +323,7 @@ class NonSalesInvoicePaymentController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(string $id)
+    public function destroy($subdomain,string $id)
     {
         // $salesInvoicePayment = SalesInvoicePayment::findOrFail($id);
         // $result = $this->salesPaymentService->destroyPayment($salesInvoicePayment);
@@ -347,7 +347,7 @@ class NonSalesInvoicePaymentController extends BaseController
     }
 
 
-    public function multipleDelete(Request $req)
+    public function multipleDelete($subdomain,Request $req)
     {
 
         foreach ($req->ids as $key => $id) {

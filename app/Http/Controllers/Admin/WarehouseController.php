@@ -189,13 +189,15 @@ class WarehouseController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($subdomain,$id)
     {
-        $warehouse = Warehouse::find($id);
+        $warehouse = Warehouse::with('users')->find($id);
+        // dd($warehouse);
 
         if ($warehouse) {
 
             $user = User::find($warehouse->user_id);
+            // dd($user);
 
             if ($user) {
 

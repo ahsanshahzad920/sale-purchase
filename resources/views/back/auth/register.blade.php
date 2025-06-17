@@ -2,82 +2,6 @@
 @section('title', 'Register')
 @section('content')
 
-    {{-- <section id="signup" class="signup">
-        <div class="container">
-            <div class="signup-form">
-                <div>
-                    <h2 class="text-center">Create Account</h2>
-                </div>
-                <form class="row g-3" method="POST" action="{{ route('register') }}">
-                    @csrf
-                    <div>
-                        <label for="inputFirstName">Name</label>
-                        <input class="form-control @error('name') is-invalid @enderror" id="inputFirstName" name="name"
-                            type="text" placeholder="Enter your name" required />
-                        @error('name')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="inputEmail">Email address</label>
-                        <input class="form-control @error('email') is-invalid @enderror" id="inputEmail" type="email"
-                            name="email" placeholder="name@example.com" required />
-                        @error('email')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-
-                    <div>
-                        <label for="inputPassword">Password</label>
-                        <input class="form-control @error('password') is-invalid @enderror" id="inputPassword"
-                            type="password" name="password" placeholder="Create a password" required />
-                        @error('password')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="inputPasswordConfirm">Confirm Password</label>
-                        <input class="form-control @error('password_confirmation') is-invalid @enderror"
-                            id="inputPasswordConfirm" type="password" placeholder="Confirm password"
-                            name="password_confirmation" />
-                        @error('password_confirmation')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                    <button class="btn save-btn text-white w-100 mt-3 rounded-5">Sign Up</button>
-
-                    <div class="exist mt-3">
-                        <p class="exist">Already have an account? <a href="{{route('login')}}" class="text-decoration-none">Sign
-                                In</a></p>
-                    </div>
-
-                    <div class="or">
-                        <p class="text-center">or</p>
-                    </div>
-
-                    <div>
-                        <button class="btn create-btn w-100 rounded-5">
-                            <img src="{{asset('back/assets/dasheets/img/google.png')}}" class="pe-2" alt="" />Sign
-                            in with Google
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </section> --}}
-
     <section class="signup position-relative">
         <div class="right-down-arrow">
             <img src="{{ asset('back/assets/dasheets/img/Ellipse.png') }}" class="img-fluid" alt="" />
@@ -120,6 +44,13 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
+                            {{-- <input type="text" class="form-control subheading" placeholder="Subdomain Name"
+                                id="subdomain" name="subdomain" />
+                            @error('last_name')
+                                <span class="text-danger" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror --}}
                             <div class="password-container">
                                 <input type="password" id="password" class="password-input form-control subheading"
                                     placeholder="Password" name="password"

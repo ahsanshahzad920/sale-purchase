@@ -1,6 +1,9 @@
 @extends('back.layout.app')
-@section('title', 'All Bills')
+
+@section('title', 'Inventories')
 @section('style')
+
+    </style>
     <link href="{{ asset('back/assets/js/datatable/css/dataTables.bootstrap5.min.css') }}" rel="stylesheet" />
     <style>
         .dataTables_paginate {
@@ -16,40 +19,54 @@
         }
     </style>
 @endsection
-
 @section('content')
-
     <div class="content">
-
         <div class="container-fluid pt-4 px-4 mb-5">
             <div class="border-bottom">
-                <h3 class="all-adjustment text-center pb-2 mb-0">All Bill</h3>
+                <h3 class="all-adjustment text-center pb-2 mb-0">All Inventory</h3>
             </div>
+
+            {{-- <div class="row my-3">
+                <div class="col-md-3 col-12 mt-2">
+                    <input type="text" placeholder="Search" class="form-control rounded-5 subheading">
+                </div>
+
+                <div class="col-md-9 col-12 text-end">
+                    <a href="#" class="btn create-btn rounded-3 mt-2">Filter <i class="bi bi-funnel"></i></a>
+                    <a href="#" class="btn border-danger text-danger rounded-3 mt-2 excel-btn">Excel <i
+                            class="bi bi-file-earmark-text"></i></a>
+                    <a href="#" class="btn pdf rounded-3 mt-2">Pdf <i class="bi bi-file-earmark"></i></a>
+                    <a href="{{route('inventories.create')}}" class="btn create-btn rounded-3 mt-2">Create <i class="bi bi-plus-lg"></i></a>
+                </div>
+            </div> --}}
 
             @include('back.layout.errors')
 
-            <div class="card border-0 card-shadow rounded-3 p-2 mt-5">
+            <div class="card border-0 card-shadow rounded-3 p-2 mt-4">
                 <div class="card-header border-0 bg-white">
                     <div class="row my-3">
                         <div class="col-md-3 col-12 mt-2">
                             <div class="input-search position-relative">
-                                <input type="text" placeholder="Search Bill" class="form-control rounded-3 subheading"
-                                    id="custom-filter" />
+                                <input type="text" placeholder="Search Inventory"
+                                    class="form-control rounded-3 subheading" id="custom-filter" />
                                 <span class="fa fa-search search-icon text-secondary"></span>
                             </div>
                         </div>
 
                         <div class="col-md-9 col-12 text-end">
+                            <a href="#" class="btn create-btn rounded-3 mt-2" type="button"
+                            data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop"
+                            aria-controls="staticBackdrop">Filter <i class="bi bi-funnel"></i></a>
                             <a href="#" class="btn rounded-3 mt-2 excel-btn" id="download-excel">Excel <i
                                     class="bi bi-file-earmark-text"></i></a>
-                            <a href="#" class="btn pdf rounded-3 mt-2" id="download-pdf">Pdf <i
+                            <a href="#" class="btn pdf rounded-3 mt-2" id="download-pdf"> Pdf <i
                                     class="bi bi-file-earmark"></i></a>
-                            {{-- <a href="{{ route('bills.create') }}" class="btn create-btn rounded-3 mt-2">Create <i
-                                    class="bi bi-plus-lg"></i></a> --}}
+                            <a href="{{ route('inventories.create') }}" class="btn create-btn rounded-3 mt-2">Create <i
+                                    class="bi bi-plus-lg"></i></a>
                         </div>
                     </div>
-
                 </div>
+
                 <div class="table-responsive">
                     <div class="alert alert-danger p-2 text-end" id="deletedAlert" style="display: none">
                         <div style="display: flex;justify-content:space-between">
@@ -60,7 +77,7 @@
                     <table class="table" id="example">
                         <thead>
                             <tr>
-                                <th>
+                                <th class="align-middle">
                                     <label for="myCheckbox09" class="checkbox">
                                         <input class="checkbox__input" type="checkbox" id="myCheckbox09" />
                                         <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
@@ -71,22 +88,21 @@
                                         </svg>
                                     </label>
                                 </th>
-                                <th class="text-secondary">Reference</th>
                                 <th class="text-secondary">Date</th>
-                                <th class="text-secondary">Vendor</th>
-                                <th class="text-secondary">Bill Amount</th>
-                                <th class="text-secondary">Status</th>
+                                <th class="text-secondary">Reference</th>
+                                <th class="text-secondary">Warehouse</th>
+                                <th class="text-secondary">Total Products</th>
                                 <th class="text-secondary">Action</th>
                             </tr>
                         </thead>
-
                         <tbody>
-                            @foreach ($purchases as $bill)
+
+                            @foreach ($inventories as $inventory)
                                 <tr>
-                                    <td class="pt-3">
+                                    <td class="align-middle">
                                         <label for="select-checkbox" class="checkbox">
                                             <input class="checkbox__input select-checkbox deleteRow" type="checkbox"
-                                                id="select-checkbox" data-id="{{ $bill->id }}" />
+                                                id="select-checkbox" data-id="{{ $inventory->id }}" />
                                             <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="0 0 22 22">
                                                 <rect width="21" height="21" x=".5" y=".5" fill="#FFF"
@@ -96,67 +112,60 @@
                                             </svg>
                                         </label>
                                     </td>
-                                    <td class="text-primary align-middle"><a class="text-decoration-none"
-                                            href="{{ route('bills.show', $bill->id) }}">{{ $bill->reference }}</a>
+                                    <td class="align-middle">{{ $inventory->date ?? '' }}</td>
+                                    <td class="align-middle">{{ $inventory->reference ?? '' }}</td>
+                                    <td class="text-primary align-middle">{{ $inventory->warehouse->users['name'] ?? '' }}
                                     </td>
-                                    <td class="align-middle">{{ $bill->date }}</td>
-                                    <td class="align-middle">{{ $bill->vendor->user->name ?? 'N/A' }}</td>
-                                    <td class="align-middle">${{ $bill->grand_total ?? '0.00' }}</td>
-                                    <td class="align-middle"><span
-                                            class="badges green-border text-center">{{ $bill->payment_status ?? '' }}</span>
-                                    </td>
+                                    <td class="align-middle">{{ $inventory->total_products ?? '' }}</td>
+
                                     <td class="align-middle">
-                                        <div>
-                                            <a class="btn btn-secondary bg-transparent border-0 text-dark" role="button"
-                                                id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
-                                                <i class="fa-solid fa-ellipsis-v"></i>
+
+                                        <div class="d-flex">
+
+                                            <a class=" text-decoration-none btn"
+                                                data-bs-target="#exampleModalToggle2{{ $inventory->id }}"
+                                                data-bs-toggle="modal">
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"
+                                                        stroke="#2563EB" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round" />
+                                                    <path
+                                                        d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"
+                                                        stroke="#2563EB" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round" />
+                                                </svg>
                                             </a>
 
-                                            <div class="dropdown-menu p-2 ps-0" aria-labelledby="dropdownMenuLink">
-                                                <?php
-                                                    $paidBill = App\Models\PayBill::where('purchase_id',$bill->id)->first();
+                                            <a href="{{ route('inventories.edit', $inventory->id) }}"
+                                                class=" text-decoration-none btn">
+                                                <img src="{{ asset('back/assets/dasheets/img/edit-2.svg') }}"
+                                                    class="p-0 ms-0" alt="" />
+                                            </a>
 
-                                                ?>
 
-                                                <button class="dropdown-item" @if (isset($paidBill)) disabled @endif data-bs-toggle="modal"
-                                                    data-bs-target="#exampleModalToggle" data-bill="{{ $bill }}">
-                                                    <img src="{{ asset('back/assets/dasheets/img/menu.svg') }}"
-                                                        class="img-fluid me-1" alt="" />
-                                                    Paybill
+                                            <form action="{{ route('inventories.destroy', $inventory->id) }}"
+                                                class="d-inline" method="post" action="">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn text-danger btn-outline-light"
+                                                    onclick="return confirm('Are you sure, you want to delete this record?')">
+                                                    <img src="{{ asset('back/assets/dasheets/img/plus-circle.svg') }}"
+                                                        class="p-0" data-bs-target="#exampleModalToggle2"
+                                                        data-bs-toggle="modal" alt="" />
                                                 </button>
-                                                <a class="dropdown-item" href="{{ route('bills.show', $bill->id) }}">
-                                                    <img src="{{ asset('back/assets/dasheets/img/menu.svg') }}"
-                                                        class="img-fluid me-1" alt="" />
-                                                    Detail Bill
-                                                </a>
-                                                {{-- <a class="dropdown-item" href="{{ route('bills.edit', $bill->id) }}">
-                                                    <img src="{{ asset('back/assets/dasheets/img/menu.svg') }}"
-                                                        class="img-fluid me-1" alt="" />
-                                                    Edit Bill
-                                                </a> --}}
-
-                                                <form id="deleteForm" action="{{ route('bills.destroy', $bill->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-
-                                                    <button type="submit" class="dropdown-item confirm-text">
-                                                        <img src="{{ asset('back/assets/dasheets/img/menu.svg') }}"
-                                                            class="img-fluid me-1" alt="">
-                                                        Delete Bill
-                                                    </button>
-                                                </form>
-
-                                            </div>
+                                            </form>
                                         </div>
-
+                                    </td>
                                 </tr>
                             @endforeach
-                        </tbody>
 
+
+                        </tbody>
                     </table>
                 </div>
+
                 <div class="card-footer bg-white border-0 rounded-3">
                     <div class="d-flex justify-content-between p-0">
                         <div class="row align-items-center">
@@ -187,305 +196,143 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-
-
-        <!-- Modal STart -->
-        {{-- <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
-            tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header border-0">
-                        <h3 class="all-adjustment text-center pb-2 mb-0" style="width: 57%;">
-                            Add Payment
-                        </h3>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="offcanvas offcanvas-end" tabindex="-1" id="staticBackdrop"
+                    aria-labelledby="staticBackdropLabel" style="width: 20rem">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="staticBackdropLabel">Filter</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                            aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <form id="createTransfer" action="{{ route('add-payment.store') }}" method="POST"
-                            enctype="multipart/form-data">
+                    <div class="offcanvas-body">
+                        <form action="{{ route('inventories.filter') }}" method="POST">
                             @csrf
-                            <div class="row mb-2">
-
+                            @method('POST')
+                            <div>
                                 <div class="form-group">
-                                    <label for="date" class="mb-1">Date <span class="text-danger">*</span></label>
-                                    <input type="date" class="form-control subheading" id="date" name="date"
-                                        value="{{ date('Y-m-d') }}">
+                                    <label for="date">Date</label>
+                                    <input type="date" class="form-control mt-2" name="date" id="date">
                                 </div>
-                                <input type="hidden" name="bill_id" id="bill_id" value="">
-
-                            </div>
-                            <div class="form-group">
-                                <label for="amount" class="mb-1">Amount <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control subheading" id="amount" name="amount"
-                                    placeholder="Enter Amount" required>
-                            </div>
-                            <div class="row">
+                                <div class="form-group">
+                                    <label for="reference">Reference</label>
+                                    <input type="text" class="form-control mt-2" name="reference" id="reference"
+                                        placeholder="Reference">
+                                </div>
 
                                 <div class="form-group">
-                                    <label for="from_account_id" class="mb-1 fw-bold">Account <span
-                                            class="text-danger">*</span></label>
-                                    <select class="form-control form-select subheading" name="account_id"
-                                        id="from_account_id" required>
-                                        <option disabled>Choose Account</option>
-                                        @forelse ($accounts as $account)
-                                            <option value="{{ $account->id }}">{{ $account->name }}</option>
-                                        @empty
-                                            <option disabled>No Account Found</option>
-                                        @endforelse
+                                    <label for="warehouse_id">Warehouse</label>
+                                    <select class="form-control form-select subheading mt-1"
+                                        aria-label="Default select example" name="warehouse_id" id="warehouse_id">
+                                        <option value="0">Select Warehouse</option>
+                                        @foreach ($warehouses as $warehouse)
+                                            <option value="{{ $warehouse->id }}">{{ $warehouse->users->name ?? ''}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
 
+
+                                <button class="btn save-btn text-white mt-3" type="submit">Filter <i
+                                        class="bi bi-funnel"></i></button>
+
                             </div>
-                            <div class="form-group mt-2">
-                                <label for="details" class="mb-1 fw-bold">Description</label>
-                                <textarea class="form-control subheading" id="description" name="description" placeholder="A few words"
-                                    rows="5"></textarea>
-                            </div>
-
-
-                            <button type="submit" class="btn save-btn text-white mt-2">Submit</button>
-
                         </form>
                     </div>
                 </div>
             </div>
-        </div> --}}
-        <!-- Modal End -->
+        </div>
+    </div>
 
-
-        <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel"
-            tabindex="-1">
-            <div class="modal-dialog modal-lg">
+    @foreach ($inventories as $inventory)
+        <!-- Modal 2 -->
+        <div class="modal fade" id="exampleModalToggle2{{ $inventory->id }}" aria-hidden="true"
+            aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">
-                            Choose the type of payment to send
-                        </h1>
+                    <div class="modal-header border-0">
+                        <h3 class="all-adjustment text-center pb-2 mb-0">
+                            Details
+                        </h3>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <nav>
-                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
-                                    data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
-                                    aria-selected="true">
-                                    Bank Payment (ACH)
-                                </button>
-                                <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab"
-                                    data-bs-target="#nav-profile" type="button" role="tab"
-                                    aria-controls="nav-profile" aria-selected="false">
-                                    Paper Check
-                                </button>
+
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="m-2">
+                                    <table class="table  table-bordered">
+                                        <thead class="fw-bold">
+                                            <th>Date</th>
+                                            <th>Warehouse</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>{{ $inventory->date ?? '' }}</td>
+                                                <td>
+                                                    {{ $inventory->warehouse->users['name'] ?? '' }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </nav>
-                        <div class="tab-content" id="nav-tabContent">
-                            <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
-                                aria-labelledby="nav-home-tab" tabindex="0">
-                                <form action="{{ route('bills.store') }}" method="POST">
-                                    @csrf
-                                    <div class="row">
-                                        <div class="col-md-6 mt-2">
-                                            <div class="form-group fw-bold">
-                                                <label for="exampleFormControlSelect1">Pay to</label>
-                                                <input type="text" class="form-control subheading mt-2" value=""
-                                                    name="pay_to" id="exampleFormControlInput1" required/>
-                                            </div>
-                                            <input type="hidden" name="type" value="Bank">
-                                            <input type="hidden" name="purchase_id" class="purchase_id">
-                                        </div>
-                                        <div class="col-md-6 mt-2">
-                                            <div class="form-group fw-bold">
-                                                <label for="exampleFormControlSelect1">Email</label>
-                                                <input type="text" class="form-control subheading mt-2" name="email"
-                                                    id="exampleFormControlInput1" required/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mt-2">
-                                            <div class="form-group fw-bold">
-                                                <label for="exampleFormControlSelect1">Zip code</label>
-                                                <input type="text" class="form-control subheading mt-2"
-                                                    id="exampleFormControlInput1" name="zip_code" required/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mt-2">
-                                            <div class="form-group fw-bold">
-                                                <label for="exampleFormControlSelect1">State</label>
-                                                <input type="text" class="form-control subheading mt-2"
-                                                    id="exampleFormControlInput1" name="state" required/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mt-2">
-                                            <div class="form-group fw-bold">
-                                                <label for="exampleFormControlSelect1">Bank Account Number (5-7)
-                                                    digits</label>
-                                                <input type="text" class="form-control subheading mt-2"
-                                                    id="exampleFormControlInput1" name="account_number" min="5" max="7" required/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mt-2">
-                                            <div class="form-group fw-bold">
-                                                <label for="exampleFormControlSelect1">Routing Number 19 digits</label>
-                                                <input type="text" class="form-control subheading mt-2"
-                                                    id="exampleFormControlInput1" name="routing_number" min="19"/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mt-2">
-                                            <div class="form-group fw-bold">
-                                                <label for="exampleFormControlSelect1">Bank Name</label>
-                                                <input type="text" class="form-control subheading mt-2"
-                                                    placeholder="Bank Name" id="exampleFormControlInput1" name="bank_name" required />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button class="btn save-btn mt-3 text-white" data-bs-target="#exampleModalToggle2"
-                                        data-bs-toggle="modal">
-                                        Save
-                                    </button>
-                                </form>
-                            </div>
-                            <div class="tab-pane fade" id="nav-profile" role="tabpanel"
-                                aria-labelledby="nav-profile-tab" tabindex="0">
-                                <form action="{{ route('bills.store') }}" method="POST">
-                                    @csrf
-                                    <div class="row">
-                                        <div class="col-md-6 mt-2">
-                                            <div class="form-group fw-bold">
-                                                <label for="exampleFormControlSelect1">Pay to</label>
-                                                <input type="text" class="form-control subheading mt-2" value=""
-                                                    name="pay_to" id="exampleFormControlInput1" required />
-                                            </div>
-                                            <input type="hidden" name="type" value="Paper Check">
-                                            <input type="hidden" class="purchase_id" name="purchase_id" required>
-                                        </div>
-                                        <div class="col-md-6 mt-2">
-                                            <div class="form-group fw-bold">
-                                                <label for="exampleFormControlSelect1">Email</label>
-                                                <input type="text" class="form-control subheading mt-2" name="email"
-                                                    id="exampleFormControlInput1" required/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mt-2">
-                                            <div class="form-group fw-bold">
-                                                <label for="exampleFormControlSelect1">Street Address or P.O Box</label>
-                                                <input type="text" class="form-control subheading mt-2"
-                                                     id="exampleFormControlInput1" name="street_address" required/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mt-2">
-                                            <div class="form-group fw-bold">
-                                                <label for="exampleFormControlSelect1">APT, Suit, Unit, Building</label>
-                                                <input type="text" class="form-control subheading mt-2"
-                                                     id="exampleFormControlInput1" name="full_address"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mt-2">
-                                            <div class="form-group fw-bold">
-                                                <label for="exampleFormControlSelect1">Zip code</label>
-                                                <input type="text" class="form-control subheading mt-2"
-                                                    id="exampleFormControlInput1" name="zip_code" required/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mt-2">
-                                            <div class="form-group fw-bold">
-                                                <label for="exampleFormControlSelect1">State</label>
-                                                <input type="text" class="form-control subheading mt-2"
-                                                    id="exampleFormControlInput1" name="state" required/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mt-2">
-                                            <div class="form-group fw-bold">
-                                                <label for="exampleFormControlSelect1">Bank Account Number (5-7)
-                                                    digits</label>
-                                                <input type="text" class="form-control subheading mt-2"
-                                                    id="exampleFormControlInput1" name="account_number" min="5" max="7"/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mt-2">
-                                            <div class="form-group fw-bold">
-                                                <label for="exampleFormControlSelect1">Routing Number 19 digits</label>
-                                                <input type="text" class="form-control subheading mt-2"
-                                                    id="exampleFormControlInput1" name="routing_number" required/>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mt-2">
-                                            <div class="form-group fw-bold">
-                                                <label for="exampleFormControlSelect1">Bank Name</label>
-                                                <input type="text" class="form-control subheading mt-2"
-                                                    value="Bank Name" id="exampleFormControlInput1" name="bank_name" required />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button class="btn save-btn mt-3 text-white" data-bs-target="#exampleModalToggle2"
-                                        data-bs-toggle="modal">
-                                        Save
-                                    </button>
-                                </form>
+                            <div class="col-md-7 me-2">
+                                <div class="m-2">
+                                    <table class="table  table-bordered">
+                                        <thead class="fw-bold">
+                                            <th>Product Name</th>
+                                            <th>Product Code</th>
+                                            <th>Quantity</th>
+                                            <th>Type</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($inventory->product_inventory as $product)
+                                                <tr>
+                                                    <td>{{ $product->products->name ?? '' }}</td>
+                                                    <td>{{ $product->products->sku ?? '' }}</td>
+                                                    <td>{{ $product['qty'] ?? '' }}{{ $product->products['unit']->short_name ?? '' }}
+                                                    </td>
+                                                    <td>{{ $product['type'] ?? '' }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
-
-
-
-    </div>
+    @endforeach
 @endsection
 
 @section('scripts')
     <script src="{{ asset('back/assets/js/datatable/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('back/assets/js/datatable/js/dataTables.bootstrap5.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajaxy/1.6.1/scripts/jquery.ajaxy.min.js"></script>
+
     <script>
-        $('#exampleModalToggle').on('show.bs.modal', function(event) {
-            var button = $(event.relatedTarget); // Button that triggered the modal
-            var data = button.data('bill'); // Extract info from data-* attributes
-            console.log(data);
-            var id = data.id;
-            var modal = $(this);
-            modal.find('.purchase_id').val(id);
-
-        });
-
-
-
-
-
         $(document).ready(function() {
 
             var table = $('#example').DataTable({
                 dom: 'Bfrtip',
                 select: true,
                 select: {
-                    style: 'multi',
-                    selector: 'td:first-child .select-checkbox',
+                    style: "multi",
+                    selector: "td:first-child .select-checkbox",
                 },
                 buttons: [{
                         extend: 'pdf',
                         footer: true,
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5]
+                            columns: [0, 1, 2, 3, 4]
                         }
                     },
                     {
                         extend: 'csv',
                         footer: false,
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5]
+                            columns: [0, 1, 2, 3, 4]
                         }
 
                     },
@@ -493,11 +340,22 @@
                         extend: 'excel',
                         footer: false,
                         exportOptions: {
-                            columns: [0, 1, 2, 3, 4, 5]
+                            columns: [0, 1, 2, 3, 4]
                         }
                     }
                 ]
             });
+
+            $('#custom-filter').keyup(function() {
+                table.search(this.value).draw();
+            });
+            $('#download-pdf').on('click', function() {
+                table.button('.buttons-pdf').trigger();
+            });
+            $('#download-excel').on('click', function() {
+                table.button('.buttons-excel').trigger();
+            });
+
 
             // Select all checkbox click handler
             $('#myCheckbox09').on('click', function() {
@@ -570,7 +428,7 @@
 
                         $.ajax({
                             type: "POST",
-                            url: "{{ route('bill.delete') }}",
+                            url: "{{ route('inventories.delete') }}",
                             data: {
                                 ids
                             },
@@ -584,18 +442,6 @@
                         });
                     }
                 }
-            });
-
-
-            $('#custom-filter').keyup(function() {
-                table.search(this.value).draw();
-            });
-
-            $('#download-pdf').on('click', function() {
-                table.button('.buttons-pdf').trigger();
-            });
-            $('#download-excel').on('click', function() {
-                table.button('.buttons-excel').trigger();
             });
 
 
@@ -637,38 +483,5 @@
             table.draw();
 
         });
-
-        $(document).ready(function() {
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            $(document).on('click', '.delete-category-link', function(e) {
-                e.preventDefault();
-                $(this).find('.delete-category-form').submit();
-            });
-
-            $(".delete-category-form").submit(function() {
-                var decision = confirm("Are you sure, You want to Delete this category?");
-                if (decision) {
-                    return true;
-                }
-                return false;
-            });
-
-
-        });
     </script>
-    {{-- <script>
-        // Add a click event listener to the anchor tag
-        document.getElementById('deleteSaleLink').addEventListener('click', function(event) {
-            // Prevent the default behavior of the anchor tag
-            // event.preventDefault();
-            // Submit the form
-            document.getElementById('deleteForm').submit();
-        });
-    </script> --}}
 @endsection

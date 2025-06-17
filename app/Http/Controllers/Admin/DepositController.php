@@ -112,8 +112,9 @@ class DepositController extends BaseController
      * @param  \App\Models\Deposit  $deposit
      * @return \Illuminate\Http\Response
      */
-    public function edit(Deposit $deposit)
+    public function edit($subdomain,$id)
     {
+        $deposit = Deposit::findOrFail($id);
         return $this->handleException(function () use ($deposit) {
             $warehouses = Warehouse::all();
             $depositCategories = DepositCategory::all();
@@ -130,8 +131,9 @@ class DepositController extends BaseController
      * @param  \App\Models\Deposit  $deposit
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Deposit $deposit)
+    public function update(Request $request, $subdomain,$id)
     {
+        $deposit = Deposit::findOrFail($id);
         return $this->handleException(function () use ($request, $deposit) {
             $data = $request->validate([
                 'amount' => 'required|numeric',
@@ -162,8 +164,9 @@ class DepositController extends BaseController
      * @param  \App\Models\Deposit  $deposit
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Deposit $deposit)
+    public function destroy($subdomain,$id)
     {
+        $deposit = Deposit::findOrFail($id);
         return $this->handleException(function () use ($deposit) {
             $account = Account::find($deposit->account_id);
             $account->init_balance -= $deposit->amount;
@@ -174,7 +177,7 @@ class DepositController extends BaseController
                 ->with('success', 'Deposit deleted successfully.');
         });
     }
-    public function deleteDeposits(Request $req)
+    public function deleteDeposits($subdomain,Request $req)
     {
         if(!empty($req->ids) && is_array($req->ids)){
             // dd($req->all());

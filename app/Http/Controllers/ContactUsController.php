@@ -55,7 +55,7 @@ class ContactUsController extends Controller
 
     public function showOnBackend()
     {
-        $contacts = ContactUs::all();
+        $contacts = ContactUs::where('tenant_id',getTenantId())->get();
         return view('back.cms.contact-us',compact('contacts'));
     }
 

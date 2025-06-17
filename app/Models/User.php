@@ -149,5 +149,11 @@ class User extends Authenticatable
         return $this->hasMany(CustomerShippingAddress::class, 'customer_id');
     }
 
-    
+
+    public function tenant()
+    {
+        return $this->hasOne(Tenant::class);
+    }
+
+
 }

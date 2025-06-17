@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Customer extends Model
 {
     use HasFactory, SoftDeletes, Searchable;
+    protected $table = 'customers';
 
     protected $guarded = ['id'];
     protected $fillable = [
@@ -124,6 +125,15 @@ class Customer extends Model
     {
         static::addGlobalScope('latest', function (Builder $builder) {
             $builder->latest();
+        });
+
+        // Add tenant_id scope
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('customers.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
         });
     }
 }

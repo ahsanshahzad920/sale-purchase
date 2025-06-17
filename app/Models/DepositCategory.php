@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class DepositCategory extends Model
 {
     use HasFactory;
+    protected $table = 'deposit_categories';
     protected $fillable = [
         'name',
         'description',
@@ -30,6 +31,14 @@ class DepositCategory extends Model
     {
         static::addGlobalScope('latest', function (Builder $builder) {
             $builder->latest();
+        });
+
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('deposit_categories.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
         });
     }
 }

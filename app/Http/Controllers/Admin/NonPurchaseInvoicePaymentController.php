@@ -101,11 +101,11 @@ class NonPurchaseInvoicePaymentController extends BaseController
             foreach ($purchases as $purchase) {
                 // Calculate the amount to apply to this sale
                 $amount_to_apply = min($amount_pay, $purchase->amount_due);
-    
+
                 // Update the sale's amount_received and amount_due
                 $purchase->amount_recieved += $amount_to_apply;
                 $purchase->amount_due -= $amount_to_apply;
-    
+
                 // Determine the new payment status
                 if ($purchase->amount_due == 0) {
                     $purchase->payment_status = 'paid';
@@ -114,13 +114,13 @@ class NonPurchaseInvoicePaymentController extends BaseController
                 } else {
                     $purchase->payment_status = 'pending';
                 }
-    
+
                 // Save the sale
                 $purchase->save();
-    
+
                 // Subtract the applied amount from the total amount to pay
                 $amount_pay -= $amount_to_apply;
-    
+
                 // If no more amount to pay, break the loop
                 if ($amount_pay <= 0) {
                     break;
@@ -159,7 +159,7 @@ class NonPurchaseInvoicePaymentController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(string $id)
+    public function edit($subdomain,string $id)
     {
         $nonPurchaseInvoicePayment = NonPurchasePayment::findOrFail($id);
         $vendors = Vendor::with('purchases', 'purchases.invoice')->get();
@@ -176,7 +176,7 @@ class NonPurchaseInvoicePaymentController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request,$subdomain, string $id)
     {
         $data = $request->validate([
             'account_id' => 'nullable|integer|exists:accounts,id',
@@ -205,7 +205,7 @@ class NonPurchaseInvoicePaymentController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(string $id)
+    public function destroy($subdomain,string $id)
     {
         // $purchaseInvoicePayment = PurchaseInvoicePayment::findOrFail($id);
         // $result = $this->purchasePaymentService->destroyPayment($purchaseInvoicePayment);
@@ -225,7 +225,7 @@ class NonPurchaseInvoicePaymentController extends BaseController
 
 
 
-    public function multipleDelete(Request $req)
+    public function multipleDelete($subdomain,Request $req)
     {
 
         foreach ($req->ids as $key => $id) {

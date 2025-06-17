@@ -102,8 +102,9 @@ class PurchaseInvoiceController extends BaseController
      * @param  \App\Models\PurchaseInvoice  $purchaseInvoice
      * @return \Illuminate\Http\Response
      */
-    public function show(PurchaseInvoice $purchaseInvoice)
+    public function show($subdomain,$id )
     {
+        $purchaseInvoice = PurchaseInvoice::findOrFail($id);
         return $this->handleException(function () use ($purchaseInvoice) {
             return view('back.purchase-invoices.show', compact('purchaseInvoice'));
         });
@@ -115,8 +116,10 @@ class PurchaseInvoiceController extends BaseController
      * @param  \App\Models\PurchaseInvoice  $purchaseInvoice
      * @return \Illuminate\Http\Response
      */
-    public function edit(PurchaseInvoice $purchaseInvoice)
+    public function edit($subdomain, $id)
     {
+        $purchaseInvoice = PurchaseInvoice::findOrFail($id);
+
         return $this->handleException(function () use ($purchaseInvoice) {
 
             $vendors = VendorResource::collection(Vendor::all());
@@ -134,8 +137,10 @@ class PurchaseInvoiceController extends BaseController
      * @param  \App\Models\PurchaseInvoice  $purchaseInvoice
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, PurchaseInvoice $purchaseInvoice)
+    public function update(Request $request, $subdomain,$id)
     {
+        $purchaseInvoice = PurchaseInvoice::findOrFail($id);
+
         $data = $request->validate([
             'vendor_id' => 'required|integer|exists:vendors,id',
             'order_date' => 'required|date',
@@ -180,8 +185,10 @@ class PurchaseInvoiceController extends BaseController
      * @param  \App\Models\PurchaseInvoice  $purchaseInvoice
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PurchaseInvoice $purchaseInvoice)
+    public function destroy($subdomain,$id)
     {
+        $purchaseInvoice = PurchaseInvoice::findOrFail($id);
+
         $purchaseInvoice->delete();
 
         return redirect()->route('purchase-invoices.index')->with('success', 'Purchase Invoice deleted successfully.');

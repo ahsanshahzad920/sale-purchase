@@ -60,7 +60,7 @@ class LandingPageHeadingController extends Controller
     public function edit($id)
     {
 
-        $headings = LandingPageHeading::find($id);
+        $headings = LandingPageHeading::where('tenant_id', getTenantId())->first();
         return view('back.cms.landing-page-heading', compact('headings'));
     }
 
@@ -71,10 +71,9 @@ class LandingPageHeadingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $subdomain,$id)
     {
-
-        LandingPageHeading::UpdateOrCreate(['id' => $id], [
+        LandingPageHeading::UpdateOrCreate(['tenant_id' => $id], [
             'top_selling_product' => $request->top_selling_product,
             'our_recomandation' => $request->our_recomandation,
             'free_shipping_heading' => $request->free_shipping_heading,
@@ -87,6 +86,7 @@ class LandingPageHeadingController extends Controller
             'support_desc' => $request->support_desc,
             'feature_category' => $request->feature_category,
             'shop_by_brands' => $request->shop_by_brands,
+            'tenant_id' => getTenantId(),
         ]);
 
         return redirect()->back()->with('message', 'Landing Page Heading Updated Successfully');
@@ -98,7 +98,7 @@ class LandingPageHeadingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($subdomain,$id)
     {
         //
     }

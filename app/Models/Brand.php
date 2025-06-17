@@ -54,10 +54,17 @@ class Brand extends Model
     //         });
     //     }
 
-    // protected static function booted(): void
-    // {
-    //     static::addGlobalScope('latest', function (Builder $builder) {
-    //         $builder->latest();
-    //     });
-    // }
+    protected static function booted(): void
+    {
+        // static::addGlobalScope('latest', function (Builder $builder) {
+        //     $builder->latest();
+        // });
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('brands.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
+        });
+    }
 }

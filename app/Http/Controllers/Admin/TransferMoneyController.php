@@ -90,8 +90,10 @@ class TransferMoneyController extends BaseController
      * @param  \App\Models\TransferMoney  $transferMoney
      * @return \Illuminate\Http\Response
      */
-    public function show(TransferMoney $transferMoney)
+    public function show($subdomain,$id)
     {
+        $transferMoney = TransferMoney::findOrFail($id);
+
         return $this->handleException(function () use ($transferMoney) {
             return view('back.transfer_money.show', compact('transferMoney'));
         });
@@ -103,8 +105,9 @@ class TransferMoneyController extends BaseController
      * @param  \App\Models\TransferMoney  $transferMoney
      * @return \Illuminate\Http\Response
      */
-    public function edit(TransferMoney $transferMoney)
+    public function edit($subdomain,$id)
     {
+        $transferMoney = TransferMoney::findOrFail($id);
         return $this->handleException(function () use ($transferMoney) {
             return view('back.transfer_money.edit', compact('transferMoney'));
         });
@@ -117,9 +120,10 @@ class TransferMoneyController extends BaseController
      * @param  \App\Models\TransferMoney  $transferMoney
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, TransferMoney $transferMoney)
+    public function update(Request $request, $subdomain,$id)
     {
 
+        $transferMoney = TransferMoney::findOrFail($id);
         $data = $request->validate([
             'amount' => 'required|numeric',
             'date' => 'required|date',
@@ -156,8 +160,9 @@ class TransferMoneyController extends BaseController
      * @param  \App\Models\TransferMoney  $transferMoney
      * @return \Illuminate\Http\Response
      */
-    public function destroy(TransferMoney $transferMoney)
+    public function destroy($subdomain,$id)
     {
+        $transferMoney = TransferMoney::findOrFail($id);
         return $this->handleException(function () use ($transferMoney) {
             $transferMoney->delete();
             return redirect()->route('transfer-money.index')

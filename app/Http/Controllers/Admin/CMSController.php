@@ -11,7 +11,8 @@ class CMSController extends Controller
 {
     public function landingPage()
     {
-        $sections = BannerSection::all();
+        // dd(getTenant());
+        $sections = BannerSection::where('tenant_id', getTenantId())->get();
         return view('back.cms.landing-page', compact('sections'));
     }
 
@@ -71,7 +72,7 @@ class CMSController extends Controller
     }
 
 
-    public function landingPageUpdate(Request $request,$id)
+    public function landingPageUpdate(Request $request,$subdomain,$id)
     {
         $request->validate([
             'title' => 'required',
@@ -95,7 +96,7 @@ class CMSController extends Controller
         return redirect()->back()->with('success', 'Banner Section Updated Successfully');
     }
 
-    public function landingPageDelete($id){
+    public function landingPageDelete($subdomain,$id){
         $section = BannerSection::find($id);
         if(!$section){
             return redirect()->back()->with('danger', 'Banner Not Found');
@@ -103,7 +104,6 @@ class CMSController extends Controller
         $section->image ? unlink(public_path('storage/'.$section->image)) : '';
         $section->delete();
         return redirect()->back()->with('success', 'Banner section deleted successfully');
-
     }
 
 }

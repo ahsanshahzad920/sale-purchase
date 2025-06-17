@@ -72,7 +72,7 @@ class ManualShippingController extends Controller
 
 
 
-    public function createShipment($id)
+    public function createShipment($subdomain,$id)
     {
         $sale = Sale::where('tracking_number', null)->where('id', $id)->first();
         $sale->load('customer');

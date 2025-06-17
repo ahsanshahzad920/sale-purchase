@@ -15,13 +15,13 @@ class AboutController extends Controller
      */
     public function index()
     {
-        $section = AboutUs::first();
+        $section = AboutUs::where('tenant_id', getTenantId())->first();
         return view('back.cms.about-us.index', compact('section'));
     }
 
     public function showOnFrontend()
     {
-        $section = AboutUs::first();
+        $section = AboutUs::where('tenant_id', getTenantId())->first();
         return view('user.about-us.index', compact('section'));
     }
 
@@ -92,7 +92,7 @@ class AboutController extends Controller
 
         $data['our_services'] = json_encode($extraContent);
 
-        AboutUs::UpdateOrCreate(['id' => 1], $data);
+        AboutUs::UpdateOrCreate(['tenant_id' => getTenantId()], $data);
 
 
 

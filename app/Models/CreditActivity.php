@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class CreditActivity extends Model
 {
     use HasFactory;
+    protected $table = 'credit_activities';
 
     protected $fillable = [
         'customer_id',
@@ -27,6 +28,14 @@ class CreditActivity extends Model
     {
         static::addGlobalScope('latest', function (Builder $builder) {
             $builder->latest();
+        });
+
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('credit_activities.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
         });
     }
 }

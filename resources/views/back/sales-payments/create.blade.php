@@ -282,7 +282,7 @@
                 $('#receipt_div').css('display', 'block');
                 $('#cheque').prop('required', true);
                 $('#receipt').prop('required', true);
-            } 
+            }
             else if (method === 'Card') {
                 $('#card_div').css('display', 'block');
                 $('#card_no').prop('required', true);

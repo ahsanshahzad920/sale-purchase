@@ -42,7 +42,17 @@ class CustomerController extends BaseController
     {
         $clientRole = Role::where('name', 'Client')->first();
 
-        $users = $clientRole ? $clientRole->users : collect();
+        // $users = $clientRole ? $clientRole->users : collect();
+        $tenantId = getTenantId();
+        $users = collect(); // Default empty collection
+
+            if ($clientRole) {
+                $users = $clientRole->users()
+                    ->whereHas('customer', function ($query) use ($tenantId) {
+                        $query->where('tenant_id', $tenantId);
+                    })
+                    ->get();
+            }
 
         $customers = CustomerResource::collection(Customer::all());
         // dd($customers);
@@ -101,7 +111,7 @@ class CustomerController extends BaseController
      * Store a newly status in storage.
      *
      */
-    public function changeStatus(Request $request)
+    public function changeStatus($subdomain,Request $request)
     {
         $user_id = $request->user_id;
         $stats = $request->status;
@@ -119,7 +129,7 @@ class CustomerController extends BaseController
         return response()->json($message);
     }
 
-    public function changeBlacklistStatus(Request $request)
+    public function changeBlacklistStatus($subdomain,Request $request)
     {
         $user_id = $request->user_id;
         $stats = $request->status;
@@ -216,7 +226,7 @@ class CustomerController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($subdomain,$id)
     {
         $user = User::find($id);
         $customer = Customer::where('user_id', $id)->with('user')->with('tiers')->first();
@@ -236,7 +246,7 @@ class CustomerController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $subdomain,$id)
     {
         $this->validate($request, [
             'name' => 'required',
@@ -288,7 +298,7 @@ class CustomerController extends BaseController
      * @return \Illuminate\Http\Response
      */
 
-    public function destroy($id)
+    public function destroy($subdomain,$id)
     {
         Customer::where('user_id', $id)->delete();
         User::destroy($id);
@@ -368,7 +378,7 @@ class CustomerController extends BaseController
         }
     }
 
-    public function addBalance(Request $request,$id)
+    public function addBalance(Request $request,$subdomain,$id)
     {
         $request->validate([
             'add_balance' => 'required|integer'
@@ -389,7 +399,7 @@ class CustomerController extends BaseController
 
     }
 
-    public function addCard(Request $request,$id){
+    public function addCard(Request $request,$subdomain,$id){
         $request->validate([
             'card_brand' => 'required|string',
             'card_last_four' => 'required|numeric|digits:4',

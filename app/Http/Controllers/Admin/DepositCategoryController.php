@@ -61,8 +61,9 @@ class DepositCategoryController extends BaseController
      * @param  \App\Models\DepositCategory  $depositCategory
      * @return \Illuminate\Http\Response
      */
-    public function show(DepositCategory $depositCategory)
+    public function show($subdomain,$id)
     {
+        $depositCategory = DepositCategory::findOrFail($id);
         return $this->handleException(function () use ($depositCategory) {
             return view('back.deposit-categories.show', compact('depositCategory'));
         });
@@ -74,8 +75,10 @@ class DepositCategoryController extends BaseController
      * @param  \App\Models\DepositCategory  $depositCategory
      * @return \Illuminate\Http\Response
      */
-    public function edit(DepositCategory $depositCategory)
+    public function edit($subdomain,$id)
     {
+        $depositCategory = DepositCategory::findOrFail($id);
+
         return $this->handleException(function () use ($depositCategory) {
             return view('back.deposit-categories.edit', compact('depositCategory'));
         });
@@ -88,8 +91,9 @@ class DepositCategoryController extends BaseController
      * @param  \App\Models\DepositCategory  $depositCategory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, DepositCategory $depositCategory)
+    public function update(Request $request, $subdomain,$id)
     {
+        $depositCategory = DepositCategory::findOrFail($id);
         return $this->handleException(function () use ($request, $depositCategory) {
             $data = $request->validate([
                 'name' => 'required|string',
@@ -109,8 +113,10 @@ class DepositCategoryController extends BaseController
      * @param  \App\Models\DepositCategory  $depositCategory
      * @return \Illuminate\Http\Response
      */
-    public function destroy(DepositCategory $depositCategory)
+    public function destroy($subdomain,$id)
     {
+        $depositCategory = DepositCategory::findOrFail($id);
+
         return $this->handleException(function () use ($depositCategory) {
             $depositCategory->delete();
 
@@ -118,7 +124,7 @@ class DepositCategoryController extends BaseController
                 ->with('success', 'Deposit category deleted successfully.');
         });
     }
-    public function deleteDepositCategory(Request $req)
+    public function deleteDepositCategory($subdomain,Request $req)
     {
         if(!empty($req->ids) && is_array($req->ids)){
             // dd($req->all());

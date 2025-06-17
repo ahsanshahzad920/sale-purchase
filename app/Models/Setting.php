@@ -68,6 +68,41 @@ class Setting extends Model
         'paypal_client_secret',
         'paypal_app_id',
         'show_pricing',
+        'tenant_id',
 
     ];
+
+    // protected static function booted()
+    // {
+    //     static::creating(function ($model) {
+    //         $model->tenant_id = getTenantId() ?? null;
+    //     });
+    // }
+
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            // Safely get tenant ID without throwing exceptions
+            $model->tenant_id = self::resolveTenantId();
+        });
+    }
+
+    /**
+     * Safely resolve the current tenant ID
+     */
+    protected static function resolveTenantId()
+    {
+        try {
+            // Check if the service is bound in the container
+            if (app()->bound('currentTenant')) {
+                $tenant = app('currentTenant');
+                return $tenant?->id ?? null;
+            }
+            return null;
+        } catch (\Exception $e) {
+            // Log the error if needed
+            // logger()->debug('Tenant resolution failed: '.$e->getMessage());
+            return null;
+        }
+    }
 }

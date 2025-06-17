@@ -56,7 +56,7 @@
                         </tr>
                         <tr>
                           <td>Tax</td>
-                          <td class="fw-bold">{{$product->order_tax ?? ''}} %</td>
+                          <td class="fw-bold">{{$product->order_tax ?? ''}}%</td>
                         </tr>
                         <tr>
                           <td>Tax</td>

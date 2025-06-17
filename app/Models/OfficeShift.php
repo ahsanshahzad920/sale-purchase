@@ -44,5 +44,12 @@ class OfficeShift extends Model
         static::addGlobalScope('latest', function (Builder $builder) {
             $builder->latest();
         });
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
+        });
     }
 }

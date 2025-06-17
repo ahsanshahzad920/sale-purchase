@@ -294,7 +294,7 @@ class PurchaseController extends BaseController
      * @param  \App\Models\Purchase  $purchase
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($subdomain,$id)
     {
         $purchase = Purchase::find($id);
         $purchase->load('purchaseItems', 'vendor', 'warehouse', 'invoice.user');
@@ -311,8 +311,9 @@ class PurchaseController extends BaseController
      * @param  \App\Models\Purchase  $purchase
      * @return \Illuminate\Http\Response
      */
-    public function edit(Purchase $purchase)
+    public function edit($subdomain,$id )
     {
+        $purchase = Purchase::find($id);
         return $this->handleException(function () use ($purchase) {
 
             // $purchase = new PurchaseResource($purchase);
@@ -335,9 +336,10 @@ class PurchaseController extends BaseController
      * @param  \App\Models\Purchase  $purchase
      * @return \Illuminate\Http\Response
      */
-    public function update(PurchaseUpdateRequest $request, Purchase $purchase)
+    public function update(PurchaseUpdateRequest $request,$subdomain, $id)
     {
         // return $request->order_items;
+        $purchase = Purchase::find($id);
 
         $data = $request->validated();
         $data['ntn'] = $data['ntn_no'] ?? null;
@@ -426,7 +428,7 @@ class PurchaseController extends BaseController
      * @param  \App\Models\Purchase  $purchase
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($subdomain,$id)
     {
         $purchase = Purchase::find($id);
         if ($purchase) {
@@ -463,7 +465,8 @@ class PurchaseController extends BaseController
             return redirect()->back()->with('success', 'Purchase Deleted Successfully!');
         }
     }
-    public function deletePurchases(Request $req)
+
+    public function deletePurchases($subdomain,Request $req)
     {
 
         if (!empty($req->ids) && is_array($req->ids)) {

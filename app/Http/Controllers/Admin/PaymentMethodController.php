@@ -80,7 +80,7 @@ class PaymentMethodController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,$subdomain,$id)
     {
         $request->validate([
         	'name' => 'required',
@@ -99,7 +99,7 @@ class PaymentMethodController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($subdomain,$id)
     {
         PaymentMethod::find($id)->delete();
         return redirect()->route('payment-methods.index')->with('success','Payment Method deleted successfully');

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Attendance extends Model
 {
     use HasFactory;
+    protected $table = 'attendances';
 
     protected $fillable = [
         'company_id',
@@ -28,9 +29,17 @@ class Attendance extends Model
         return $this->belongsTo(Company::class);
     }
     protected static function booted(): void
-{
-    static::addGlobalScope('latest', function (Builder $builder) {
-        $builder->latest();
-    });
-}
+    {
+        static::addGlobalScope('latest', function (Builder $builder) {
+            $builder->latest();
+        });
+
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('attendances.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
+        });
+    }
 }

@@ -235,7 +235,7 @@
                             <select name="warehouse_id" class="form-control" id="warehouse" required>
                                 <option value="" selected disabled>Select Warehouse</option>
                                 @foreach ($warehouses as $warehouse)
-                                    <option value="{{ $warehouse->id }}">{{ $warehouse->users->name ?? '' }}</option>
+                                    <option value="{{ $warehouse->id }}">{{ $warehouse?->users?->name ?? '' }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -301,7 +301,7 @@
                                 <select name="warehouse_id" class="form-control">
                                     <option value="" selected disabled>Select Warehouse</option>
                                     @foreach ($warehouses as $warehouse)
-                                        <option value="{{ $warehouse->id }}" {{$warehouse->id == $user->warehouse_id ? 'selected':''}} >{{ $warehouse->users->name }}</option>
+                                        <option value="{{ $warehouse->id }}" {{$warehouse->id == $user->warehouse_id ? 'selected':''}} >{{ $warehouse?->users?->name ?? 'N/A' }}</option>
                                     @endforeach
                                 </select>
                             </div>

@@ -444,6 +444,10 @@
                 </div>
 
                 @role('Admin')
+                <a href="{{ route('domain.index') }}" class="nav-item nav-link @if (request()->routeIs('shipment.index')) active @endif">
+                    <i class="bi bi-truck me-2"></i><span>Custom Domain</span>
+                </a>
+                
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                         <i class="bi bi-window-dock me-2"></i> CMS

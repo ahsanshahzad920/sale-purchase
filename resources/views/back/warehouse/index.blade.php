@@ -92,6 +92,7 @@
                         </thead>
                         <tbody>
 
+                            {{-- {{dd($warehouses)}} --}}
                             @foreach ($warehouses as $warehouse)
                                 <tr>
                                     <td class="align-middle">
@@ -138,8 +139,7 @@
                                                     @method('DELETE')
                                                     <button type="submit" class="btn text-danger btn-outline-light">
                                                         <img src="{{ asset('back/assets/dasheets/img/plus-circle.svg') }}"
-                                                            class="p-0" data-bs-target="#exampleModalToggle2"
-                                                            data-bs-toggle="modal" alt="" />
+                                                            class="p-0"  />
                                                     </button>
                                                 </form>
                                             @endcan

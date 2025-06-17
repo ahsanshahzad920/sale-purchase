@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Company extends Model
 {
     use HasFactory;
+    protected $table = 'companies';    
 
     protected $fillable = [
         'name',
@@ -49,5 +50,15 @@ class Company extends Model
         static::addGlobalScope('latest', function (Builder $builder) {
             $builder->latest();
         });
+
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('companies.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
+        });
+
+
     }
 }

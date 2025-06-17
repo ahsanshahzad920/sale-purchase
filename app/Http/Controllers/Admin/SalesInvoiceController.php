@@ -106,8 +106,11 @@ class SalesInvoiceController extends BaseController
      * @param  \App\Models\SalesInvoice  $salesInvoice
      * @return \Illuminate\Http\Response
      */
-    public function show(SalesInvoice $salesInvoice)
+    public function show($subdomain,$id)
     {
+        $salesInvoice = SalesInvoice::findOrFail($id);
+
+        // Return the view with the sales invoice data
         return $this->handleException(function () use ($salesInvoice) {
             return view('back.sales-invoices.show', compact('salesInvoice'));
         });
@@ -119,8 +122,10 @@ class SalesInvoiceController extends BaseController
      * @param  \App\Models\SalesInvoice  $salesInvoice
      * @return \Illuminate\Http\Response
      */
-    public function edit(SalesInvoice $salesInvoice)
+    public function edit($subdomain, $id)
     {
+        $salesInvoice = SalesInvoice::findOrFail($id);
+
         return $this->handleException(function () use ($salesInvoice) {
 
             $vendors = VendorResource::collection(Vendor::all());
@@ -138,8 +143,10 @@ class SalesInvoiceController extends BaseController
      * @param  \App\Models\SalesInvoice  $salesInvoice
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SalesInvoice $salesInvoice)
+    public function update(Request $request, $subdomain, $id)
     {
+        $salesInvoice = SalesInvoice::findOrFail($id);
+
         $data = $request->validate([
             'customer_id' => 'required|integer|exists:customers,id',
             'vendor_id' => 'required|integer|exists:vendors,id',
@@ -192,16 +199,19 @@ class SalesInvoiceController extends BaseController
      * @param  \App\Models\SalesInvoice  $salesInvoice
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SalesInvoice $salesInvoice)
+    public function destroy($subdomain,$id)
     {
+        $salesInvoice = SalesInvoice::findOrFail($id);
+
         $salesInvoice->delete();
 
         return redirect()->route('sales-invoices.index')->with('success', 'Sales Invoice deleted successfully.');
     }
 
     // storePayment
-    public function storePayment(Request $request, SalesInvoice $salesInvoice)
+    public function storePayment(Request $request, $subdomain, $id)
     {
+        $salesInvoice = SalesInvoice::findOrFail($id);
         try {
 
             DB::beginTransaction();

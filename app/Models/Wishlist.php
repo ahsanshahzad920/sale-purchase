@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Wishlist extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
+    protected $table = 'wishlists';
     protected $fillable = ['product_id', 'user_id', 'date'];
 
     public function product()
@@ -25,6 +27,13 @@ class Wishlist extends Model
     {
         static::addGlobalScope('latest', function (Builder $builder) {
             $builder->latest();
+        });
+
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('wishlists.tenant_id', getTenantId());
+        });
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
         });
     }
 }

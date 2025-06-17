@@ -693,7 +693,7 @@
                                                             </span>
                                                             <span>Processing</span>
                                                         </span>  --}}
-                                                        @if ($product->sale->status == 'completed')
+                                                        @if ($product?->sale?->status == 'completed')
                                                             <span
                                                                 class="badges bg-success text-center px-1 d-flex gap-1 align-items-center justify-content-center">
                                                                 <span class="mb-1">

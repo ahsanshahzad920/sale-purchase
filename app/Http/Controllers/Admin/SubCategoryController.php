@@ -96,9 +96,10 @@ class SubCategoryController extends BaseController
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(SubCategoryRequest $request, SubCategory $sub_category)
+    public function update($subdomain,SubCategoryRequest $request,$id)
     {
         $data = $request->validated();
+        $sub_category = SubCategory::findOrFail($id);
 
         $data['updated_by'] = auth()->user()->id;
 
@@ -114,8 +115,9 @@ class SubCategoryController extends BaseController
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SubCategory $subCategory)
+    public function destroy($subdomain, $id)
     {
+        $subCategory = SubCategory::findOrFail($id);
         return $this->handleException(function () use ($subCategory) {
             $subCategory->delete();
 
@@ -124,7 +126,7 @@ class SubCategoryController extends BaseController
         });
     }
 
-    public function deleteCategory(Request $req)
+    public function deleteCategory($subdomain,Request $req)
     {
         if(!empty($req->ids) && is_array($req->ids)){
             // dd($req->all());
@@ -136,9 +138,9 @@ class SubCategoryController extends BaseController
         }
 
     }
-    public function change_status(SubCategory $subCategory)
+    public function change_status($subdomain, Request $req,$id)
     {
-        // dd($subCategory->status );
+        $subCategory = SubCategory::findOrFail($id);
         if($subCategory->status==1){
             $subCategory->status=0;
             $message= trans('Blacklist Successfully');

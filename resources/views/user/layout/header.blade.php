@@ -35,7 +35,8 @@
                 <div class="col-lg-7">
                     <div class="header-search">
                         @php
-                            $categories = App\Models\Category::where('status', 1)->get();
+                            $categories = App\Models\Category::where('created_by',app('currentTenant')->user->id)->where('status', 1)->get();
+                            // dd($categories);
                         @endphp
                         <form class="d-flex justify-content-start align-items-center w-100">
                             <select class="form-control form-select rounded-end-0 w-25 rounded-start-5 p-2 w-100"

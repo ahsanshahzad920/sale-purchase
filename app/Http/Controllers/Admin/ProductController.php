@@ -180,6 +180,7 @@ class ProductController extends BaseController
         return $this->handleException(function () use ($req) {
             if ($req->ajax()) {
                 $query = Product::with(['category', 'brand', 'unit', 'images', 'product_warehouses']);
+                    // ->where('tenant_id',getTenantId());
 
                 // Handle search
                 if ($req->filled('search')) {
@@ -263,10 +264,10 @@ class ProductController extends BaseController
             $buttons .= '<a class="dropdown-item" href="' . route('get-one-product-details', $product->id) . '">Product Detail</a>';
         }
         if (auth()->user()->can('products-edit')) {
-            $buttons .= '<a class="dropdown-item" href="' . route('products.edit', $product->id) . '">Edit Product</a>';
+            $buttons .= '<a class="dropdown-item" href="' . route('products.edit', ['subdomain' => getTenant()?->subdomain,'product' => $product->id]) . '">Edit Product</a>';
         }
         if (auth()->user()->can('products-delete')) {
-            $buttons .= '<form action="' . route('products.destroy', $product->id) . '" method="POST" style="display:inline;">
+            $buttons .= '<form action="' . route('products.destroy', ['subdomain' => getTenant()?->subdomain,'product' => $product->id]) . '" method="POST" style="display:inline;">
                         ' . csrf_field() . method_field('DELETE') . '
                         <button type="submit" class="dropdown-item confirm-text">Delete Product</button>
                      </form>';
@@ -606,7 +607,7 @@ class ProductController extends BaseController
         foreach ($images as $file) {
             // Validate the file
             $validatedData = $request->validate([
-                'img.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'img.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:6144',
             ]);
 
             // Generate a unique filename
@@ -656,7 +657,7 @@ class ProductController extends BaseController
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show($subdomain,Product $product)
     {
         return $this->handleException(function () use ($product) {
             $product = new ProductResource($product);
@@ -672,8 +673,9 @@ class ProductController extends BaseController
      * @param  \App\Models\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit($subdomain,string $id)
     {
+        $product = Product::find($id);
         return $this->handleException(function () use ($product) {
             $product->load('variants.options');
             $product = new ProductResource($product);
@@ -689,6 +691,23 @@ class ProductController extends BaseController
             return view('back.products.edit', compact('product', 'categories', 'brands', 'units', 'mainUnits', 'taxes', 'warehouses', 'subCategories'));
         });
     }
+    // public function edit($subdomain,Product $product)
+    // {
+    //     return $this->handleException(function () use ($product) {
+    //         $product->load('variants.options');
+    //         $product = new ProductResource($product);
+    //         $categories = Category::all();
+    //         $warehouses = Warehouse::with('users')->get();
+    //         $brands = Brand::all();
+    //         // $warranties = Warranty::all();
+    //         $units = Unit::all();
+    //         $mainUnits = Unit::where('parent_id', '0')->get();
+    //         $taxes = Tax::all();
+    //         $subCategories = SubCategory::all();
+
+    //         return view('back.products.edit', compact('product', 'categories', 'brands', 'units', 'mainUnits', 'taxes', 'warehouses', 'subCategories'));
+    //     });
+    // }
 
     /**
      * Update the specified resource in storage.
@@ -699,7 +718,7 @@ class ProductController extends BaseController
      */
 
 
-    public function update(ProductUpdateRequest $request, $id)
+    public function update($subdomain,ProductUpdateRequest $request, $id)
     {
 
         $data = $request->validated();
@@ -889,7 +908,7 @@ class ProductController extends BaseController
 
 
 
-    public function getOneProductDetails(Product $product, $id)
+    public function getOneProductDetails($subdomain,Product $product, $id)
     {
         $product = Product::with('unit', 'variants.options', 'category', 'brand', 'tax', 'images')->find($id);
         $product->load('product_warehouses.warehouse.users', 'product_warehouses.product.unit');
@@ -945,8 +964,9 @@ class ProductController extends BaseController
     //     });
     // }
 
-    public function destroy(Product $product)
+    public function destroy($subdomain,string $id)
     {
+        $product = Product::findOrFail($id);
         return $this->handleException(function () use ($product) {
             $shopify_enable = Setting::first();
 
@@ -1128,7 +1148,7 @@ class ProductController extends BaseController
     }
 
 
-    public function product_duplicate($id)
+    public function product_duplicate($subdomain,$id)
     {
         $product = Product::findOrFail($id);
         $newProduct = $product->replicate();

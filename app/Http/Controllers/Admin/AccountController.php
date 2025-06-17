@@ -75,8 +75,9 @@ class AccountController extends BaseController
      * @param  \App\Models\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function show(Account $account)
+    public function show($subdomain,$id)
     {
+        $account = Account::findOrFail($id);
         return $this->handleException(function () use ($account) {
             $account = new AccountResource($account);
 
@@ -90,8 +91,10 @@ class AccountController extends BaseController
      * @param  \App\Models\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function edit(Account $account)
+    public function edit($subdomain, $id)
     {
+        $account = Account::findOrFail($id);
+
         return $this->handleException(function () use ($account) {
             $account = new AccountResource($account);
 
@@ -107,8 +110,9 @@ class AccountController extends BaseController
      * @param  \App\Models\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function update(AccountStoreRequest $request, Account $account)
+    public function update(AccountStoreRequest $request, $subdomain,$id)
     {
+        $account = Account::findOrFail($id);
         $data = $request->validated();
         $data['updated_by'] = auth()->user()->id;
         if ($request->hasFile('account_img')) {
@@ -136,8 +140,9 @@ class AccountController extends BaseController
      * @param  \App\Models\Account  $account
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Account $account)
+    public function destroy($subdomain,$id)
     {
+        $account = Account::findOrFail($id);
         return $this->handleException(function () use ($account) {
             $account->delete();
 
@@ -145,7 +150,7 @@ class AccountController extends BaseController
                 ->with('success', 'Account deleted successfully');
         });
     }
-    public function deleteAccount(Request $req)
+    public function deleteAccount($subdomain,Request $req)
     {
         if(!empty($req->ids) && is_array($req->ids)){
             // dd($req->all());

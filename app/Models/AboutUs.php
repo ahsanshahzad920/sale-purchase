@@ -17,5 +17,14 @@ class AboutUs extends Model
         'section_2_desc',
         'section_2_image',
         'our_services',
+        'tenant_id',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            // Set tenant_id automatically (example from helper)
+            $model->tenant_id = getTenantId() ?? null;
+        });
+    }
 }

@@ -15,7 +15,18 @@ class Authenticate extends Middleware
     protected function redirectTo($request)
     {
         if (! $request->expectsJson()) {
-            return route('login');
+            // dd('redirectTo');
+            // return route('login');
+            $host = $request->getHost();
+            $subdomain = explode('.', $host)[0]; // Get the subdomain from the host
+            // return route('login', ['subdomain' => $subdomain]);
+            if($subdomain){
+                return route('login', ['subdomain' => $subdomain]); // Redirect to the login route with the subdomain
+            }
+            else{
+                return route('auth.login'); // Redirect to the login route without subdomain
+            }
+            
         }
     }
 }

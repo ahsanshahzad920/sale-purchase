@@ -9,6 +9,7 @@ class SalesInvoice extends Model
 {
     use HasFactory;
 
+    protected $table = 'sales_invoices';
     protected $guarded = ['id'];
 
     public function customer()
@@ -43,5 +44,16 @@ class SalesInvoice extends Model
 
     public function sales(){
         return $this->belongsTo(Sales::class);
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope('tenant', function ($builder) {
+            $builder->where('sales_invoices.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
+        });
     }
 }

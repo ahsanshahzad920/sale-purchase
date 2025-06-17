@@ -13,5 +13,14 @@ class ContactUs extends Model
         'last_name',
         'subject',
         'message',
+        'tenant_id',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId() ?? null;
+        });
+    }
+
 }

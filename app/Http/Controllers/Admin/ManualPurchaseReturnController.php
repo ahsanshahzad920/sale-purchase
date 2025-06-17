@@ -178,7 +178,7 @@ class ManualPurchaseReturnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($subdomain,$id)
     {
         $purchase_return = ManualPurchaseReturn::find($id);
         $purchase_return->load('return_items', 'vendor', 'warehouse');
@@ -192,7 +192,7 @@ class ManualPurchaseReturnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($subdomain,$id)
     {
         $purchase_return = ManualPurchaseReturn::find($id);
         $purchase_return->load('return_items');
@@ -295,7 +295,7 @@ class ManualPurchaseReturnController extends Controller
     //     }
     // }
 
-    public function update(Request $request, $id)
+    public function update(Request $request,$subdomain, $id)
     {
         // dd($request->all());
         try {
@@ -396,7 +396,7 @@ class ManualPurchaseReturnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($subdomain,$id)
     {
         // dd($id);
 
@@ -418,7 +418,7 @@ class ManualPurchaseReturnController extends Controller
                     } else {
                         $finalStock = $warehouse_product->quantity + $return['return_quantity'];
                     }
-                    
+
                 } else {
 
                     $finalStock = $warehouse_product->quantity + $return['return_quantity'];
@@ -433,7 +433,7 @@ class ManualPurchaseReturnController extends Controller
     }
 
 
-    public function deleteReturns(Request $req)
+    public function deleteReturns($subdomain,Request $req)
     {
 
         foreach ($req->ids as $key => $id) {

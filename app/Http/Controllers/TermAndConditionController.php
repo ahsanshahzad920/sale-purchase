@@ -14,13 +14,13 @@ class TermAndConditionController extends Controller
      */
     public function index()
     {
-        $setting = Setting::first();
+        $setting = Setting::where('tenant_id',getTenantId())->first();
         return view('back.cms.term-and-conditions',compact('setting'));
     }
 
     public function showInFrontEnd()
     {
-        $setting = Setting::first();
+        $setting = Setting::where('tenant_id',getTenantId())->first();
         return view('user.terms-and-conditions',compact('setting'));
     }
 
@@ -47,7 +47,7 @@ class TermAndConditionController extends Controller
         ]);
         
         Setting::updateOrCreate(
-            ['id' => 1],
+            ['tenant_id' => getTenantId()],
             ['terms_and_conditions' => $request->terms_and_conditions]
         );
         return redirect()->back()->with('success', 'Terms and conditions updated successfully');

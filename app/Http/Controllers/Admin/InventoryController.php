@@ -139,7 +139,7 @@ class InventoryController extends BaseController
         return view('back.inventory.inventoryStockCount', compact('warehouses'));
     }
 
-    public function filterStockCount($date)
+    public function filterStockCount($subdomain,$date)
     {
 
         if (auth()->user()->hasRole(['Cashier', 'Manager'])) {
@@ -164,17 +164,17 @@ class InventoryController extends BaseController
         return response()->json(['data' => $warehouses, 'status' => 200]);
     }
 
-    public function downloadStockPdf($warehouse_id)
+    public function downloadStockPdf($subdomain,$warehouse_id)
     {
-        
+
         $warehouse = Warehouse::with('products.unit', 'users', 'productWarehouses')->find($warehouse_id);
-        
+
         $pdf = Pdf::loadView('back.inventory.download-stock-pdf', ['warehouse' => $warehouse]);
         return $pdf->download($warehouse->users->name . ' Inventory Stock Count' . '.pdf');
     }
 
 
-    public function deleteProductInventory($inventory_id, $product_id)
+    public function deleteProductInventory($subdomain,$inventory_id, $product_id)
     {
         $productInventory = ProductInventory::where('inventory_id', $inventory_id)->where('product_id', $product_id)->first();
         if ($productInventory) {
@@ -348,7 +348,7 @@ class InventoryController extends BaseController
      * @param  \App\Models\Inventory  $inventory
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($subdomain,$id)
     {
         $warehouse = Warehouse::with('users')->get();
         $products = Product::with('barcodes')->get();
@@ -367,7 +367,7 @@ class InventoryController extends BaseController
      * @param  \App\Models\Inventory  $inventory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $req, $id)
+    public function update(Request $req,$subdomain, $id)
     {
         $req->validate([
             'date' => 'required',
@@ -462,7 +462,7 @@ class InventoryController extends BaseController
      * @param  \App\Models\Inventory  $inventory
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($subdomain,$id)
     {
         $inventory = Inventory::find($id);
 
@@ -545,7 +545,7 @@ class InventoryController extends BaseController
             return view('back.inventory.stock-count-by-product', compact('products'));
         }
         else {
-            
+
             $selected_warehouse_id = session('selected_warehouse_id');
             if ($selected_warehouse_id) {
                 $products = Product::with('category', 'unit', 'images', 'product_warehouses')->whereHas('product_warehouses', function ($query) use ($selected_warehouse_id) {

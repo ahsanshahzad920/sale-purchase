@@ -13,7 +13,7 @@
                 @include('back.layout.errors')
 
                 <!--end breadcrumb-->
-                <form action="{{ route('landing-page-heading.update',1) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('landing-page-heading.update',getTenantId()) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row mt-3">

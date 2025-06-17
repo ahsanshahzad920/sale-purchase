@@ -71,7 +71,7 @@ class TaxesController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($subdomain,$id)
     {
         $tax = Tax::find($id);
         return view('back.taxes.edit',compact('tax'));
@@ -84,7 +84,7 @@ class TaxesController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $req, $id)
+    public function update(Request $req,$subdomain, $id)
     {
         $tax = Tax::find($id);
         if($tax){
@@ -106,9 +106,9 @@ class TaxesController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Tax $tax)
+    public function destroy($subdomain,$id)
     {
-        // $tax = Tax::find($id);
+        $tax = Tax::find($id);
 
         if($tax){
 

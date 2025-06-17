@@ -21,7 +21,7 @@ class OrderReservController extends Controller
 
     public function index()
     {
-        $orders = $this->reserveOrder->all(); 
+        $orders = $this->reserveOrder->all();
         return view('back.cms.reserve-order.index', compact('orders'));
     }
 
@@ -87,7 +87,7 @@ class OrderReservController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function destroy($id)
+    public function destroy($subdomain,$id)
     {
         $this->reserveOrder->delete($id);
         return redirect()->back()->with('success','Reserved order has been deleted successfully');

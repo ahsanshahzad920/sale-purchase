@@ -171,7 +171,7 @@ class ManualReturnController extends Controller
 
             $amount = $manual_return->grand_total;
 
-            
+
             $customer = Customer::find($request->customer_id);
             $customer->balance += $request->grand_total;
             $customer->save();
@@ -204,7 +204,7 @@ class ManualReturnController extends Controller
 
 
 
-            
+
             return response()->json(['message' => 'Return successfully created', 'reference' => $reference], 200);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -218,7 +218,7 @@ class ManualReturnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($subdomain,$id)
     {
         $sale_return = ManualReturn::find($id);
         $sale_return->load('return_items', 'customer', 'warehouse');
@@ -232,7 +232,7 @@ class ManualReturnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($subdomain,$id)
     {
         $sale_return = ManualReturn::find($id);
         $sale_return->load('return_items');
@@ -246,7 +246,7 @@ class ManualReturnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,$subdomain ,$id)
     {
         // dd($request->all());
 
@@ -344,7 +344,7 @@ class ManualReturnController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($subdomain,$id)
     {
 
         $sale_return = ManualReturn::find($id);
@@ -378,7 +378,7 @@ class ManualReturnController extends Controller
     }
 
 
-    public function deleteReturns(Request $req)
+    public function deleteReturns($subdomain,Request $req)
     {
 
         foreach ($req->ids as $key => $id) {

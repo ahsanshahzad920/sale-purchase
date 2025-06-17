@@ -100,40 +100,27 @@
                             </table>
                         </div>
                         <div class="row mt-2 px-3 ">
-                            @php
-                                $subtotal = $sale_return->return_items->sum('subtotal');
-                                $discountPercentage = $sale_return->discount ?? 0;
-                                            $discountAmount = ($subtotal * $discountPercentage) / 100;
-                                            $orderPercentage = $sale_return->order_tax ?? 0;
-                                            $orderAmount = ($subtotal * $orderPercentage) / 100;
-                            @endphp
                             <div class="col-md-8"></div>
                             <div class="col-md-4 border rounded-2 py-2">
-                                <div class="row border-bottom">
+                                <div class="row border-bottom subheading">
                                     <div class="col-md-6 col-6">Order Tax</div>
 
-                                    <div class="col-md-6 col-6">
-                                        {{-- $ {{ $sale_return->order_tax ?? '0' }} % --}}
-                                        ${{number_format($orderAmount,2)}} ({{ $orderPercentage }}%)
-                                    </div>
+                                    <div class="col-md-6 col-6">$ {{ $sale_return->order_tax ?? '0' }} %</div>
                                 </div>
 
                                 <div class="row border-bottom">
                                     <div class="col-md-6 col-6">Discount</div>
-                                    <div class="col-md-6 col-6">
-                                        {{-- $ {{ $sale_return->discount ?? '0.00' }} --}}
-                                        ${{ number_format($discountAmount, 2) }} ({{ number_format($discountPercentage, 2) }}%)
-                                    </div>
+                                    <div class="col-md-6 col-6">$ {{ $sale_return->discount ?? '0.00' }}</div>
                                 </div>
 
                                 <div class="row border-bottom">
                                     <div class="col-md-6 col-6">Shipping</div>
-                                    <div class="col-md-6 col-6">$ {{ number_format($sale_return->shipping ?? '0.00',2) }}</div>
+                                    <div class="col-md-6 col-6">$ {{ $sale_return->shipping ?? '0.00' }}</div>
                                 </div>
 
                                 <div class="row border-bottom">
                                     <div class="col-md-6 col-6">Grand Total</div>
-                                    <div class="col-md-6 col-6">$ {{ number_format($sale_return->grand_total ?? '0.00',2) }}</div>
+                                    <div class="col-md-6 col-6">$ {{ $sale_return->grand_total ?? '0.00' }}</div>
                                 </div>
                                 <div class="row border-bottom">
                                     <div class="col-md-6 col-6">Paid</div>
@@ -141,7 +128,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-6">Due</div>
-                                    <div class="col-md-6 col-6">$ {{ number_format($sale_return->amount_due ?? '0.00',2) }}</div>
+                                    <div class="col-md-6 col-6">$ {{ $sale_return->amount_due ?? '0.00' }}</div>
                                 </div>
                             </div>
                         </div>

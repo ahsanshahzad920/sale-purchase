@@ -22,5 +22,9 @@ class LandingPageHeading extends Model
         'support_desc',
         'feature_category',
         'shop_by_brands',
+        // 'created_by',
+        'tenant_id',
     ];
+
+    
 }

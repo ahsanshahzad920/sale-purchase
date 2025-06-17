@@ -20,10 +20,11 @@ class SettingController extends Controller
      */
     public function index()
     {
-        $warehouses = Warehouse::with('users')->get();
-        $customers = Customer::with('user')->get();
-        $setting = Setting::first();
-        $shopify_store = ShopifyStore::where('user_id',auth()->user()->id)->first();
+        // dd("setting");
+        $warehouses = Warehouse::with('users')->where('tenant_id',getTenantId())->get();
+        $customers = Customer::with('user')->where('tenant_id',getTenantId())->get();
+        $setting = Setting::where('tenant_id',getTenantId())->first();
+        $shopify_store = ShopifyStore::where('tenant_id',getTenantId())->first();
         // dd($setting);
             // $brands = SettingResource::collection(Setting::all());
         return view('back.setting.index',compact('warehouses','customers','setting','shopify_store'));
@@ -54,6 +55,8 @@ class SettingController extends Controller
     {
         $data = $request->all();
         // dd($data);
+        $data['created_by'] = auth()->id();
+        $data['updated_by'] = auth()->id();
         if($request->hasFile('logo')){
             $file = $request->file('logo');
             $filename = "logo"."_".rand(1111,9999).'.'.$file->extension();
@@ -63,12 +66,15 @@ class SettingController extends Controller
         // dd($data);
         $data['shopify_enable'] = $request->shopify_enable == 'on' ? 1 : 0;
 
-        $setting = Setting::first() ?? new Setting();
+        $setting = Setting::where('tenant_id',getTenantId())->first() ?? new Setting();
         $setting->fill($data)->save();
 
         // if request has access_token and shop_domain then check if shopify store exists then update otherwise create new
         if($request->has('access_token') && $request->has('shop_domain')){
-            $shopify_store = ShopifyStore::where('shop_domain',$request->shop_domain)->first();
+            $shopify_store = ShopifyStore::where('shop_domain',$request->shop_domain)->where('tenant_id',getTenantId())->first();
+            // if(ShopifyStore::where('shop_domain',$request->shop_domain)->first()){
+            //     return redirect()->back()->with('error','Shopify Store Already Exists!');
+            // }
             if($shopify_store){
                 $shopify_store->update([
                     'access_token' => $request->access_token,
@@ -82,6 +88,7 @@ class SettingController extends Controller
                     'shop_domain' => $request->shop_domain,
                     'user_id' => auth()->user()->id,
                     'created_by' => auth()->user()->id,
+                    'tenant_id' => getTenantId(),
                 ]);
             }
         }
@@ -98,21 +105,21 @@ class SettingController extends Controller
 
      public function emailSetting(){
         // dd("ues");
-        $setting = Setting::first();
+        $setting = Setting::where('tenant_id',getTenantId())->first();
         return view('back.setting.email',compact('setting'));
      }
 
      public function smsSetting(){
-        $setting = Setting::first();
+        $setting = Setting::where('tenant_id',getTenantId())->first();
         return view('back.setting.sms',compact('setting'));
      }
 
      public function posSetting(){
-        $setting = Setting::first();
+        $setting = Setting::where('tenant_id',getTenantId())->first();
         return view('back.setting.pos',compact('setting'));
      }
      public function paymentSetting(){
-        $setting = Setting::first();
+        $setting = Setting::where('tenant_id',getTenantId())->first();
         return view('back.setting.payment',compact('setting'));
      }
 
@@ -122,7 +129,7 @@ class SettingController extends Controller
 
     public function shopifyEnable(Request $request){
         // dd($request->all());
-        $setting = Setting::first();
+        $setting = Setting::where('tenant_id',getTenantId())->first();
         $setting->shopify_enable = $request->shopify_enable;
         $setting->save();
         return redirect()->back()->with('success','Shopify Enabled Successfully!');
@@ -130,7 +137,7 @@ class SettingController extends Controller
 
     public function pricingEnable(Request $request){
 
-        $setting = Setting::first();
+        $setting = Setting::where('tenant_id',getTenantId())->first();
         $setting->show_pricing = $request->show_pricing;
         $setting->save();
         return redirect()->back()->with('success','Shopify Enabled Successfully!');

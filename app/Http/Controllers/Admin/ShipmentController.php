@@ -138,7 +138,7 @@ class ShipmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $req, $id)
+    public function update(Request $req,$subdomain, $id)
     {
         $req->validate([
             'status' => 'required'
@@ -160,7 +160,7 @@ class ShipmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($subdomain,$id)
     {
         $shipment = Shipment::find($id);
         if($shipment){

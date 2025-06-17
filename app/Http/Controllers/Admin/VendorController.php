@@ -120,8 +120,8 @@ class VendorController extends BaseController
             'address.required' => 'The address field is required.',
         ]);
 
-        $data = $request->all(); 
-   
+        $data = $request->all();
+
         $data['password'] = Hash::make('password');
 
         $role = 'Vendor';
@@ -157,8 +157,9 @@ class VendorController extends BaseController
      * @param  \App\Models\Vendor  $vendor
      * @return \Illuminate\Http\Response
      */
-    public function edit(Vendor $vendor)
+    public function edit($subdomain,$id)
     {
+        $vendor = Vendor::findOrFail($id);
         $vendor->load('user');
         return $this->handleException(function () use ($vendor) {
             $vendor = new VendorResource($vendor);
@@ -174,9 +175,9 @@ class VendorController extends BaseController
      * @param  \App\Models\Vendor  $vendor
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Vendor $vendor)
+    public function update(Request $request, $subdomain,$id)
     {
-    
+        $vendor = Vendor::findOrFail($id);
 
         $request->validate([
             'name' => 'required|string|max:255',
@@ -217,8 +218,10 @@ class VendorController extends BaseController
      * @param  \App\Models\Vendor  $vendor
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Vendor $vendor)
+    public function destroy($subdomain,$id)
     {
+        $vendor = Vendor::with('user')->findOrFail($id);
+
         $vendor->user->delete();
         $vendor->delete();
 
@@ -226,8 +229,10 @@ class VendorController extends BaseController
             ->with('success', 'Vendor deleted successfully');
     }
 
-    public function change_status(Vendor $vendor)
+    public function change_status($subdomain, $id)
     {
+        // dd($subdomain);
+        $vendor = Vendor::findOrFail($id);
 
         if ($vendor->status == 1) {
             $vendor->status = 0;
@@ -239,8 +244,9 @@ class VendorController extends BaseController
         $vendor->save();
         return response()->json($message);
     }
-    public function change_blacklistStatus(Vendor $vendor)
+    public function change_blacklistStatus($subdomain,$id)
     {
+        $vendor = Vendor::findOrFail($id);
 
         if ($vendor->blacklist == 1) {
             $vendor->blacklist = 0;

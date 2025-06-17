@@ -65,7 +65,7 @@ class TierController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($subdomain,$id)
     {
         $tier = Tier::find($id);
         if($tier){
@@ -80,7 +80,7 @@ class TierController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $req, $id)
+    public function update(Request $req,$subdomain ,$id)
     {
         $tier = Tier::find($id);
         if($tier){
@@ -121,7 +121,7 @@ class TierController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($subdomain,$id)
     {
         $tier = Tier::find($id);
 

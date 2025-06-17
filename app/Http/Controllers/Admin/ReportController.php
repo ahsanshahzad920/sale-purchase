@@ -716,7 +716,7 @@ class ReportController extends BaseController
         return ['data' => $product_reports];
     }
 
-    public function productShow($id)
+    public function productShow($subdomain,$id)
     {
 
         $product = Product::find($id);
@@ -934,7 +934,7 @@ class ReportController extends BaseController
 
         return ['data' => $products];
     }
-    public function stockShow($id)
+    public function stockShow($subdomain,$id)
     {
 
         if (auth()->user()->hasRole('Manager')) {
@@ -1677,7 +1677,7 @@ class ReportController extends BaseController
         return ['data' => $customers];
     }
 
-    public function customerdownloadPdf($id)
+    public function customerdownloadPdf($subdomain,$id)
     {
         $customer = Customer::with('user')->find($id);
         $sale = Sale::with('customer', 'invoice')->where('customer_id', $id)->get();
@@ -1686,7 +1686,7 @@ class ReportController extends BaseController
         return $pdf->download('report-' . $customer->user->name . '.pdf');
     }
 
-    public function customerDetail($id)
+    public function customerDetail($subdomain,$id)
     {
         // return $id;
         // $customer = Customer::with('user')->find($id);
@@ -2862,7 +2862,7 @@ class ReportController extends BaseController
 
 
 
-    public function userShow($id)
+    public function userShow($subdomain,$id)
     {
         // dd('he');
         $user = User::find($id);

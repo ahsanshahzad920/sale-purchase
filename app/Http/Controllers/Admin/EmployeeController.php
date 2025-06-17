@@ -98,7 +98,7 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,$subdomain, $id)
     {
         $request->validate([
             'company_id' => 'required|exists:companies,id',
@@ -126,7 +126,7 @@ class EmployeeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($subdomain,$id)
     {
         Employee::destroy($id);
         return redirect()->route('employees.index')->with('success','Employee deleted successfully.');

@@ -10,6 +10,8 @@ class SalesInvoicePayment extends Model
 {
     use HasFactory;
 
+
+
     protected $guarded = ['id'];
     protected $table = 'sales_invoice_payment';
     protected $fillable = [
@@ -51,6 +53,14 @@ class SalesInvoicePayment extends Model
     {
         static::addGlobalScope('latest', function (Builder $builder) {
             $builder->latest();
+        });
+
+        static::addGlobalScope('tenant', function (Builder $builder) {
+            $builder->where('sales_invoice_payment.tenant_id', getTenantId());
+        });
+
+        static::creating(function ($model) {
+            $model->tenant_id = getTenantId();
         });
     }
 }
